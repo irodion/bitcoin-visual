@@ -44,8 +44,13 @@ function DiffHex({ original, modified }: { original: Uint8Array; modified: Uint8
         </div>
         <code className="break-all font-mono text-sm leading-relaxed tracking-wide">
           {pairs.map((p, i) => (
-            <span key={i} className={p.differs ? "text-danger" : "text-success"}>
+            <span
+              key={i}
+              className={p.differs ? "rounded-sm bg-danger/10 text-danger" : "text-success"}
+            >
+              {p.differs && <span aria-hidden="true">·</span>}
               {p.orig}
+              <span className="sr-only">{p.differs ? " differs" : " matches"}</span>
             </span>
           ))}
         </code>
@@ -56,8 +61,13 @@ function DiffHex({ original, modified }: { original: Uint8Array; modified: Uint8
         </div>
         <code className="break-all font-mono text-sm leading-relaxed tracking-wide">
           {pairs.map((p, i) => (
-            <span key={i} className={p.differs ? "text-danger" : "text-success"}>
+            <span
+              key={i}
+              className={p.differs ? "rounded-sm bg-danger/10 text-danger" : "text-success"}
+            >
+              {p.differs && <span aria-hidden="true">·</span>}
               {p.mod}
+              <span className="sr-only">{p.differs ? " differs" : " matches"}</span>
             </span>
           ))}
         </code>
@@ -133,7 +143,7 @@ export default function HashPlayground() {
 
   const modifiedInput = useMemo(() => {
     if (!isAvalanche) return "";
-    if (input.length === 0) return "\x01";
+    if (input.length === 0) return "";
     const lastChar = input.charCodeAt(input.length - 1);
     const toggled = String.fromCharCode(lastChar ^ 1);
     return input.slice(0, -1) + toggled;
