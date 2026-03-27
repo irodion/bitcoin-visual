@@ -1,4 +1,4 @@
-import { useState, useCallback, type ReactNode } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
 
 interface TheoryPanelProps {
@@ -22,6 +22,10 @@ function readPersistedState(moduleKey: string): boolean {
 
 export function TheoryPanel({ moduleKey, children, className = "" }: TheoryPanelProps) {
   const [isOpen, setIsOpen] = useState(() => readPersistedState(moduleKey));
+
+  useEffect(() => {
+    setIsOpen(readPersistedState(moduleKey));
+  }, [moduleKey]);
 
   const toggle = useCallback(() => {
     setIsOpen((prev) => {

@@ -18,7 +18,13 @@ export function CopyButton({ text, className = "" }: CopyButtonProps) {
   return (
     <button
       type="button"
-      onClick={() => void navigator.clipboard.writeText(text).then(() => setCopied(true))}
+      onClick={() => {
+        if (!navigator.clipboard?.writeText) return;
+        void navigator.clipboard.writeText(text).then(
+          () => setCopied(true),
+          () => {},
+        );
+      }}
       className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-text-secondary transition-all hover:bg-border hover:text-accent active:scale-90 ${className}`}
       aria-label="Copy to clipboard"
     >
