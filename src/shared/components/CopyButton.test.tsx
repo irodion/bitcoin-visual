@@ -33,7 +33,8 @@ describe("CopyButton", () => {
     });
 
     const button = screen.getByLabelText("Copy to clipboard");
-    // Click should not throw — AnimatePresence handles the icon transition
-    await expect(user.click(button)).resolves.not.toThrow();
+    await user.click(button);
+    // Button remains in the document after click (AnimatePresence handles icon swap)
+    expect(button).toBeInTheDocument();
   });
 });

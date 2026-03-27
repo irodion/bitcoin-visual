@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { motion } from "framer-motion";
 
 interface ValueFlowArrowProps {
@@ -17,6 +18,7 @@ export function ValueFlowArrow({
   animationKey,
 }: ValueFlowArrowProps) {
   const isVertical = direction === "vertical";
+  const tooltipId = useId();
 
   return (
     <div
@@ -44,11 +46,17 @@ export function ValueFlowArrow({
         initial={false}
         animate={PULSE_ANIMATE}
         transition={PULSE_TRANSITION}
+        tabIndex={description ? 0 : undefined}
+        aria-describedby={description ? tooltipId : undefined}
         className="group/pill absolute z-10 rounded-full border border-border-strong bg-surface px-3 py-1 font-mono text-[11px] font-medium text-text-secondary shadow-sm"
       >
         {label}
         {description && (
-          <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 hidden w-max max-w-xs -translate-x-1/2 rounded-card border border-border-strong bg-surface-raised px-3 py-2 text-left font-sans text-xs leading-relaxed text-text-primary shadow-lg group-hover/pill:block">
+          <span
+            id={tooltipId}
+            role="tooltip"
+            className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 hidden w-max max-w-xs -translate-x-1/2 rounded-card border border-border-strong bg-surface-raised px-3 py-2 text-left font-sans text-xs leading-relaxed text-text-primary shadow-lg group-hover/pill:block group-focus/pill:block"
+          >
             <span className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-l border-t border-border-strong bg-surface-raised" />
             {description}
           </span>

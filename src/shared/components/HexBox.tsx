@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useId, useState, useMemo } from "react";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { CopyButton } from "./CopyButton";
 
@@ -31,6 +31,7 @@ export function HexBox({
   truncate = false,
   maxLength = 64,
 }: HexBoxProps) {
+  const contentId = useId();
   const [expanded, setExpanded] = useState(false);
 
   const hex = useMemo(() => (value instanceof Uint8Array ? bytesToHex(value) : value), [value]);
@@ -57,7 +58,7 @@ export function HexBox({
           {label}
         </div>
       )}
-      <div className="pr-8">
+      <div id={contentId} className="pr-8">
         <code
           className={`break-all font-mono text-sm leading-relaxed tracking-wide ${variantColors[variant]}`}
         >
@@ -67,13 +68,15 @@ export function HexBox({
           <button
             type="button"
             onClick={() => setExpanded((e) => !e)}
+            aria-expanded={expanded}
+            aria-controls={contentId}
             className="ml-2 cursor-pointer rounded px-1.5 py-0.5 text-[11px] text-text-secondary transition-colors hover:bg-border hover:text-accent"
           >
             {expanded ? "less" : "more"}
           </button>
         )}
       </div>
-      <div className="absolute right-1.5 top-1.5 opacity-0 transition-opacity group-hover/hex:opacity-100">
+      <div className="absolute right-1.5 top-1.5 opacity-0 transition-opacity group-hover/hex:opacity-100 group-focus-within/hex:opacity-100">
         <CopyButton text={hex} />
       </div>
     </div>
