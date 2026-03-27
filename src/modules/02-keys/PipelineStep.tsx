@@ -27,11 +27,11 @@ export function PipelineStep({
           {stepNumber}
         </span>
         <span className="text-sm font-medium text-text-primary">{title}</span>
-        <span className="group relative">
+        <span className="group relative" tabIndex={0}>
           <span className="rounded-full bg-surface px-2 py-0.5 font-mono text-[11px] text-text-secondary">
             {algorithm}
           </span>
-          <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-56 -translate-x-1/2 rounded-card border border-border bg-surface-raised p-2 text-xs text-text-secondary shadow-lg group-hover:block">
+          <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-56 -translate-x-1/2 rounded-card border border-border bg-surface-raised p-2 text-xs text-text-secondary shadow-lg group-hover:block group-focus-within:block">
             {algorithmDetail}
           </span>
         </span>
