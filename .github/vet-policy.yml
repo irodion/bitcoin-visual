@@ -1,0 +1,5 @@
+filters:
+  - name: critical-vulnerabilities
+    check_type: 1
+    value: "vulns.critical.exists(p, true)"
+    summary: Block on critical vulnerabilities
