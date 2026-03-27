@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+      - run: vp check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+      - run: vp test run
+
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - run: semgrep scan --config auto --error src/
+
+  vet:
+    name: Dependency Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check if deps changed
+        id: deps
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            deps:
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+      - name: Run vet
+        if: steps.deps.outputs.deps == 'true'
+        uses: safedep/vet-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          policy: .github/vet-policy.yml
+      - name: Skip vet
+        if: steps.deps.outputs.deps != 'true'
+        run: echo "No dependency changes — skipping vet scan"
