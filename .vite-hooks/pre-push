@@ -1,0 +1,13 @@
+#!/bin/sh
+echo "Running dependency security scan (vet)..."
+vet scan -D . \
+  --filter 'vulns.critical.exists(p, true)' \
+  --filter-fail 2>&1
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
+  echo ""
+  echo "⚠ vet found critical vulnerabilities. Push aborted."
+  echo "Run 'vet scan -D .' locally for details."
+  exit 1
+fi
+echo "✓ Dependency scan passed — no critical vulnerabilities."
