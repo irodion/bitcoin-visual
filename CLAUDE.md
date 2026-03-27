@@ -32,6 +32,7 @@ Each module lives in `src/modules/NN-name/` and is a self-contained route. Share
 ## Reference Docs
 
 - [Architecture & Design System](docs/references/architecture.md)
-- [Development Guide & Testing](docs/references/development.md)
+- [Development Guide](docs/references/development.md)
+- [Testing Guide](docs/references/tests.md)
 - [Commit Guidelines](docs/references/commits.md)
 - [Full PRD](docs/bitcoin-visual-learning-prd.md)
