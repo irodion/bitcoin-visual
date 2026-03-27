@@ -35,7 +35,7 @@ function varintSize(n: number): number {
   if (n < 0xfd) return 1;
   if (n <= 0xffff) return 3;
   if (n <= 0xffffffff) return 5;
-  return 9;
+  throw new Error(`varint value too large: ${n}`);
 }
 
 function writeVarint(buf: Uint8Array, n: number, offset: number): number {
@@ -49,9 +49,12 @@ function writeVarint(buf: Uint8Array, n: number, offset: number): number {
     buf[offset + 2] = (n >> 8) & 0xff;
     return 3;
   }
-  buf[offset] = 0xfe;
-  writeUint32LE(buf, n, offset + 1);
-  return 5;
+  if (n <= 0xffffffff) {
+    buf[offset] = 0xfe;
+    writeUint32LE(buf, n, offset + 1);
+    return 5;
+  }
+  throw new Error(`varint value too large: ${n}`);
 }
 
 export function serializeTransaction(tx: Transaction): Uint8Array {

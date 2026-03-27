@@ -111,6 +111,9 @@ export function deriveAllSiblings(
 
   return Array.from({ length: count }, (_, i) => {
     const child = parent.deriveChild(i);
-    return child.privateKey!;
+    if (!child.privateKey) {
+      throw new Error(`Failed to derive private key for child index ${i}`);
+    }
+    return child.privateKey;
   });
 }
