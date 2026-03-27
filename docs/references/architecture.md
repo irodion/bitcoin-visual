@@ -2,7 +2,7 @@
 
 ## Project Structure
 
-```
+```text
 src/
 ├── modules/              # Feature modules (one per learning topic)
 │   ├── 01-hash/          # SHA-256 playground

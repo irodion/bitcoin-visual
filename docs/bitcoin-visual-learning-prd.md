@@ -45,8 +45,8 @@ An interactive, self-contained PWA that lets a developer **feel** how Bitcoin wo
 
 | Layer             | Choice                                         | Rationale                                            |
 | ----------------- | ---------------------------------------------- | ---------------------------------------------------- |
-| Build tool        | **Vite 5**                                     | Fast HMR, native ESM, first-class PWA support        |
-| UI Framework      | **React 18**                                   | Component model ideal for reactive value propagation |
+| Build tool        | **VitePlus** (Vite + Oxlint + Oxfmt + Vitest)  | Unified toolchain, fast HMR, native ESM, PWA support |
+| UI Framework      | **React 19**                                   | Component model ideal for reactive value propagation |
 | PWA plugin        | **vite-plugin-pwa** (Workbox)                  | Offline cache, manifest, install prompt              |
 | Crypto primitives | **@noble/hashes** + **@noble/curves**          | Audited, pure JS, no WASM deps, zero network         |
 | BIP32/BIP39       | **@scure/bip32** + **@scure/bip39**            | Same noble ecosystem, audited                        |
@@ -651,14 +651,14 @@ Red/amber warning box used for:
     "vite.config.ts (with VitePWA plugin + Tailwind plugin)",
     "public/manifest.webmanifest",
     "public/icons/ (192x192, 512x512 PNG)",
-    "src/App.tsx (react-router-dom routes for all 6 modules)",
+    "src/App.tsx (react-router-dom routes for all 7 modules)",
     "src/main.tsx",
     "tailwind.config.ts",
     "src/index.css (global CSS variables + base styles)"
   ],
   "acceptance_criteria": [
     "npm run dev serves the app at localhost:5173",
-    "All 6 routes (/hash, /keys, /utxo, /blockchain, /hd-wallet, /multisig) return 200 with placeholder content",
+    "All 7 routes (/hash, /keys, /utxo, /blockchain, /hd-wallet, /multisig, /attacks) return 200 with placeholder content",
     "Lighthouse PWA check shows manifest and service worker registered",
     "App installs as PWA in Chrome (install prompt appears)",
     "npm run build produces a dist/ folder with no TS errors",
@@ -1040,7 +1040,7 @@ Red/amber warning box used for:
     "concept_chain": "Horizontal flow diagram: Hash Functions → Keys & Addresses → UTXOs → Blockchain → HD Wallets → Multisig. Each node links to its module. Completed modules shown with checkmark (progress stored in localStorage).",
     "module_cards": "6 cards, one per module. Each shows: icon, title, one-line description, estimated time, prerequisite modules."
   },
-  "sidebar": "Fixed left sidebar showing all 6 modules with icons. Current module highlighted. Collapsible on mobile (hamburger). Progress dots per module.",
+  "sidebar": "Fixed left sidebar showing all 7 modules with icons. Current module highlighted. Collapsible on mobile (hamburger). Progress dots per module.",
   "acceptance_criteria": [
     "Landing page renders all 6 module cards",
     "Concept chain is a visually connected flow (SVG or CSS lines between nodes)",
@@ -1090,11 +1090,11 @@ Red/amber warning box used for:
 
 ---
 
-### STEP 13 — Attack Module: ECDSA Nonce Reuse + xpub Leak
+### STEP 12 — Attack Module: ECDSA Nonce Reuse + xpub Leak
 
 ```json
 {
-  "step": 13,
+  "step": 12,
   "title": "Module 7 — Attack Lab: ECDSA Nonce Reuse & xpub Child Key Leak",
   "route": "/attacks",
   "description": "Two primary attack demos running real cryptographic math in-browser. No mocking. Every intermediate value shown and labeled. Step-by-step reveal mode for first-time viewers.",
@@ -1144,17 +1144,17 @@ Red/amber warning box used for:
 
 ---
 
-### STEP 14 — Attack Module: Weak Entropy & Rainbow Table
+### STEP 13 — Attack Module: Weak Entropy & Rainbow Table
 
 ```json
 {
-  "step": 14,
+  "step": 13,
   "title": "Module 7 — Attack Lab: Weak Entropy & Rainbow Table (secondary tabs)",
   "route": "/attacks (sub-tabs 3 and 4)",
   "description": "Two lighter-weight attack demos. Weak entropy shows how predictable private keys enable instant address sweeping. Rainbow table shows how unsalted hashes are reversed by lookup, and how salting defeats it.",
   "files_created": [
-    "src/modules/07-attacks/tabs/WeakEntropyDemo.tsx  (already listed in Step 13 files)",
-    "src/modules/07-attacks/tabs/RainbowTableDemo.tsx (already listed in Step 13 files)",
+    "src/modules/07-attacks/tabs/WeakEntropyDemo.tsx  (already listed in Step 12 files)",
+    "src/modules/07-attacks/tabs/RainbowTableDemo.tsx (already listed in Step 12 files)",
     "src/modules/07-attacks/data/brainWalletHallOfShame.ts",
     "src/modules/07-attacks/data/rainbowTable.ts"
   ],
@@ -1192,11 +1192,11 @@ Red/amber warning box used for:
 
 ---
 
-### STEP 12 — Testing & Documentation
+### STEP 14 — Testing & Documentation
 
 ```json
 {
-  "step": 12,
+  "step": 14,
   "title": "Test Suite & Documentation",
   "description": "Complete test coverage for all crypto utilities, integration tests for key modules, and user-facing documentation.",
   "files_created": [

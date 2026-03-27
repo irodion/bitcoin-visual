@@ -29,6 +29,14 @@ export default function App() {
           <Route path="/hd-wallet" element={<HDWalletExplorer />} />
           <Route path="/multisig" element={<MultisigVault />} />
           <Route path="/attacks" element={<AttackLab />} />
+          <Route
+            path="*"
+            element={
+              <div className="flex min-h-screen items-center justify-center text-text-secondary">
+                404 — Page not found
+              </div>
+            }
+          />
         </Routes>
       </Suspense>
     </BrowserRouter>

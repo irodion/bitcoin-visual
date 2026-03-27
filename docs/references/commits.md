@@ -2,7 +2,7 @@
 
 ## Message Format
 
-```
+```text
 <type>: <short description>
 
 <optional body>
