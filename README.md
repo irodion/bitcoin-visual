@@ -66,4 +66,4 @@ vp preview          # Preview production build
 
 ## License
 
-MIT
+[GPLv3](LICENSE)
