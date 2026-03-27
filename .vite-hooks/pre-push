@@ -1,10 +1,21 @@
 #!/bin/sh
+
+echo "Running semgrep static analysis..."
+semgrep scan --config auto --error --quiet src/ 2>&1
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "⚠ semgrep found issues. Push aborted."
+  echo "Run 'semgrep scan --config auto src/' locally for details."
+  exit 1
+fi
+echo "✓ Semgrep scan passed."
+
+echo ""
 echo "Running dependency security scan (vet)..."
 vet scan -D . \
   --filter 'vulns.critical.exists(p, true)' \
   --filter-fail 2>&1
-exit_code=$?
-if [ $exit_code -ne 0 ]; then
+if [ $? -ne 0 ]; then
   echo ""
   echo "⚠ vet found critical vulnerabilities. Push aborted."
   echo "Run 'vet scan -D .' locally for details."
