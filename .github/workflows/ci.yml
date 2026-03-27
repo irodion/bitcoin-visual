@@ -59,6 +59,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           policy: .github/vet-policy.yml
+          paranoid: true
       - name: Skip vet
         if: steps.deps.outputs.deps != 'true'
         run: echo "No dependency changes — skipping vet scan"

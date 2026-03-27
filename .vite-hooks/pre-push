@@ -1,5 +1,15 @@
 #!/bin/sh
 
+if ! command -v semgrep >/dev/null 2>&1; then
+  echo "⚠ semgrep not found. Install it: brew install semgrep"
+  exit 1
+fi
+
+if ! command -v vet >/dev/null 2>&1; then
+  echo "⚠ vet not found. Install it: brew install safedep/tap/vet"
+  exit 1
+fi
+
 echo "Running semgrep static analysis..."
 semgrep scan --config auto --error --quiet src/ 2>&1
 if [ $? -ne 0 ]; then
