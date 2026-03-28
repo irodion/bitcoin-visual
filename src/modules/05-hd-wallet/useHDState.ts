@@ -145,7 +145,16 @@ export function useHDState(): HDState {
   const updatePathSegment = useCallback((i: number, update: Partial<PathSegment>) => {
     setPathSegments((prev) => {
       const next = [...prev];
-      next[i] = { ...next[i], ...update };
+      const merged = { ...next[i], ...update };
+      // Enforce BIP84 constraints on change (3) and index (4) segments
+      if (i === 3) {
+        merged.index = merged.index === 1 ? 1 : 0;
+        merged.hardened = false;
+      } else if (i === 4) {
+        merged.index = Math.max(0, merged.index);
+        merged.hardened = false;
+      }
+      next[i] = merged;
       return next;
     });
   }, []);
@@ -216,12 +225,18 @@ export function useHDState(): HDState {
     const accountXpub = hdKeyToXPub(accountKey);
     const accountXprv = hdKeyToXPrv(accountKey);
 
-    const externalChain = deriveChild(accountKey, 0);
-    const changeChain = deriveChild(accountKey, 1);
-
+    const changeIndex = pathSegments[3]?.index ?? 0;
     const startIndex = pathSegments[4]?.index ?? 0;
-    const externalAddresses = deriveAddresses(externalChain, 0, accountPath, startIndex, 5);
-    const changeAddresses = deriveAddresses(changeChain, 1, accountPath, startIndex, 5);
+    const selectedChain = deriveChild(accountKey, changeIndex);
+    const addresses = deriveAddresses(selectedChain, changeIndex, accountPath, startIndex, 5);
+
+    // Also derive the other chain for the full tree view
+    const otherIndex = changeIndex === 0 ? 1 : 0;
+    const otherChain = deriveChild(accountKey, otherIndex);
+    const otherAddresses = deriveAddresses(otherChain, otherIndex, accountPath, startIndex, 5);
+
+    const externalAddresses = changeIndex === 0 ? addresses : otherAddresses;
+    const changeAddresses = changeIndex === 0 ? otherAddresses : addresses;
 
     return {
       pathNodes,
