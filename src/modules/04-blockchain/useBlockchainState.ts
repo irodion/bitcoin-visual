@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import {
   buildMerkleTree,
   computeMerkleRoot,
@@ -70,7 +70,9 @@ export function useBlockchainState(): BlockchainState {
   const [selectedTxIndex, setSelectedTxIndex] = useState<number | null>(null);
   const txCounterRef = useRef(100);
   const blocksRef = useRef(blocks);
-  blocksRef.current = blocks;
+  useEffect(() => {
+    blocksRef.current = blocks;
+  }, [blocks]);
 
   const applyMinedResult = useCallback((blockIdx: number, nonce: number, hash: Uint8Array) => {
     setBlocks((prev) => {
