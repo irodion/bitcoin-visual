@@ -38,7 +38,7 @@ export function EntropyInput({ value, onChange, onGenerate, error }: EntropyInpu
               {value.length} / 64 chars
             </span>
             <span className="rounded-pill bg-[#171E2C] px-3 py-1 text-xs font-bold text-text-primary">
-              {Math.floor(value.length / 2)} / 32 bytes
+              {(value.match(/[0-9a-fA-F]{2}/g) ?? []).length} / 32 bytes
             </span>
           </div>
         )}

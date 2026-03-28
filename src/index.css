@@ -66,6 +66,7 @@
 @theme {
   /* Background */
   --color-bg: #09101a;
+  --color-module-shell: #0a0f18;
   --color-surface: #121a28;
   --color-surface-raised: #101827;
   --color-surface-warm: #16110c;

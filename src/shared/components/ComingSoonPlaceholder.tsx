@@ -6,7 +6,7 @@ interface ComingSoonPlaceholderProps {
 export function ComingSoonPlaceholder({ title, description }: ComingSoonPlaceholderProps) {
   return (
     <div className="flex flex-1 items-center justify-center">
-      <div className="panel-cool rounded-[30px] border border-border p-10 text-center">
+      <div className="panel-cool rounded-card border border-border p-10 text-center">
         <div className="mb-3 text-[12px] font-bold uppercase tracking-[0.18em] text-text-muted">
           Coming Soon
         </div>

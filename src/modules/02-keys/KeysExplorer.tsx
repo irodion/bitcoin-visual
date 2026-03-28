@@ -115,22 +115,22 @@ function TheoryContent() {
 
       <div className="space-y-3">
         <TheoryConceptCard
-          dot="#FF6B6B"
+          dot="danger"
           title="Entropy → Private Key"
           description="32 random bytes that satisfy the curve constraint. Here we use raw entropy directly."
         />
         <TheoryConceptCard
-          dot="#F7931A"
+          dot="accent"
           title="secp256k1"
           description="P = k × G — one-way scalar multiplication on the elliptic curve. You cannot recover k from P."
         />
         <TheoryConceptCard
-          dot="#7DD3FC"
+          dot="info"
           title="Compressed Public Keys"
           description="Store x + prefix (02/03). Reduces 65 bytes → 33 bytes."
         />
         <TheoryConceptCard
-          dot="#36CFC9"
+          dot="teal"
           title="HASH160"
           description="RIPEMD-160(SHA-256(pubkey)) — compresses 33 bytes → 20 bytes."
         />

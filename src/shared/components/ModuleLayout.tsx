@@ -23,6 +23,7 @@ interface ModuleLayoutProps {
   subtitle?: string;
   tabConfig?: TabConfig;
   statusText?: string;
+  headerNotice?: ReactNode;
 }
 
 export function ModuleLayout({
@@ -34,13 +35,11 @@ export function ModuleLayout({
   subtitle,
   tabConfig,
   statusText,
+  headerNotice,
 }: ModuleLayoutProps) {
   return (
     <PageBackground>
-      <div
-        className="relative z-10 mx-4 my-4 overflow-hidden rounded-[34px] border border-border shadow-container md:mx-7 md:my-5"
-        style={{ background: "#0A0F18" }}
-      >
+      <div className="relative z-10 mx-4 my-4 overflow-hidden rounded-[34px] border border-border bg-module-shell shadow-container md:mx-7 md:my-5">
         {/* ── Header ── */}
         <header className="border-b border-border px-5 py-3 md:px-7">
           <div className="flex items-center justify-between">
@@ -82,21 +81,31 @@ export function ModuleLayout({
               )}
 
               {tabConfig && (
-                <div className="flex rounded-pill border border-border bg-surface-raised p-0.5">
-                  {tabConfig.tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      type="button"
-                      onClick={() => tabConfig.onTabChange(tab.key)}
-                      className={`cursor-pointer rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors ${
-                        tabConfig.activeTab === tab.key
-                          ? "bg-accent text-[#0D1420]"
-                          : "text-text-secondary hover:text-text-primary"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
+                <div
+                  className="flex rounded-pill border border-border bg-surface-raised p-0.5"
+                  role="tablist"
+                >
+                  {tabConfig.tabs.map((tab) => {
+                    const isSelected = tabConfig.activeTab === tab.key;
+                    return (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        role="tab"
+                        id={`tab-${tab.key}`}
+                        aria-selected={isSelected}
+                        tabIndex={isSelected ? 0 : -1}
+                        onClick={() => tabConfig.onTabChange(tab.key)}
+                        className={`cursor-pointer rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors ${
+                          isSelected
+                            ? "bg-accent text-[#0D1420]"
+                            : "text-text-secondary hover:text-text-primary"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -104,6 +113,8 @@ export function ModuleLayout({
 
           {subtitle && <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>}
         </header>
+
+        {headerNotice && <div className="px-5 pt-4 md:px-7">{headerNotice}</div>}
 
         {/* ── Body ── */}
         <div

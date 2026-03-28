@@ -107,19 +107,16 @@ export default function Landing() {
           animate="visible"
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {MODULES.map((mod) => (
-            <motion.div key={mod.number} variants={cardVariants}>
-              <Link
-                to={mod.active ? mod.route : "#"}
-                className={`group block rounded-[28px] border p-6 transition-all ${
-                  mod.active
-                    ? "border-border shadow-container hover:border-border-strong hover:shadow-[0_18px_48px_rgba(0,0,0,0.36)]"
-                    : "pointer-events-none border-border/50 opacity-50"
-                }`}
-                style={{ background: "linear-gradient(180deg, #121A28, #0C1320)" }}
-                aria-disabled={!mod.active}
-                tabIndex={mod.active ? undefined : -1}
-              >
+          {MODULES.map((mod) => {
+            const cardClasses = `group block rounded-card border p-6 transition-all ${
+              mod.active
+                ? "border-border shadow-container hover:border-border-strong hover:shadow-[0_18px_48px_rgba(0,0,0,0.36)]"
+                : "border-border/50 opacity-50"
+            }`;
+            const cardStyle = { background: "linear-gradient(180deg, #121A28, #0C1320)" };
+
+            const cardContent = (
+              <>
                 <div className="mb-3 flex items-center justify-between">
                   <span
                     className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold"
@@ -158,9 +155,23 @@ export default function Landing() {
                     </svg>
                   </div>
                 )}
-              </Link>
-            </motion.div>
-          ))}
+              </>
+            );
+
+            return (
+              <motion.div key={mod.number} variants={cardVariants}>
+                {mod.active ? (
+                  <Link to={mod.route} className={cardClasses} style={cardStyle}>
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <div className={cardClasses} style={cardStyle} aria-disabled="true">
+                    {cardContent}
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         {/* Footer */}

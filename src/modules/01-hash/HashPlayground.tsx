@@ -30,7 +30,7 @@ function BitDiffBar({ original, modified }: { original: Uint8Array; modified: Ui
   const groups = useMemo(() => {
     const result: { differs: boolean; count: number }[] = [];
     for (let i = 0; i < original.length; i++) {
-      let xor = original[i] ^ modified[i];
+      const xor = original[i] ^ modified[i];
       for (let bit = 7; bit >= 0; bit--) {
         const differs = ((xor >> bit) & 1) === 1;
         const last = result[result.length - 1];
@@ -44,8 +44,14 @@ function BitDiffBar({ original, modified }: { original: Uint8Array; modified: Ui
     return result;
   }, [original, modified]);
 
+  const changed = groups.filter((g) => g.differs).reduce((s, g) => s + g.count, 0);
+
   return (
-    <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-[#131C2A]">
+    <div
+      className="flex h-2.5 w-full overflow-hidden rounded-full bg-[#131C2A]"
+      role="img"
+      aria-label={`Bit difference visualization: ${changed} of 256 bits differ`}
+    >
       {groups.map((g, i) => (
         <div
           key={i}
@@ -123,22 +129,22 @@ function TheoryContent() {
 
       <div className="space-y-3">
         <TheoryConceptCard
-          dot="#F7931A"
+          dot="accent"
           title="Determinism"
           description="Same input, same fingerprint. No randomness involved."
         />
         <TheoryConceptCard
-          dot="#36CFC9"
+          dot="teal"
           title="Avalanche Effect"
           description="One letter shifts the whole digest. Try the demo to see it live."
         />
         <TheoryConceptCard
-          dot="#FF6B6B"
+          dot="danger"
           title="Pre-image Resistance"
           description="You can verify, not reverse. This is what makes proof-of-work hard."
         />
         <TheoryConceptCard
-          dot="#FBBF24"
+          dot="warning"
           title="Fixed Output Length"
           description="Always 256 bits, always 64 hex chars, regardless of input size."
         />
