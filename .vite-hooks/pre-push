@@ -28,7 +28,12 @@ fi
 echo "✓ Semgrep scan passed."
 
 # Only run vet if dependency files changed since the remote branch
-DEPS_CHANGED=$(git diff --name-only @{push}.. -- package.json pnpm-lock.yaml 2>/dev/null)
+PUSH_REF=$(git rev-parse @{push} 2>/dev/null) || PUSH_REF=$(git rev-parse origin/main 2>/dev/null)
+if [ -z "$PUSH_REF" ]; then
+  DEPS_CHANGED="unknown"
+else
+  DEPS_CHANGED=$(git diff --name-only "$PUSH_REF".. -- package.json pnpm-lock.yaml 2>/dev/null)
+fi
 if [ -n "$DEPS_CHANGED" ]; then
   if ! command -v vet >/dev/null 2>&1; then
     echo "⚠ vet not found. Install it: brew install safedep/tap/vet"
@@ -38,8 +43,8 @@ if [ -n "$DEPS_CHANGED" ]; then
   echo ""
   echo "Running dependency security scan (vet)..."
   vet scan -D . \
-    --filter 'vulns.critical.exists(p, true)' \
-    --filter-fail 2>&1
+    --policy-suite .github/vet-policy.yml \
+    --policy-suite-fail 2>&1
   if [ $? -ne 0 ]; then
     echo ""
     echo "⚠ vet found critical vulnerabilities. Push aborted."
