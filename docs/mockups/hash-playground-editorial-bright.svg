@@ -1,0 +1,127 @@
+<svg width="1600" height="1080" viewBox="0 0 1600 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6F0E7"/>
+      <stop offset="0.45" stop-color="#F9F7F3"/>
+      <stop offset="1" stop-color="#E9F3F0"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1317 164) rotate(136.332) scale(507.801 434.679)">
+      <stop stop-color="#F59E0B" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(243 872) rotate(22.429) scale(520.775 276.454)">
+      <stop stop-color="#0F766E" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#0F766E" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#5B4B3A" flood-opacity="0.16"/>
+    </filter>
+    <pattern id="paper" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#0F172A" fill-opacity="0.045"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="1080" fill="url(#bg)"/>
+  <rect width="1600" height="1080" fill="url(#paper)"/>
+  <rect width="1600" height="1080" fill="url(#glow1)"/>
+  <rect width="1600" height="1080" fill="url(#glow2)"/>
+
+  <rect x="36" y="28" width="1528" height="1024" rx="34" fill="#FFFDF9" stroke="#E7DED2" filter="url(#shadow)"/>
+  <rect x="36" y="28" width="1528" height="82" rx="34" fill="#FFF9F1"/>
+  <rect x="36" y="82" width="1528" height="1" fill="#E7DED2"/>
+
+  <text x="82" y="52" fill="#9A7B4F" font-family="Georgia, Times New Roman, serif" font-size="13" letter-spacing="0.22em">MODULE 1 / BITCOIN VISUAL</text>
+  <text x="82" y="78" fill="#18212F" font-family="Georgia, Times New Roman, serif" font-size="29" font-weight="700">Hash Playground</text>
+  <text x="1225" y="55" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="0.18em">EDUCATIONAL CRYPTOGRAPHY STUDY</text>
+
+  <rect x="1302" y="35" width="220" height="44" rx="22" fill="#F4EFE7" stroke="#E1D6C8"/>
+  <rect x="1306" y="39" width="108" height="36" rx="18" fill="#122033"/>
+  <text x="1330" y="62" fill="#F8F4EC" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">Live Hash</text>
+  <text x="1443" y="62" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600">Avalanche</text>
+
+  <rect x="70" y="140" width="286" height="866" rx="30" fill="#FCF7EF" stroke="#E6DAC8"/>
+  <text x="102" y="184" fill="#1C2635" font-family="Georgia, Times New Roman, serif" font-size="22" font-weight="700">Theory, at a glance</text>
+  <text x="102" y="212" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="14">Short concepts that stay visible while experimenting.</text>
+
+  <g>
+    <line x1="116" y1="260" x2="116" y2="754" stroke="#D8C7AF" stroke-width="2"/>
+    <circle cx="116" cy="290" r="10" fill="#F59E0B"/>
+    <circle cx="116" cy="398" r="10" fill="#0F766E"/>
+    <circle cx="116" cy="506" r="10" fill="#DC2626"/>
+    <circle cx="116" cy="614" r="10" fill="#1D4ED8"/>
+    <circle cx="116" cy="722" r="10" fill="#B45309"/>
+  </g>
+
+  <text x="142" y="294" fill="#17202D" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Determinism</text>
+  <text x="142" y="319" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="13">A stable rule: same text, same output.</text>
+  <text x="142" y="402" fill="#17202D" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Avalanche effect</text>
+  <text x="142" y="427" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="13">A tiny edit can scramble most bits.</text>
+  <text x="142" y="510" fill="#17202D" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Pre-image resistance</text>
+  <text x="142" y="535" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="13">Verification is easy; reversing is not.</text>
+  <text x="142" y="618" fill="#17202D" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Fixed output length</text>
+  <text x="142" y="643" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="13">Always 64 hex characters for SHA-256.</text>
+  <text x="142" y="726" fill="#17202D" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Why SHA-256d?</text>
+  <text x="142" y="751" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="13">Bitcoin often hashes twice for key structures.</text>
+
+  <text x="406" y="186" fill="#18212F" font-family="Georgia, Times New Roman, serif" font-size="56" font-weight="700">The fingerprint of a message</text>
+  <text x="410" y="227" fill="#5D6C80" font-family="Arial, Helvetica, sans-serif" font-size="22">An editorial, easy-to-read interpretation of the Hash Playground from the PRD.</text>
+
+  <rect x="410" y="280" width="522" height="340" rx="32" fill="#FFF8EF" stroke="#E9DCCB"/>
+  <text x="448" y="326" fill="#17202D" font-family="Georgia, Times New Roman, serif" font-size="28" font-weight="700">Input</text>
+  <text x="448" y="354" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="14">Single text input with live updates and visible character count.</text>
+  <rect x="448" y="388" width="446" height="148" rx="24" fill="#FFFCF8" stroke="#DCCFBD"/>
+  <text x="480" y="444" fill="#192638" font-family="Courier New, monospace" font-size="30">Hello, Bitcoin!</text>
+  <text x="480" y="482" fill="#7B8799" font-family="Courier New, monospace" font-size="16">Every keystroke updates both hashes below.</text>
+  <rect x="448" y="557" width="88" height="34" rx="17" fill="#EFE6D8"/>
+  <text x="473" y="579" fill="#344154" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">15 chars</text>
+  <rect x="545" y="557" width="88" height="34" rx="17" fill="#EFE6D8"/>
+  <text x="571" y="579" fill="#344154" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">15 bytes</text>
+  <rect x="642" y="557" width="146" height="34" rx="17" fill="#EFE6D8"/>
+  <text x="674" y="579" fill="#344154" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">UTF-8 encoded</text>
+
+  <path d="M958 442C1004 442 1037 442 1072 442" stroke="#D6A15E" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="983" cy="442" r="7" fill="#F59E0B"/>
+  <circle cx="1014" cy="442" r="7" fill="#0F766E"/>
+  <text x="958" y="415" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="13" letter-spacing="0.14em">HASHING PIPELINE</text>
+
+  <rect x="1090" y="252" width="430" height="304" rx="32" fill="#162231"/>
+  <text x="1126" y="300" fill="#FFF8F0" font-family="Georgia, Times New Roman, serif" font-size="28" font-weight="700">SHA-256</text>
+  <text x="1126" y="329" fill="#A9BACB" font-family="Arial, Helvetica, sans-serif" font-size="14">First digest, fixed 256-bit result.</text>
+  <rect x="1126" y="360" width="358" height="150" rx="24" fill="#0C1522" stroke="#2E3C4F"/>
+  <text x="1152" y="408" fill="#F4F7FA" font-family="Courier New, monospace" font-size="22">a2d4 5f9c 11ee 0aa4 5bd1</text>
+  <text x="1152" y="443" fill="#F4F7FA" font-family="Courier New, monospace" font-size="22">9a41 4d2b 9ef7 0cb1 27f0</text>
+  <text x="1152" y="478" fill="#F4F7FA" font-family="Courier New, monospace" font-size="22">8441 8cd0 9183 b0fe 8e77</text>
+  <rect x="1126" y="521" width="114" height="24" rx="12" fill="#223043"/>
+  <text x="1151" y="538" fill="#DCE6F2" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">DETERMINISTIC</text>
+
+  <rect x="1090" y="580" width="430" height="304" rx="32" fill="#FFF7EE" stroke="#E2D7C9"/>
+  <text x="1126" y="628" fill="#1D2634" font-family="Georgia, Times New Roman, serif" font-size="28" font-weight="700">SHA-256d</text>
+  <text x="1126" y="657" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="14">Second pass for a Bitcoin-specific teaching moment.</text>
+  <rect x="1126" y="688" width="358" height="150" rx="24" fill="#FFFDF9" stroke="#DCCFBD"/>
+  <text x="1152" y="736" fill="#17202D" font-family="Courier New, monospace" font-size="22">56ce 81b2 07af 48e0 1e13</text>
+  <text x="1152" y="771" fill="#17202D" font-family="Courier New, monospace" font-size="22">4962 9f7d 4b31 d9a4 b08c</text>
+  <text x="1152" y="806" fill="#17202D" font-family="Courier New, monospace" font-size="22">7ad0 39f2 6ef1 6a3e d219</text>
+  <rect x="1126" y="849" width="138" height="24" rx="12" fill="#F2E6D6"/>
+  <text x="1159" y="866" fill="#855A24" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">BITCOIN DOUBLE HASH</text>
+
+  <rect x="410" y="662" width="632" height="284" rx="32" fill="#FCF7EF" stroke="#E6DAC8"/>
+  <text x="448" y="710" fill="#1B2433" font-family="Georgia, Times New Roman, serif" font-size="30" font-weight="700">Avalanche mode preview</text>
+  <text x="448" y="740" fill="#6D7A8F" font-family="Arial, Helvetica, sans-serif" font-size="15">Two mirrored inputs. One subtle change. Many changed output bits highlighted in red.</text>
+  <rect x="448" y="776" width="194" height="56" rx="22" fill="#FFFDF9" stroke="#DCCFBD"/>
+  <text x="473" y="797" fill="#7B8799" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.14em">ORIGINAL</text>
+  <text x="473" y="819" fill="#17202D" font-family="Courier New, monospace" font-size="18">Hello, Bitcoin!</text>
+  <rect x="666" y="776" width="194" height="56" rx="22" fill="#FFFDF9" stroke="#DCCFBD"/>
+  <text x="691" y="797" fill="#7B8799" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.14em">MODIFIED</text>
+  <text x="691" y="819" fill="#17202D" font-family="Courier New, monospace" font-size="18">Hello, Bitcoin"</text>
+  <rect x="885" y="776" width="121" height="56" rx="22" fill="#162231"/>
+  <text x="914" y="797" fill="#90A0B4" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.14em">BITS CHANGED</text>
+  <text x="919" y="821" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">183</text>
+  <rect x="448" y="862" width="558" height="18" rx="9" fill="#EADFD2"/>
+  <rect x="455" y="866" width="68" height="10" rx="5" fill="#DC2626"/>
+  <rect x="530" y="866" width="34" height="10" rx="5" fill="#0F766E"/>
+  <rect x="571" y="866" width="92" height="10" rx="5" fill="#DC2626"/>
+  <rect x="670" y="866" width="26" height="10" rx="5" fill="#0F766E"/>
+  <rect x="703" y="866" width="126" height="10" rx="5" fill="#DC2626"/>
+  <rect x="836" y="866" width="38" height="10" rx="5" fill="#0F766E"/>
+  <rect x="881" y="866" width="118" height="10" rx="5" fill="#DC2626"/>
+</svg>

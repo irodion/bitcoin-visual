@@ -2,10 +2,12 @@ import { useId, useState, useMemo } from "react";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { CopyButton } from "./CopyButton";
 
+type HexVariant = "default" | "danger" | "info" | "success" | "warm";
+
 interface HexBoxProps {
   value: string | Uint8Array;
   label?: string;
-  variant?: "default" | "danger" | "info" | "success" | "warm";
+  variant?: HexVariant;
   truncate?: boolean;
   maxLength?: number;
 }
@@ -35,7 +37,7 @@ const variantDot = {
 } as const;
 
 const DEFAULT_BORDER = "border-border hover:border-border-strong";
-const variantBorder: Record<string, string> = {
+const variantBorder: Partial<Record<HexVariant, string>> = {
   warm: "border-border-amber hover:border-border-amber",
 };
 
