@@ -81,6 +81,11 @@ export function useMiningWorker(
           workerRef.current = null;
           blockIndexRef.current = null;
           setState(IDLE);
+        } else if (msg.type === "exhausted") {
+          worker.terminate();
+          workerRef.current = null;
+          blockIndexRef.current = null;
+          setState(IDLE);
         }
       };
 

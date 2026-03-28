@@ -21,14 +21,17 @@ export interface MineResult {
   totalHashes: number;
 }
 
-export type WorkerOutMessage = MineProgress | MineResult;
+export interface MineExhausted {
+  type: "exhausted";
+  totalHashes: number;
+}
+
+export type WorkerOutMessage = MineProgress | MineResult | MineExhausted;
 
 const BATCH_SIZE = 2_000;
 
-self.onmessage = (e: MessageEvent<MineRequest | { type: "stop" }>) => {
-  if (e.data.type === "stop") return;
-
-  const { headerTemplate, difficulty, startNonce } = e.data as MineRequest;
+self.onmessage = (e: MessageEvent<MineRequest>) => {
+  const { headerTemplate, difficulty, startNonce } = e.data;
   const header = new Uint8Array(headerTemplate);
 
   let nonce = startNonce;
@@ -73,4 +76,7 @@ self.onmessage = (e: MessageEvent<MineRequest | { type: "stop" }>) => {
 
     nonce++;
   }
+
+  const msg: MineExhausted = { type: "exhausted", totalHashes: hashCount };
+  self.postMessage(msg);
 };

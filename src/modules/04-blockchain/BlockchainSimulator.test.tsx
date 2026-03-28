@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterAll } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
@@ -14,6 +14,10 @@ vi.stubGlobal(
   "Worker",
   vi.fn(() => new MockWorker()),
 );
+
+afterAll(() => {
+  vi.unstubAllGlobals();
+});
 
 function renderWithRouter(ui: React.ReactElement) {
   return render(<MemoryRouter>{ui}</MemoryRouter>);
@@ -76,8 +80,10 @@ describe("BlockchainSimulator", () => {
     await user.clear(txInputs[0]);
     await user.type(txInputs[0], "Modified transaction");
 
+    // Editing block 0 invalidates all 3 blocks (cascade)
     const invalidBadges = screen.getAllByText(/Invalid/);
-    expect(invalidBadges.length).toBeGreaterThanOrEqual(1);
+    expect(invalidBadges.length).toBe(3);
+    expect(screen.queryByText("Valid")).not.toBeInTheDocument();
   });
 
   it("AC: editing nonce makes block invalid", async () => {
@@ -93,8 +99,9 @@ describe("BlockchainSimulator", () => {
     await user.clear(nonceInput);
     await user.type(nonceInput, "99999999");
 
+    // Editing block 0 nonce invalidates all 3 blocks
     const invalidBadges = screen.getAllByText(/Invalid/);
-    expect(invalidBadges.length).toBeGreaterThanOrEqual(1);
+    expect(invalidBadges.length).toBe(3);
   });
 
   it("AC: Mine button appears only on invalid blocks", async () => {
@@ -180,10 +187,11 @@ describe("BlockchainSimulator", () => {
     const addButtons = screen.getAllByText("+ Add TX");
     await user.click(addButtons[0]);
 
-    // Block should now show 4 transactions and be invalid
+    // Block should now show 4 transactions and all blocks become invalid (cascade)
     expect(screen.getByText("Transactions (4)")).toBeInTheDocument();
     const invalidBadges = screen.getAllByText(/Invalid/);
-    expect(invalidBadges.length).toBeGreaterThanOrEqual(1);
+    expect(invalidBadges.length).toBe(3);
+    expect(screen.queryByText("Valid")).not.toBeInTheDocument();
   });
 
   it("shows hash target requirement in mining controls", async () => {

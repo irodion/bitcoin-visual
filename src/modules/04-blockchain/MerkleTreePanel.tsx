@@ -19,19 +19,34 @@ export function MerkleTreePanel({
   merkleProof,
   onSelectTransaction,
 }: MerkleTreePanelProps) {
-  // Build a set of highlighted node hashes for the proof path
+  // Build a set of highlighted node hashes for the proof path:
+  // the selected leaf, its siblings at each level, and ancestor (parent) nodes.
   const proofHashSet = useMemo(() => {
-    if (!merkleProof) return new Set<string>();
+    if (!merkleProof || selectedTxIndex === null) return new Set<string>();
     const set = new Set<string>();
+
+    // Add the selected leaf
+    if (block.transactions[selectedTxIndex]) {
+      set.add(bytesToHex(block.transactions[selectedTxIndex].txid));
+    }
+
+    // Add sibling hashes from the proof
     for (const step of merkleProof) {
       set.add(bytesToHex(step.hash));
     }
-    // Also include the selected leaf itself
-    if (selectedTxIndex !== null && block.transactions[selectedTxIndex]) {
-      set.add(bytesToHex(block.transactions[selectedTxIndex].txid));
+
+    // Walk up the tree to add ancestor (parent) nodes
+    let idx = selectedTxIndex;
+    for (let level = 1; level < merkleTree.length; level++) {
+      const parentIdx = Math.floor(idx / 2);
+      if (merkleTree[level][parentIdx]) {
+        set.add(bytesToHex(merkleTree[level][parentIdx]));
+      }
+      idx = parentIdx;
     }
+
     return set;
-  }, [merkleProof, selectedTxIndex, block.transactions]);
+  }, [merkleProof, selectedTxIndex, block.transactions, merkleTree]);
 
   const hasActiveProof = selectedTxIndex !== null && merkleProof !== null;
 

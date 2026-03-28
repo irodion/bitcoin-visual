@@ -46,6 +46,9 @@ export function computeMerkleRoot(leaves: Uint8Array[]): Uint8Array {
  * Each step contains the sibling hash and whether it sits on the left or right.
  */
 export function getMerkleProof(leaves: Uint8Array[], index: number): MerkleProofStep[] {
+  if (index < 0 || !Number.isInteger(index) || index >= leaves.length) {
+    throw new RangeError(`getMerkleProof: index ${index} out of range [0, ${leaves.length})`);
+  }
   if (leaves.length <= 1) return [];
 
   const tree = buildMerkleTree(leaves);

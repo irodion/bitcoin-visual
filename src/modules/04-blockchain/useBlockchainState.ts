@@ -69,6 +69,8 @@ export function useBlockchainState(): BlockchainState {
   const [selectedBlockIndex, setSelectedBlockIndex] = useState<number | null>(null);
   const [selectedTxIndex, setSelectedTxIndex] = useState<number | null>(null);
   const txCounterRef = useRef(100);
+  const blocksRef = useRef(blocks);
+  blocksRef.current = blocks;
 
   const applyMinedResult = useCallback((blockIdx: number, nonce: number, hash: Uint8Array) => {
     setBlocks((prev) => {
@@ -173,12 +175,12 @@ export function useBlockchainState(): BlockchainState {
   const miningStartFn = mining.startMining;
   const startMining = useCallback(
     (blockIdx: number) => {
-      const block = blocks[blockIdx];
+      const block = blocksRef.current[blockIdx];
       if (!block) return;
       const header = serializeBlockHeader(block);
       miningStartFn(blockIdx, header, difficulty);
     },
-    [blocks, difficulty, miningStartFn],
+    [difficulty, miningStartFn],
   );
 
   const selectBlock = useCallback((idx: number | null) => {
