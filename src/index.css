@@ -64,29 +64,80 @@
 }
 
 @theme {
-  --color-bg: #08080e;
-  --color-surface: #111118;
-  --color-surface-raised: #1a1a24;
-  --color-accent: #f59e0b;
-  --color-accent-muted: rgba(245, 158, 11, 0.15);
+  /* Background */
+  --color-bg: #09101a;
+  --color-surface: #121a28;
+  --color-surface-raised: #101827;
+  --color-surface-warm: #16110c;
+
+  /* Primary accent — Bitcoin orange */
+  --color-accent: #f7931a;
+  --color-accent-muted: rgba(247, 147, 26, 0.15);
+
+  /* Secondary accent — teal */
+  --color-teal: #36cfc9;
+  --color-teal-muted: rgba(54, 207, 201, 0.15);
+
+  /* Semantic */
   --color-success: #22c55e;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
-  --color-text-primary: #f4f4f5;
-  --color-text-secondary: #a1a1aa;
+  --color-danger: #ff6b6b;
+  --color-info: #7dd3fc;
+
+  /* Warm / warning callouts */
+  --color-warning-bg: #171109;
+  --color-warning-border: #4b3415;
+  --color-warning-text: #fdba74;
+  --color-warning-heading: #f8e7d1;
+  --color-warning-body: #c6a883;
+
+  /* Text */
+  --color-text-primary: #eef3fa;
+  --color-text-secondary: #8fa0b9;
+  --color-text-muted: #7f8da3;
+
+  /* Borders */
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-strong: rgba(255, 255, 255, 0.14);
-  --color-glow-accent: rgba(245, 158, 11, 0.06);
+  --color-border-amber: rgba(247, 147, 26, 0.24);
 
+  /* Glows */
+  --color-glow-accent: rgba(247, 147, 26, 0.06);
+  --color-glow-teal: rgba(45, 212, 191, 0.06);
+
+  /* Fonts */
   --font-sans: "Geist Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --radius-card: 8px;
-  --radius-input: 4px;
+  /* Radii */
+  --radius-card: 28px;
+  --radius-input: 24px;
+  --radius-pill: 19px;
+  --radius-badge: 13px;
 }
 
+/* ── Utility classes ── */
+
+.bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.045) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.panel-cool {
+  background: linear-gradient(180deg, #121a28, #0c1320);
+}
+
+.panel-warm {
+  background: linear-gradient(135deg, #16110c, #111a20);
+}
+
+.shadow-container {
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+/* ── Base ── */
+
 html {
-  background-color: var(--color-bg);
+  background: linear-gradient(135deg, #07131b, #0b101b, #140f0a);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

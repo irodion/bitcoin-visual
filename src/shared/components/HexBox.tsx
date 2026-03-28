@@ -5,7 +5,7 @@ import { CopyButton } from "./CopyButton";
 interface HexBoxProps {
   value: string | Uint8Array;
   label?: string;
-  variant?: "default" | "danger" | "info" | "success";
+  variant?: "default" | "danger" | "info" | "success" | "warm";
   truncate?: boolean;
   maxLength?: number;
 }
@@ -15,14 +15,29 @@ const variantColors = {
   danger: "text-danger",
   info: "text-info",
   success: "text-success",
+  warm: "text-warning-heading",
 } as const;
 
 const variantGlow = {
-  default: "shadow-[inset_0_0_20px_rgba(245,158,11,0.04)]",
-  danger: "shadow-[inset_0_0_20px_rgba(239,68,68,0.04)]",
-  info: "shadow-[inset_0_0_20px_rgba(59,130,246,0.04)]",
+  default: "shadow-[inset_0_0_20px_rgba(247,147,26,0.04)]",
+  danger: "shadow-[inset_0_0_20px_rgba(255,107,107,0.04)]",
+  info: "shadow-[inset_0_0_20px_rgba(125,211,252,0.04)]",
   success: "shadow-[inset_0_0_20px_rgba(34,197,94,0.04)]",
+  warm: "shadow-[inset_0_0_20px_rgba(247,147,26,0.06)]",
 } as const;
+
+const variantDot = {
+  default: "bg-accent",
+  danger: "bg-danger",
+  info: "bg-info",
+  success: "bg-success",
+  warm: "bg-warning-text",
+} as const;
+
+const DEFAULT_BORDER = "border-border hover:border-border-strong";
+const variantBorder: Record<string, string> = {
+  warm: "border-border-amber hover:border-border-amber",
+};
 
 export function HexBox({
   value,
@@ -36,31 +51,21 @@ export function HexBox({
 
   const hex = useMemo(() => (value instanceof Uint8Array ? bytesToHex(value) : value), [value]);
   const shouldTruncate = truncate && !expanded && hex.length > maxLength;
-  const displayHex = shouldTruncate ? hex.slice(0, maxLength) + "…" : hex;
+  const displayHex = shouldTruncate ? hex.slice(0, maxLength) + "\u2026" : hex;
 
   return (
     <div
-      className={`group/hex relative rounded-card border border-border bg-surface-raised p-3 transition-colors hover:border-border-strong ${variantGlow[variant]}`}
+      className={`group/hex relative rounded-card border bg-surface-raised p-4 transition-colors ${variantBorder[variant] ?? DEFAULT_BORDER} ${variantGlow[variant]}`}
     >
       {label && (
-        <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
-          <span
-            className={`inline-block h-1.5 w-1.5 rounded-full ${
-              variant === "default"
-                ? "bg-accent"
-                : variant === "danger"
-                  ? "bg-danger"
-                  : variant === "info"
-                    ? "bg-info"
-                    : "bg-success"
-            }`}
-          />
+        <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
+          <span className={`inline-block h-1.5 w-1.5 rounded-full ${variantDot[variant]}`} />
           {label}
         </div>
       )}
       <div id={contentId} className="pr-8">
         <code
-          className={`break-all font-mono text-sm leading-relaxed tracking-wide ${variantColors[variant]}`}
+          className={`break-all font-mono text-sm leading-relaxed tracking-wide md:text-base ${variantColors[variant]}`}
         >
           {displayHex}
         </code>
@@ -76,7 +81,7 @@ export function HexBox({
           </button>
         )}
       </div>
-      <div className="absolute right-1.5 top-1.5 opacity-0 transition-opacity group-hover/hex:opacity-100 group-focus-within/hex:opacity-100">
+      <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover/hex:opacity-100 group-focus-within/hex:opacity-100">
         <CopyButton text={hex} />
       </div>
     </div>
