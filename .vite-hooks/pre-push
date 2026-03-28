@@ -44,7 +44,7 @@ if [ -n "$DEPS_CHANGED" ]; then
   echo "Running dependency security scan (vet)..."
   vet scan -D . \
     --policy-suite .github/vet-policy.yml \
-    --policy-suite-fail 2>&1
+    --filter-fail 2>&1
   if [ $? -ne 0 ]; then
     echo ""
     echo "⚠ vet found critical vulnerabilities. Push aborted."
