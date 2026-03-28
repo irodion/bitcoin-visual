@@ -1,8 +1,4 @@
-const BTN_ACCENT =
-  "cursor-pointer rounded-card border border-accent bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20";
-const LABEL = "mb-2 block text-[11px] font-medium uppercase tracking-widest text-text-secondary";
-const INPUT =
-  "w-full rounded-input border border-border bg-surface-raised px-4 py-3 font-mono text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-accent focus:outline-none";
+import { BTN_PRIMARY, INPUT, LABEL } from "../../shared/components/styles.ts";
 
 interface EntropyInputProps {
   value: string;
@@ -13,12 +9,15 @@ interface EntropyInputProps {
 
 export function EntropyInput({ value, onChange, onGenerate, error }: EntropyInputProps) {
   return (
-    <div className="space-y-3">
-      <button type="button" onClick={onGenerate} className={BTN_ACCENT}>
+    <div className="panel-cool rounded-[30px] border border-border p-6">
+      <h3 className="mb-1 text-lg font-bold text-text-primary">Entropy Source</h3>
+      <p className="mb-4 text-sm text-text-muted">Generate or paste 32 random bytes</p>
+
+      <button type="button" onClick={onGenerate} className={BTN_PRIMARY}>
         Generate Random Key
       </button>
 
-      <div>
+      <div className="mt-4">
         <label htmlFor="entropy-input" className={LABEL}>
           Or paste custom entropy (64 hex characters)
         </label>
@@ -33,6 +32,16 @@ export function EntropyInput({ value, onChange, onGenerate, error }: EntropyInpu
           autoComplete="off"
           className={INPUT}
         />
+        {value.length > 0 && (
+          <div className="mt-2 flex gap-2">
+            <span className="rounded-pill bg-[#171E2C] px-3 py-1 text-xs font-bold text-text-primary">
+              {value.length} / 64 chars
+            </span>
+            <span className="rounded-pill bg-[#171E2C] px-3 py-1 text-xs font-bold text-text-primary">
+              {(value.match(/[0-9a-fA-F]{2}/g) ?? []).length} / 32 bytes
+            </span>
+          </div>
+        )}
         {error && (
           <p className="mt-1.5 text-sm text-danger" role="status">
             {error}

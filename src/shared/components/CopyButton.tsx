@@ -25,7 +25,7 @@ export function CopyButton({ text, className = "" }: CopyButtonProps) {
           () => {},
         );
       }}
-      className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-text-secondary transition-all hover:bg-border hover:text-accent active:scale-90 ${className}`}
+      className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-text-secondary transition-all hover:bg-white/10 hover:text-accent active:scale-90 ${className}`}
       aria-label="Copy to clipboard"
     >
       <AnimatePresence mode="wait" initial={false}>
