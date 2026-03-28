@@ -34,4 +34,6 @@ export {
   isHardenedIndex,
 } from "./attacks";
 export type { AttackSignature } from "./attacks";
+export { buildMerkleTree, computeMerkleRoot, getMerkleProof } from "./merkle";
+export type { MerkleProofStep } from "./merkle";
 export type { Network, XPub } from "./types";
