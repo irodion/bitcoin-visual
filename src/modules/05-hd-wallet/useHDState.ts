@@ -148,18 +148,19 @@ export function useHDState(): HDState {
     setPathSegments((prev) => {
       const next = [...prev];
       const merged = { ...next[i], ...update };
-      // Enforce BIP84 constraints on change (3) and index (4) segments
       if (i === 3) {
         merged.index = merged.index === 1 ? 1 : 0;
         merged.hardened = false;
       } else if (i === 4) {
         const n = Number(merged.index);
-        merged.index = Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
+        // Cap so startIndex + 5 addresses stays below hardened offset (0x80000000)
+        merged.index = Number.isFinite(n) ? Math.min(Math.max(0, Math.floor(n)), 0x7ffffffb) : 0;
         merged.hardened = false;
       }
       next[i] = merged;
       return next;
     });
+    setPrivateKeysRevealed(false);
   }, []);
 
   useEffect(() => {
