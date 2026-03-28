@@ -1,3 +1,5 @@
+import type { Variants } from "framer-motion";
+
 /** Shared styling constants for module pages */
 
 export const BTN_PRIMARY =
@@ -14,3 +16,13 @@ export const INPUT =
 
 export const LABEL =
   "mb-2 block text-[11px] font-medium uppercase tracking-widest text-text-secondary";
+
+export const CONTAINER_VARIANTS: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+
+export const STEP_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+};
