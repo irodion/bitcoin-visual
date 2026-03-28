@@ -47,7 +47,7 @@ function TheoryContent() {
         <TheoryConceptCard
           dot="info"
           title="Difficulty Target"
-          description="Each additional leading zero doubles the expected work. Difficulty 1 needs ~16 hashes, difficulty 4 needs ~65,536. Bitcoin adjusts difficulty every 2,016 blocks."
+          description="Each additional leading hex zero (nibble) multiplies expected work by 16. Difficulty 1 needs ~16 hashes, difficulty 4 needs ~65,536. Bitcoin adjusts difficulty every 2,016 blocks."
         />
       </div>
 
