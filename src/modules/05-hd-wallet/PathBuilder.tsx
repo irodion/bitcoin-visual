@@ -5,7 +5,7 @@ const SEGMENT_META = [
   {
     name: "Purpose",
     explanation:
-      "BIP44 uses 44'. This tells wallets to follow the BIP44 multi-account derivation scheme.",
+      "BIP84 uses 84' for native SegWit (P2WPKH) addresses. BIP44 uses 44' for legacy P2PKH.",
     canHarden: true,
   },
   {
@@ -137,7 +137,7 @@ export function PathBuilder({
         <div className="space-y-3">
           <HexBox
             value={derivedTree.accountXpub}
-            label="Account xpub (m/44'/0'/0')"
+            label="Account xpub (m/84'/0'/0')"
             variant="info"
             truncate
           />

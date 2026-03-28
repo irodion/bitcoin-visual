@@ -45,7 +45,7 @@ function TheoryContent() {
       </div>
 
       <TheoryCallout
-        label="BIP44 PATH"
+        label="BIP84 PATH"
         title="m / purpose' / coin' / account' / change / index"
         description="Standard 5-level path. Hardened levels isolate accounts; normal levels allow xpub-based address generation."
       />
@@ -68,7 +68,7 @@ export default function HDWalletExplorer() {
       moduleKey="hd-wallet"
       title="HD Wallet Tree"
       moduleNumber={5}
-      subtitle="Generate a mnemonic, derive a master seed, and explore BIP-44 key derivation."
+      subtitle="Generate a mnemonic, derive a master seed, and explore BIP-84 key derivation."
       theoryContent={<TheoryContent />}
     >
       <div className="mx-auto max-w-3xl space-y-2">
@@ -108,6 +108,8 @@ export default function HDWalletExplorer() {
                   masterPrivateKey={state.masterPrivateKey}
                   masterChainCode={state.masterChainCode}
                   generationKey={state.generationKey}
+                  privateKeysRevealed={state.privateKeysRevealed}
+                  onRequestReveal={() => state.setPrivateKeysRevealed(true)}
                 />
               </motion.div>
 
@@ -116,7 +118,7 @@ export default function HDWalletExplorer() {
                   <motion.div variants={STEP_VARIANTS}>
                     <ValueFlowArrow
                       label="BIP32 Derivation"
-                      description="Walk the BIP44 path: each segment derives a child key via HMAC-SHA-512"
+                      description="Walk the derivation path: each segment derives a child key via HMAC-SHA-512"
                       animationKey={state.generationKey}
                     />
                   </motion.div>
