@@ -119,9 +119,9 @@ export default function Landing() {
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
           {MODULES.map((mod) => {
-            const cardClasses = `group block rounded-card border p-6 transition-all ${
+            const cardClasses = `block rounded-card border p-6 transition-all ${
               mod.active
-                ? "border-border shadow-container hover:border-border-strong hover:shadow-[0_18px_48px_rgba(0,0,0,0.36)]"
+                ? "group border-border shadow-container hover:border-border-strong hover:shadow-[0_18px_48px_rgba(0,0,0,0.36)]"
                 : "border-border/50 opacity-50"
             }`;
             const cardContent = (

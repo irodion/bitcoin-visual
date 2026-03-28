@@ -93,7 +93,7 @@ export function ModuleLayout({
                         key={tab.key}
                         type="button"
                         aria-pressed={isSelected}
-                        onClick={() => tabConfig.onTabChange(tab.key)}
+                        onClick={() => !isSelected && tabConfig.onTabChange(tab.key)}
                         className={`cursor-pointer rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors ${
                           isSelected
                             ? "bg-accent text-[#0D1420]"
@@ -117,7 +117,7 @@ export function ModuleLayout({
         {/* ── Body ── */}
         <div
           className="flex flex-1 flex-col md:flex-row"
-          style={{ minHeight: "calc(100vh - 140px)" }}
+          style={{ minHeight: "calc(100dvh - 140px)" }}
         >
           <TheoryPanel moduleKey={moduleKey}>{theoryContent}</TheoryPanel>
           <main className="flex-1 overflow-y-auto p-5 md:p-8">{children}</main>
