@@ -83,7 +83,8 @@ export function ModuleLayout({
               {tabConfig && (
                 <div
                   className="flex rounded-pill border border-border bg-surface-raised p-0.5"
-                  role="tablist"
+                  role="group"
+                  aria-label="View mode"
                 >
                   {tabConfig.tabs.map((tab) => {
                     const isSelected = tabConfig.activeTab === tab.key;
@@ -91,10 +92,7 @@ export function ModuleLayout({
                       <button
                         key={tab.key}
                         type="button"
-                        role="tab"
-                        id={`tab-${tab.key}`}
-                        aria-selected={isSelected}
-                        tabIndex={isSelected ? 0 : -1}
+                        aria-pressed={isSelected}
                         onClick={() => tabConfig.onTabChange(tab.key)}
                         className={`cursor-pointer rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors ${
                           isSelected

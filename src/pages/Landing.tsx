@@ -2,7 +2,16 @@ import { Link } from "react-router-dom";
 import { motion, type Variants } from "framer-motion";
 import { PageBackground } from "../shared/components/index.ts";
 
-const MODULES = [
+interface ModuleItem {
+  number: number;
+  title: string;
+  description: string;
+  route: string;
+  color: string;
+  active: boolean;
+}
+
+const MODULES: ModuleItem[] = [
   {
     number: 1,
     title: "Hash Playground",
@@ -74,6 +83,8 @@ const cardVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
+const CARD_STYLE = { background: "linear-gradient(180deg, #121A28, #0C1320)" };
+
 export default function Landing() {
   return (
     <PageBackground glowSize={700} amberOpacity={0.22} tealOpacity={0.16}>
@@ -113,8 +124,6 @@ export default function Landing() {
                 ? "border-border shadow-container hover:border-border-strong hover:shadow-[0_18px_48px_rgba(0,0,0,0.36)]"
                 : "border-border/50 opacity-50"
             }`;
-            const cardStyle = { background: "linear-gradient(180deg, #121A28, #0C1320)" };
-
             const cardContent = (
               <>
                 <div className="mb-3 flex items-center justify-between">
@@ -161,11 +170,11 @@ export default function Landing() {
             return (
               <motion.div key={mod.number} variants={cardVariants}>
                 {mod.active ? (
-                  <Link to={mod.route} className={cardClasses} style={cardStyle}>
+                  <Link to={mod.route} className={cardClasses} style={CARD_STYLE}>
                     {cardContent}
                   </Link>
                 ) : (
-                  <div className={cardClasses} style={cardStyle} aria-disabled="true">
+                  <div className={cardClasses} style={CARD_STYLE} aria-disabled="true">
                     {cardContent}
                   </div>
                 )}
