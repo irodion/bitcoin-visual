@@ -34,7 +34,7 @@ const MODULES: ModuleItem[] = [
     description: "Build and inspect raw Bitcoin transactions, input by input.",
     route: "/utxo",
     color: "#7DD3FC",
-    active: false,
+    active: true,
   },
   {
     number: 4,
