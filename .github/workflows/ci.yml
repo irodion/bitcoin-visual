@@ -30,6 +30,16 @@ jobs:
           cache: true
       - run: vp test run
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+      - run: vp build
+
   semgrep:
     name: Semgrep
     runs-on: ubuntu-latest
