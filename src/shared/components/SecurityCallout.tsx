@@ -7,19 +7,19 @@ interface SecurityCalloutProps {
 
 const variantStyles = {
   danger: "border-danger/60 bg-danger/5",
-  warning: "border-accent/60 bg-accent/5",
+  warning: "border-warning-border bg-warning-bg",
 } as const;
 
 const iconColors = {
   danger: "text-danger",
-  warning: "text-accent",
+  warning: "text-warning-text",
 } as const;
 
 export function SecurityCallout({ children, variant = "danger" }: SecurityCalloutProps) {
   return (
     <div
       role="alert"
-      className={`flex gap-3 rounded-card border-l-2 py-3 pl-4 pr-4 ${variantStyles[variant]}`}
+      className={`flex gap-3 rounded-[20px] border py-3 pl-4 pr-4 ${variantStyles[variant]}`}
     >
       <svg
         width="18"

@@ -2,7 +2,13 @@ import { type ReactNode, useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { generatePrivateKey } from "../../shared/crypto/index.ts";
-import { ModuleLayout, ValueFlowArrow, SecurityCallout } from "../../shared/components/index.ts";
+import {
+  ModuleLayout,
+  ValueFlowArrow,
+  SecurityCallout,
+  TheoryConceptCard,
+  TheoryCallout,
+} from "../../shared/components/index.ts";
 import { useKeyPipeline, type PipelineResult } from "./useKeyPipeline.ts";
 import { EntropyInput } from "./EntropyInput.tsx";
 import { PipelineStep } from "./PipelineStep.tsx";
@@ -104,58 +110,48 @@ function TheoryContent() {
       <h3>Private Keys</h3>
       <p>
         A Bitcoin private key is simply a random <strong>256-bit number</strong> (32 bytes). The
-        only constraint is it must be between 1 and the secp256k1 curve order <code>n</code> (a
-        256-bit prime). Any 32 random bytes that satisfy this are a valid key.
-      </p>
-      <p>
-        Here we use raw entropy directly as the private key for clarity. Real wallets typically add
-        layers of protection: a <strong>mnemonic phrase</strong> (BIP-39) is derived from entropy,
-        then stretched through PBKDF2 into a seed, which feeds <strong>HD key derivation</strong>{" "}
-        (BIP-32). You&apos;ll explore that full pipeline in the HD Wallet module.
+        only constraint is it must be between 1 and the secp256k1 curve order <code>n</code>.
       </p>
 
-      <h3>secp256k1</h3>
-      <p>
-        Bitcoin uses the <strong>secp256k1</strong> elliptic curve. The public key is derived by{" "}
-        <em>scalar multiplication</em>: <code>P = k &times; G</code>, where <code>k</code> is the
-        private key and <code>G</code> is the curve&apos;s generator point. This is a one-way
-        operation &mdash; you cannot recover <code>k</code> from <code>P</code>.
-      </p>
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="#FF6B6B"
+          title="Entropy → Private Key"
+          description="32 random bytes that satisfy the curve constraint. Here we use raw entropy directly."
+        />
+        <TheoryConceptCard
+          dot="#F7931A"
+          title="secp256k1"
+          description="P = k × G — one-way scalar multiplication on the elliptic curve. You cannot recover k from P."
+        />
+        <TheoryConceptCard
+          dot="#7DD3FC"
+          title="Compressed Public Keys"
+          description="Store x + prefix (02/03). Reduces 65 bytes → 33 bytes."
+        />
+        <TheoryConceptCard
+          dot="#36CFC9"
+          title="HASH160"
+          description="RIPEMD-160(SHA-256(pubkey)) — compresses 33 bytes → 20 bytes."
+        />
+      </div>
 
-      <h3>Compressed Public Keys</h3>
-      <p>
-        A public key is a point (x, y) on the curve. Since y can be derived from x (there are only
-        two possible y values), we store just x plus a prefix: <code>02</code> if y is even,{" "}
-        <code>03</code> if y is odd. This reduces the key from 65 bytes to <strong>33 bytes</strong>
-        .
-      </p>
-
-      <h3>HASH160</h3>
-      <p>
-        Bitcoin addresses use <code>HASH160</code> = <code>RIPEMD-160(SHA-256(pubkey))</code>. This
-        shortens the 33-byte public key to a <strong>20-byte</strong> hash, providing a compact
-        identifier with an extra layer of protection.
-      </p>
-
-      <h3>Two Address Formats</h3>
-      <p>
-        Both address types below encode the <em>same</em> public key hash &mdash; they are two ways
-        to receive Bitcoin to the same key. The pipeline shows both so you can compare them.
-      </p>
+      <TheoryCallout
+        label="TWO ADDRESS FORMATS"
+        title="P2PKH (Legacy) & P2WPKH (SegWit)"
+        description="Both encode the same key hash. SegWit (bc1q) has lower fees and better error detection."
+      />
 
       <h3>P2PKH (Legacy)</h3>
       <p>
-        The original Bitcoin address format (starting with <code>1</code>). Uses{" "}
-        <strong>Base58Check</strong> encoding: a version byte (<code>0x00</code>) is prepended to
-        the HASH160, a 4-byte checksum is appended, and the result is Base58-encoded. Still widely
-        supported but largely superseded by SegWit.
+        Original format (starting with <code>1</code>). Uses <strong>Base58Check</strong>: version
+        byte + HASH160 + 4-byte checksum.
       </p>
 
       <h3>P2WPKH (SegWit)</h3>
       <p>
-        The modern replacement (starting with <code>bc1q</code>). Uses <strong>Bech32</strong>{" "}
-        encoding with witness version 0. SegWit addresses produce smaller transactions (lower fees),
-        have stronger error detection than Base58Check, and are the recommended format today.
+        Modern replacement (starting with <code>bc1q</code>). Uses <strong>Bech32</strong> with
+        witness version 0. Recommended format today.
       </p>
     </>
   );
@@ -176,6 +172,8 @@ export default function KeysExplorer() {
     <ModuleLayout
       moduleKey="keys"
       title="Keys & Address Generator"
+      moduleNumber={2}
+      subtitle="Generate a private key, derive the public key, and encode Bitcoin addresses step by step."
       theoryContent={<TheoryContent />}
     >
       <div className="mx-auto max-w-2xl space-y-2">
