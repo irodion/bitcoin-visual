@@ -67,7 +67,7 @@ export interface HDState {
 }
 
 const DEFAULT_PATH: PathSegment[] = [
-  { index: 44, hardened: true },
+  { index: 84, hardened: true },
   { index: 0, hardened: true },
   { index: 0, hardened: true },
   { index: 0, hardened: false },
@@ -86,17 +86,19 @@ function deriveAddresses(
   chainKey: HDKey,
   chainIndex: number,
   basePath: string,
+  startIndex: number,
   count: number,
 ): AddressEntry[] {
   const entries: AddressEntry[] = [];
   for (let i = 0; i < count; i++) {
-    const child = deriveChild(chainKey, i);
+    const idx = startIndex + i;
+    const child = deriveChild(chainKey, idx);
     if (!child.publicKey || !child.privateKey) {
-      throw new Error(`deriveChild returned null key at index ${i}`);
+      throw new Error(`deriveChild returned null key at index ${idx}`);
     }
     entries.push({
-      index: i,
-      path: `${basePath}/${chainIndex}/${i}`,
+      index: idx,
+      path: `${basePath}/${chainIndex}/${idx}`,
       publicKey: child.publicKey,
       privateKey: child.privateKey,
       address: publicKeyToP2WPKHAddress(child.publicKey),
@@ -152,10 +154,13 @@ export function useHDState(): HDState {
     if (!isValidMnemonic) {
       setSeed(null);
       setIsDerivingSeed(false);
+      setPrivateKeysRevealed(false);
       return;
     }
     let cancelled = false;
+    setSeed(null);
     setIsDerivingSeed(true);
+    setPrivateKeysRevealed(false);
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       mnemonicToSeed(mnemonicText.trim(), passphrase).then(
@@ -214,8 +219,9 @@ export function useHDState(): HDState {
     const externalChain = deriveChild(accountKey, 0);
     const changeChain = deriveChild(accountKey, 1);
 
-    const externalAddresses = deriveAddresses(externalChain, 0, accountPath, 5);
-    const changeAddresses = deriveAddresses(changeChain, 1, accountPath, 5);
+    const startIndex = pathSegments[4]?.index ?? 0;
+    const externalAddresses = deriveAddresses(externalChain, 0, accountPath, startIndex, 5);
+    const changeAddresses = deriveAddresses(changeChain, 1, accountPath, startIndex, 5);
 
     return {
       pathNodes,

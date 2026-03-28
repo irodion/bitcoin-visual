@@ -1,4 +1,5 @@
 import { HexBox, ValueFlowArrow } from "../../shared/components/index.ts";
+import { BTN_GHOST } from "../../shared/components/styles.ts";
 
 interface SeedDerivationPanelProps {
   seedHex: string | null;
@@ -6,6 +7,8 @@ interface SeedDerivationPanelProps {
   masterPrivateKey: Uint8Array | null;
   masterChainCode: Uint8Array | null;
   generationKey: number;
+  privateKeysRevealed: boolean;
+  onRequestReveal: () => void;
 }
 
 export function SeedDerivationPanel({
@@ -14,6 +17,8 @@ export function SeedDerivationPanel({
   masterPrivateKey,
   masterChainCode,
   generationKey,
+  privateKeysRevealed,
+  onRequestReveal,
 }: SeedDerivationPanelProps) {
   return (
     <div className="space-y-2">
@@ -59,9 +64,19 @@ export function SeedDerivationPanel({
               <span className="text-sm font-semibold text-text-primary">Master Key</span>
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {masterPrivateKey && (
-                <HexBox value={masterPrivateKey} label="Master Private Key" variant="danger" />
-              )}
+              {masterPrivateKey &&
+                (privateKeysRevealed ? (
+                  <HexBox value={masterPrivateKey} label="Master Private Key" variant="danger" />
+                ) : (
+                  <div className="rounded-card border border-border bg-surface p-3">
+                    <p className="mb-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
+                      Master Private Key
+                    </p>
+                    <button type="button" onClick={onRequestReveal} className={BTN_GHOST}>
+                      Reveal
+                    </button>
+                  </div>
+                ))}
               {masterChainCode && (
                 <HexBox value={masterChainCode} label="Master Chain Code" variant="info" />
               )}

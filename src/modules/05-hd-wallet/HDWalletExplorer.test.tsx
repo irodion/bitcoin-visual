@@ -12,7 +12,8 @@ function renderWithRouter(ui: React.ReactElement) {
 const TEST_MNEMONIC =
   "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about";
 const TEST_SEED_PREFIX = "5eb00bbddcf069084889a8ab9155568165f5c453";
-// First P2WPKH address at m/44'/0'/0'/0/0 — computed in test below
+// Known P2WPKH address at m/84'/0'/0'/0/0 (BIP84 native SegWit)
+const EXPECTED_FIRST_ADDRESS = "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu";
 
 describe("HDWalletExplorer", () => {
   it("renders module layout with title", async () => {
@@ -38,7 +39,6 @@ describe("HDWalletExplorer", () => {
 
     await user.click(screen.getByText("Generate"));
 
-    // Each pill has a word index marker like #0, #123, etc.
     const pills = document.querySelectorAll('[class*="rounded-pill"][class*="bg-surface-raised"]');
     expect(pills.length).toBe(12);
   });
@@ -115,7 +115,7 @@ describe("HDWalletExplorer", () => {
     expect(screen.getAllByText(/Master Chain Code/i).length).toBeGreaterThanOrEqual(1);
   });
 
-  it("AC7: Default BIP44 path segments visible", async () => {
+  it("AC7: Default BIP84 path segments visible", async () => {
     const user = userEvent.setup();
     await act(async () => {
       renderWithRouter(<HDWalletExplorer />);
@@ -127,8 +127,7 @@ describe("HDWalletExplorer", () => {
     await waitFor(() => {
       expect(screen.getByText("Derivation Path")).toBeInTheDocument();
     });
-    // Path string appears in both path display and address entries — use getAllByText
-    const pathMatches = screen.getAllByText("m/44'/0'/0'/0/0");
+    const pathMatches = screen.getAllByText("m/84'/0'/0'/0/0");
     expect(pathMatches.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -145,12 +144,11 @@ describe("HDWalletExplorer", () => {
       expect(screen.getByText("Key Tree")).toBeInTheDocument();
     });
 
-    // Count bc1q addresses (external + change = 10)
     const addresses = screen.getAllByText(/^bc1q/);
     expect(addresses.length).toBe(10);
   });
 
-  it("AC9: Known test mnemonic produces deterministic first address", async () => {
+  it("AC9: Known test mnemonic produces correct first address at m/84'/0'/0'/0/0", async () => {
     const user = userEvent.setup();
     await act(async () => {
       renderWithRouter(<HDWalletExplorer />);
@@ -160,18 +158,10 @@ describe("HDWalletExplorer", () => {
     await user.type(textarea, TEST_MNEMONIC);
 
     await waitFor(() => {
-      expect(screen.getByText("Key Tree")).toBeInTheDocument();
+      expect(screen.getByText(EXPECTED_FIRST_ADDRESS)).toBeInTheDocument();
     });
 
-    // First address should be a bc1q address (P2WPKH bech32)
-    const addresses = screen.getAllByText(/^bc1q/);
-    expect(addresses.length).toBe(10);
-    // The first address should be deterministic — typing same mnemonic always yields same result
-    const firstAddr = addresses[0].textContent!;
-    expect(firstAddr).toMatch(/^bc1q[a-z0-9]{38,42}$/);
-
-    // Verify it's the path entry at m/44'/0'/0'/0/0
-    const pathEntries = screen.getAllByText("m/44'/0'/0'/0/0");
+    const pathEntries = screen.getAllByText("m/84'/0'/0'/0/0");
     expect(pathEntries.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -188,9 +178,7 @@ describe("HDWalletExplorer", () => {
       expect(screen.getByText("Key Tree")).toBeInTheDocument();
     });
 
-    // "Reveal Private Keys" button should be present
     expect(screen.getByText("Reveal Private Keys")).toBeInTheDocument();
-    // No danger-variant private key HexBoxes should be visible for child keys
     const privateKeyLabels = screen.queryAllByText("Private Key");
     expect(privateKeyLabels.length).toBe(0);
   });
