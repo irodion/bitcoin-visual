@@ -45,14 +45,14 @@ export function TheoryPanel({ moduleKey, children, className = "" }: TheoryPanel
         initial={false}
         animate={{ width: isOpen ? 320 : 0 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="overflow-hidden border-r border-border bg-surface"
+        className="overflow-hidden border-r border-border"
       >
         <motion.div
           initial={false}
           animate={{ opacity: isOpen ? 1 : 0 }}
           transition={{ duration: isOpen ? 0.3 : 0.15, delay: isOpen ? 0.1 : 0 }}
-          className="w-[320px] overflow-y-auto p-5"
-          style={{ maxHeight: "calc(100vh - 52px)" }}
+          className="panel-cool w-[320px] overflow-y-auto p-5"
+          style={{ maxHeight: "calc(100vh - 140px)" }}
         >
           <div className="mb-4 flex items-center gap-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
             <svg
@@ -70,7 +70,7 @@ export function TheoryPanel({ moduleKey, children, className = "" }: TheoryPanel
             </svg>
             Theory
           </div>
-          <div className="text-sm leading-relaxed text-text-secondary [&_h3]:mb-2 [&_h3]:mt-5 [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:uppercase [&_h3]:tracking-wider [&_h3]:text-text-primary [&_p]:mb-3 [&_strong]:font-medium [&_strong]:text-text-primary [&_code]:rounded [&_code]:bg-surface-raised [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_code]:text-accent">
+          <div className="space-y-3 text-sm leading-relaxed text-text-secondary [&_h3]:mb-2 [&_h3]:mt-5 [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:uppercase [&_h3]:tracking-wider [&_h3]:text-text-primary [&_p]:mb-3 [&_strong]:font-medium [&_strong]:text-text-primary [&_code]:rounded [&_code]:bg-surface-raised [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_code]:text-accent">
             {children}
           </div>
         </motion.div>
@@ -96,6 +96,60 @@ export function TheoryPanel({ moduleKey, children, className = "" }: TheoryPanel
           <path d="M9 3 5 7l4 4" />
         </svg>
       </button>
+    </div>
+  );
+}
+
+/* ── Sub-components for structured theory content ── */
+
+type DotColor = "accent" | "teal" | "danger" | "info" | "warning" | "success";
+
+const DOT_COLORS: Record<DotColor, string> = {
+  accent: "#F7931A",
+  teal: "#36CFC9",
+  danger: "#FF6B6B",
+  info: "#7DD3FC",
+  warning: "#FBBF24",
+  success: "#22C55E",
+};
+
+interface TheoryConceptCardProps {
+  dot: DotColor;
+  title: string;
+  description: string;
+}
+
+export function TheoryConceptCard({ dot, title, description }: TheoryConceptCardProps) {
+  return (
+    <div className="rounded-[20px] border border-[#1E2B3D] bg-[#101827] p-4">
+      <div className="flex items-center gap-2.5">
+        <span
+          className="inline-block h-3 w-3 shrink-0 rounded-full"
+          style={{ background: DOT_COLORS[dot] }}
+        />
+        <span className="text-[15px] font-bold text-text-primary">{title}</span>
+      </div>
+      <p className="mt-1.5 pl-[22px] text-[13px] leading-relaxed text-text-secondary">
+        {description}
+      </p>
+    </div>
+  );
+}
+
+interface TheoryCalloutProps {
+  label: string;
+  title: string;
+  description: string;
+}
+
+export function TheoryCallout({ label, title, description }: TheoryCalloutProps) {
+  return (
+    <div className="rounded-[20px] border border-warning-border bg-warning-bg p-4">
+      <div className="text-[12px] font-medium uppercase tracking-[0.16em] text-warning-text">
+        {label}
+      </div>
+      <div className="mt-1 text-[14px] font-bold text-warning-heading">{title}</div>
+      <p className="mt-1 text-[13px] leading-relaxed text-warning-body">{description}</p>
     </div>
   );
 }

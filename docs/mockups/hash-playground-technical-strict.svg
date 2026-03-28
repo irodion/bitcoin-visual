@@ -1,0 +1,138 @@
+<svg width="1600" height="1080" viewBox="0 0 1600 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1600" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06090E"/>
+      <stop offset="1" stop-color="#0A1118"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#9FB4CC" stroke-opacity="0.08"/>
+    </pattern>
+    <radialGradient id="trace" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1254 140) rotate(134.378) scale(433.755 330.678)">
+      <stop stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow2" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000000" flood-opacity="0.32"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1080" fill="url(#bg2)"/>
+  <rect width="1600" height="1080" fill="url(#grid)"/>
+  <rect width="1600" height="1080" fill="url(#trace)"/>
+
+  <rect x="24" y="24" width="1552" height="1032" rx="18" fill="#0A1017" stroke="#223245" filter="url(#shadow2)"/>
+  <rect x="24" y="24" width="1552" height="64" rx="18" fill="#0D1520"/>
+  <rect x="24" y="87" width="1552" height="1" fill="#223245"/>
+
+  <text x="58" y="52" fill="#7690AA" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="0.2em">HASH MODULE / FORENSIC VIEW</text>
+  <text x="58" y="73" fill="#E4EDF7" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700">Hash Playground</text>
+  <text x="1218" y="52" fill="#7690AA" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.16em">SHA-256 PIPELINE STATUS: STABLE</text>
+
+  <rect x="1330" y="36" width="200" height="36" rx="6" fill="#0B121A" stroke="#243548"/>
+  <rect x="1334" y="40" width="96" height="28" rx="4" fill="#132336" stroke="#356189"/>
+  <text x="1360" y="58" fill="#CDE7FF" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">NORMAL</text>
+  <text x="1454" y="58" fill="#8096AD" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">AVALANCHE</text>
+
+  <rect x="52" y="120" width="280" height="900" rx="10" fill="#0B121A" stroke="#223245"/>
+  <text x="76" y="158" fill="#E4EDF7" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Theory Panel</text>
+  <text x="76" y="182" fill="#7890A7" font-family="Arial, Helvetica, sans-serif" font-size="13">Reference notes pinned beside the instrument.</text>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="76" y="220" width="232" height="92" rx="8" fill="#0E1721" stroke="#223245"/>
+    <text x="92" y="246" fill="#5EC2FF" font-size="11" letter-spacing="0.18em">01</text>
+    <text x="92" y="270" fill="#E4EDF7" font-size="16" font-weight="700">Determinism</text>
+    <text x="92" y="295" fill="#7E96AE" font-size="13">No randomness. Equal input yields equal output.</text>
+
+    <rect x="76" y="328" width="232" height="92" rx="8" fill="#0E1721" stroke="#223245"/>
+    <text x="92" y="354" fill="#5EC2FF" font-size="11" letter-spacing="0.18em">02</text>
+    <text x="92" y="378" fill="#E4EDF7" font-size="16" font-weight="700">Avalanche Effect</text>
+    <text x="92" y="403" fill="#7E96AE" font-size="13">Small changes propagate through most bit positions.</text>
+
+    <rect x="76" y="436" width="232" height="92" rx="8" fill="#0E1721" stroke="#223245"/>
+    <text x="92" y="462" fill="#5EC2FF" font-size="11" letter-spacing="0.18em">03</text>
+    <text x="92" y="486" fill="#E4EDF7" font-size="16" font-weight="700">Pre-image Resistance</text>
+    <text x="92" y="511" fill="#7E96AE" font-size="13">Practical verification without feasible reversal.</text>
+
+    <rect x="76" y="544" width="232" height="92" rx="8" fill="#0E1721" stroke="#223245"/>
+    <text x="92" y="570" fill="#5EC2FF" font-size="11" letter-spacing="0.18em">04</text>
+    <text x="92" y="594" fill="#E4EDF7" font-size="16" font-weight="700">Fixed Length</text>
+    <text x="92" y="619" fill="#7E96AE" font-size="13">All outputs normalize to 256 bits.</text>
+
+    <rect x="76" y="652" width="232" height="114" rx="8" fill="#10161D" stroke="#3A4F63"/>
+    <text x="92" y="678" fill="#9BD7FF" font-size="11" letter-spacing="0.18em">05</text>
+    <text x="92" y="702" fill="#E4EDF7" font-size="16" font-weight="700">SHA-256d Rationale</text>
+    <text x="92" y="727" fill="#7E96AE" font-size="13">Bitcoin often applies SHA-256 twice in</text>
+    <text x="92" y="747" fill="#7E96AE" font-size="13">contexts like block headers and TXIDs.</text>
+  </g>
+
+  <text x="372" y="160" fill="#DCE8F4" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700">Interactive SHA-256 instrument</text>
+  <text x="372" y="191" fill="#7D92A8" font-family="Arial, Helvetica, sans-serif" font-size="16">Less playful, more analytical: an educational cryptography console for inspecting message digests.</text>
+
+  <rect x="372" y="226" width="480" height="316" rx="10" fill="#0B121A" stroke="#223245"/>
+  <text x="394" y="255" fill="#8EABC8" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.18em">INPUT BUFFER</text>
+  <rect x="394" y="276" width="436" height="176" rx="8" fill="#081018" stroke="#203040"/>
+  <text x="418" y="330" fill="#E6F0FA" font-family="Courier New, monospace" font-size="30">Hello, Bitcoin!</text>
+  <text x="418" y="366" fill="#7690AA" font-family="Courier New, monospace" font-size="15">Live keystrokes update SHA-256 and SHA-256d.</text>
+  <rect x="394" y="472" width="96" height="26" rx="4" fill="#101925" stroke="#243548"/>
+  <text x="419" y="489" fill="#CFE0F0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">15 CHARS</text>
+  <rect x="500" y="472" width="96" height="26" rx="4" fill="#101925" stroke="#243548"/>
+  <text x="526" y="489" fill="#CFE0F0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">15 BYTES</text>
+  <rect x="606" y="472" width="126" height="26" rx="4" fill="#101925" stroke="#243548"/>
+  <text x="634" y="489" fill="#CFE0F0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">UTF-8 INPUT</text>
+
+  <path d="M878 384H952" stroke="#5EC2FF" stroke-width="4" stroke-linecap="square"/>
+  <path d="M938 370L952 384L938 398" stroke="#5EC2FF" stroke-width="4" stroke-linecap="square"/>
+  <text x="880" y="356" fill="#7E96AE" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="0.16em">PROCESSING</text>
+
+  <rect x="974" y="226" width="556" height="248" rx="10" fill="#0B121A" stroke="#223245"/>
+  <text x="998" y="255" fill="#8EABC8" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.18em">OUTPUT REGISTER A</text>
+  <text x="998" y="282" fill="#DDE8F3" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">SHA-256</text>
+  <rect x="998" y="302" width="508" height="128" rx="8" fill="#081018" stroke="#203040"/>
+  <text x="1022" y="348" fill="#E6F0FA" font-family="Courier New, monospace" font-size="23">a2d4 5f9c 11ee 0aa4 5bd1 9a41 4d2b 9ef7</text>
+  <text x="1022" y="382" fill="#E6F0FA" font-family="Courier New, monospace" font-size="23">0cb1 27f0 8441 8cd0 9183 b0fe 8e77 c125</text>
+  <rect x="998" y="442" width="126" height="20" rx="4" fill="#0F1C29" stroke="#244059"/>
+  <text x="1026" y="456" fill="#A7D9FF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">256-BIT DIGEST</text>
+
+  <rect x="974" y="500" width="556" height="248" rx="10" fill="#0B121A" stroke="#223245"/>
+  <text x="998" y="529" fill="#8EABC8" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.18em">OUTPUT REGISTER B</text>
+  <text x="998" y="556" fill="#DDE8F3" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">SHA-256d</text>
+  <rect x="998" y="576" width="508" height="128" rx="8" fill="#081018" stroke="#203040"/>
+  <text x="1022" y="622" fill="#E6F0FA" font-family="Courier New, monospace" font-size="23">56ce 81b2 07af 48e0 1e13 4962 9f7d 4b31</text>
+  <text x="1022" y="656" fill="#E6F0FA" font-family="Courier New, monospace" font-size="23">d9a4 b08c 7ad0 39f2 6ef1 6a3e d219 aa88</text>
+  <rect x="998" y="716" width="154" height="20" rx="4" fill="#0F1C29" stroke="#244059"/>
+  <text x="1024" y="730" fill="#A7D9FF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">SECOND PASS DIGEST</text>
+
+  <rect x="372" y="570" width="480" height="176" rx="10" fill="#0B121A" stroke="#223245"/>
+  <text x="394" y="599" fill="#8EABC8" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.18em">ACTION CONTROLS</text>
+  <rect x="394" y="621" width="124" height="32" rx="4" fill="#102030" stroke="#274765"/>
+  <text x="427" y="642" fill="#D8EBFD" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">RANDOM INPUT</text>
+  <rect x="528" y="621" width="88" height="32" rx="4" fill="#0E1721" stroke="#243548"/>
+  <text x="556" y="642" fill="#A8BED2" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">EMPTY</text>
+  <rect x="626" y="621" width="118" height="32" rx="4" fill="#0E1721" stroke="#243548"/>
+  <text x="659" y="642" fill="#A8BED2" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">COMPARE</text>
+  <text x="394" y="690" fill="#7E96AE" font-family="Arial, Helvetica, sans-serif" font-size="14">Toggle into avalanche mode without losing the current input buffer.</text>
+
+  <rect x="372" y="772" width="1158" height="216" rx="10" fill="#0B121A" stroke="#223245"/>
+  <text x="394" y="802" fill="#8EABC8" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="0.18em">AVALANCHE ANALYZER PREVIEW</text>
+  <rect x="394" y="826" width="252" height="46" rx="6" fill="#081018" stroke="#203040"/>
+  <text x="410" y="844" fill="#7E96AE" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="0.14em">ORIGINAL INPUT</text>
+  <text x="410" y="861" fill="#E6F0FA" font-family="Courier New, monospace" font-size="18">Hello, Bitcoin!</text>
+  <rect x="664" y="826" width="252" height="46" rx="6" fill="#081018" stroke="#203040"/>
+  <text x="680" y="844" fill="#7E96AE" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="0.14em">MUTATED INPUT</text>
+  <text x="680" y="861" fill="#E6F0FA" font-family="Courier New, monospace" font-size="18">Hello, Bitcoin"</text>
+  <rect x="936" y="826" width="136" height="46" rx="6" fill="#081018" stroke="#35506A"/>
+  <text x="955" y="844" fill="#7E96AE" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="0.14em">BIT DIFFERENCE</text>
+  <text x="971" y="861" fill="#8DDDFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">183 / 256</text>
+  <rect x="394" y="894" width="1098" height="24" rx="4" fill="#081018" stroke="#203040"/>
+  <rect x="400" y="900" width="90" height="12" rx="2" fill="#E85D75"/>
+  <rect x="496" y="900" width="42" height="12" rx="2" fill="#38BDF8"/>
+  <rect x="544" y="900" width="122" height="12" rx="2" fill="#E85D75"/>
+  <rect x="672" y="900" width="32" height="12" rx="2" fill="#38BDF8"/>
+  <rect x="710" y="900" width="98" height="12" rx="2" fill="#E85D75"/>
+  <rect x="814" y="900" width="54" height="12" rx="2" fill="#38BDF8"/>
+  <rect x="874" y="900" width="170" height="12" rx="2" fill="#E85D75"/>
+  <rect x="1050" y="900" width="36" height="12" rx="2" fill="#38BDF8"/>
+  <rect x="1092" y="900" width="142" height="12" rx="2" fill="#E85D75"/>
+  <rect x="1240" y="900" width="58" height="12" rx="2" fill="#38BDF8"/>
+  <rect x="1304" y="900" width="180" height="12" rx="2" fill="#E85D75"/>
+</svg>

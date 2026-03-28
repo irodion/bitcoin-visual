@@ -30,6 +30,6 @@ describe("SecurityCallout", () => {
       render(<SecurityCallout variant="warning">Warning content</SecurityCallout>);
     });
     const alert = screen.getByRole("alert");
-    expect(alert.className).toContain("border-accent");
+    expect(alert.className).toContain("border-warning-border");
   });
 });
