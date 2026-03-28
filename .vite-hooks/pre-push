@@ -1,15 +1,22 @@
 #!/bin/sh
 
+export PATH="$HOME/.vite-plus/bin:$PATH"
+
+echo "Running build..."
+vp build
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "⚠ Build failed. Push aborted."
+  exit 1
+fi
+echo "✓ Build passed."
+
 if ! command -v semgrep >/dev/null 2>&1; then
   echo "⚠ semgrep not found. Install it: brew install semgrep"
   exit 1
 fi
 
-if ! command -v vet >/dev/null 2>&1; then
-  echo "⚠ vet not found. Install it: brew install safedep/tap/vet"
-  exit 1
-fi
-
+echo ""
 echo "Running semgrep static analysis..."
 semgrep scan --config auto --error --quiet src/ 2>&1
 if [ $? -ne 0 ]; then
@@ -20,15 +27,27 @@ if [ $? -ne 0 ]; then
 fi
 echo "✓ Semgrep scan passed."
 
-echo ""
-echo "Running dependency security scan (vet)..."
-vet scan -D . \
-  --filter 'vulns.critical.exists(p, true)' \
-  --filter-fail 2>&1
-if [ $? -ne 0 ]; then
+# Only run vet if dependency files changed since the remote branch
+DEPS_CHANGED=$(git diff --name-only @{push}.. -- package.json pnpm-lock.yaml 2>/dev/null)
+if [ -n "$DEPS_CHANGED" ]; then
+  if ! command -v vet >/dev/null 2>&1; then
+    echo "⚠ vet not found. Install it: brew install safedep/tap/vet"
+    exit 1
+  fi
+
   echo ""
-  echo "⚠ vet found critical vulnerabilities. Push aborted."
-  echo "Run 'vet scan -D .' locally for details."
-  exit 1
+  echo "Running dependency security scan (vet)..."
+  vet scan -D . \
+    --filter 'vulns.critical.exists(p, true)' \
+    --filter-fail 2>&1
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "⚠ vet found critical vulnerabilities. Push aborted."
+    echo "Run 'vet scan -D .' locally for details."
+    exit 1
+  fi
+  echo "✓ Dependency scan passed — no critical vulnerabilities."
+else
+  echo ""
+  echo "✓ No dependency changes — skipping vet scan."
 fi
-echo "✓ Dependency scan passed — no critical vulnerabilities."
