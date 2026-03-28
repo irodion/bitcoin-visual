@@ -13,8 +13,18 @@ export {
   redeemScriptToP2SHAddress,
   redeemScriptToP2WSHAddress,
 } from "./multisig";
-export { serializeTransaction } from "./transaction";
-export type { Transaction, TxInput, TxOutput } from "./transaction";
+export {
+  serializeTransaction,
+  serializeWitnessTransaction,
+  buildP2PKHScript,
+  buildP2WPKHScript,
+  buildP2PKHScriptSig,
+  computeTxID,
+  computeWTxID,
+  reverseBytes,
+  mapTransactionSegments,
+} from "./transaction";
+export type { Transaction, TxInput, TxOutput, TxSegment } from "./transaction";
 export {
   signWithNonce,
   recoverNonceFromTwoSigs,
