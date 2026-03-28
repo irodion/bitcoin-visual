@@ -120,12 +120,10 @@ export function useHDState(): HDState {
   const [isDerivingSeed, setIsDerivingSeed] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const isValidMnemonic = useMemo(() => {
-    const trimmed = mnemonicText.trim();
-    if (trimmed === "") return false;
-    const wordCount = trimmed.split(/\s+/).length;
-    return (wordCount === 12 || wordCount === 24) && validateMnemonic(trimmed);
-  }, [mnemonicText]);
+  const isValidMnemonic = useMemo(
+    () => mnemonicText.trim() !== "" && validateMnemonic(mnemonicText.trim()),
+    [mnemonicText],
+  );
 
   const words = useMemo(() => {
     if (mnemonicText.trim() === "") return [];
@@ -160,7 +158,6 @@ export function useHDState(): HDState {
       next[i] = merged;
       return next;
     });
-    setPrivateKeysRevealed(false);
   }, []);
 
   useEffect(() => {
