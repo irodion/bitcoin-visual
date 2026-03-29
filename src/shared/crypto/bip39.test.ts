@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { generateMnemonic, mnemonicToSeed, validateMnemonic } from "./bip39";
 

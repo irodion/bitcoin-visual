@@ -4,8 +4,8 @@
   "description": "Interactive Bitcoin cryptography learning PWA",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#08080e",
-  "theme_color": "#f59e0b",
+  "background_color": "#09101a",
+  "theme_color": "#f7931a",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
