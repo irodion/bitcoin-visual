@@ -7,3 +7,5 @@ export { ModuleLayout } from "./ModuleLayout";
 export { ByteSegmentTooltip } from "./ByteSegmentTooltip";
 export { ComingSoonPlaceholder } from "./ComingSoonPlaceholder";
 export { PageBackground } from "./PageBackground";
+export { Sidebar } from "./Sidebar";
+export { ConceptChain } from "./ConceptChain";

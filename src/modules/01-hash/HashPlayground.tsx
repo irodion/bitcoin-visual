@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { sha256, sha256d } from "../../shared/crypto/index.ts";
 import {
@@ -9,6 +9,7 @@ import {
   TheoryCallout,
 } from "../../shared/components/index.ts";
 import { BTN_PRIMARY, BTN_GHOST, TEXTAREA, LABEL } from "../../shared/components/styles.ts";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 const encoder = new TextEncoder();
 
@@ -180,6 +181,12 @@ function TheoryContent() {
 export default function HashPlayground() {
   const [input, setInput] = useState("Hello, Bitcoin!");
   const [mode, setMode] = useState<"normal" | "avalanche">("normal");
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const { completed, complete } = useModuleCompletion("hash");
+
+  useEffect(() => {
+    if (!completed && hasInteracted && input.length > 0) complete();
+  }, [input, hasInteracted, completed, complete]);
 
   const inputBytes = useMemo(() => encoder.encode(input), [input]);
   const sha256Hash = useMemo(() => sha256(inputBytes), [inputBytes]);
@@ -209,6 +216,7 @@ export default function HashPlayground() {
 
   function handleRandomInput() {
     const bytes = crypto.getRandomValues(new Uint8Array(16));
+    setHasInteracted(true);
     setInput(bytesToHex(bytes));
   }
 
@@ -240,7 +248,10 @@ export default function HashPlayground() {
                   id="hash-input"
                   rows={3}
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={(e) => {
+                    setHasInteracted(true);
+                    setInput(e.target.value);
+                  }}
                   placeholder="Type anything here..."
                   className={TEXTAREA}
                 />
@@ -264,7 +275,14 @@ export default function HashPlayground() {
                   <button type="button" onClick={handleRandomInput} className={BTN_PRIMARY}>
                     Random Input
                   </button>
-                  <button type="button" onClick={() => setInput("")} className={BTN_GHOST}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHasInteracted(true);
+                      setInput("");
+                    }}
+                    className={BTN_GHOST}
+                  >
                     Empty
                   </button>
                   <button type="button" onClick={() => setMode("avalanche")} className={BTN_GHOST}>
@@ -343,7 +361,10 @@ export default function HashPlayground() {
                 id="avalanche-original"
                 rows={2}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setHasInteracted(true);
+                  setInput(e.target.value);
+                }}
                 className={TEXTAREA}
               />
             </div>
