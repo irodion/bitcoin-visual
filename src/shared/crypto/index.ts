@@ -18,6 +18,8 @@ export {
   serializeWitnessTransaction,
   buildP2PKHScript,
   buildP2WPKHScript,
+  buildP2SHScript,
+  buildP2WSHScript,
   buildP2PKHScriptSig,
   computeTxID,
   computeWTxID,
@@ -25,6 +27,18 @@ export {
   mapTransactionSegments,
 } from "./transaction";
 export type { Transaction, TxInput, TxOutput, TxSegment } from "./transaction";
+export { signECDSA, signWithSighash, verifyECDSA } from "./signing";
+export { computeBIP143Sighash, computeBIP143SighashVerbose } from "./sighash";
+export type { SighashDetail } from "./sighash";
+export {
+  createUnsignedPSBT,
+  addPartialSignature,
+  finalizePSBTMultisig,
+  countSignatures,
+  serializePSBTDisplay,
+  extractPubkeysFromScript,
+} from "./psbt";
+export type { PSBT, PSBTInput, PSBTOutput, PSBTStatus } from "./psbt";
 export {
   signWithNonce,
   recoverNonceFromTwoSigs,
