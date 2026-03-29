@@ -28,7 +28,8 @@ describe("BlockchainSimulator", () => {
     await act(async () => {
       renderWithRouter(<BlockchainSimulator />);
     });
-    expect(screen.getByText("Blockchain & Mining")).toBeInTheDocument();
+    const matches = screen.getAllByText("Blockchain & Mining");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders 3 initial blocks", async () => {

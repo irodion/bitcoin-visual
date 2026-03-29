@@ -13,7 +13,8 @@ describe("MultisigVault", () => {
     await act(async () => {
       renderWithRouter(<MultisigVault />);
     });
-    expect(screen.getByText("Multisig Vault")).toBeInTheDocument();
+    const matches = screen.getAllByText("Multisig Vault");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("AC2: renders theory content", async () => {

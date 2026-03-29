@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useState, useEffect } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { generatePrivateKey } from "../../shared/crypto/index.ts";
@@ -10,6 +10,7 @@ import {
   TheoryCallout,
 } from "../../shared/components/index.ts";
 import { useKeyPipeline, type PipelineResult } from "./useKeyPipeline.ts";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 import { EntropyInput } from "./EntropyInput.tsx";
 import { PipelineStep } from "./PipelineStep.tsx";
 
@@ -161,6 +162,11 @@ export default function KeysExplorer() {
   const [entropyHex, setEntropyHex] = useState("");
   const [generationKey, setGenerationKey] = useState(0);
   const pipeline = useKeyPipeline(entropyHex);
+  const { completed, complete } = useModuleCompletion("keys");
+
+  useEffect(() => {
+    if (!completed && pipeline.isValid) complete();
+  }, [pipeline.isValid, completed, complete]);
 
   function handleGenerate() {
     const privKey = generatePrivateKey();
