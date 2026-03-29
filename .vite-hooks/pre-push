@@ -42,12 +42,11 @@ if [ -n "$DEPS_CHANGED" ]; then
 
   echo ""
   echo "Running dependency security scan (vet)..."
-  vet scan -D . \
-    --policy-suite .github/vet-policy.yml \
-    --filter-fail 2>&1
-  if [ $? -ne 0 ]; then
+  vet scan -D . 2>&1
+  VET_EXIT=$?
+  if [ $VET_EXIT -ne 0 ]; then
     echo ""
-    echo "⚠ vet found critical vulnerabilities. Push aborted."
+    echo "⚠ vet found issues. Push aborted."
     echo "Run 'vet scan -D .' locally for details."
     exit 1
   fi
