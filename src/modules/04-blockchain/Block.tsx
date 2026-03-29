@@ -93,10 +93,13 @@ export function Block({
               type="text"
               value={tx.data}
               onChange={(e) => onEditTransactionData(i, e.target.value)}
+              disabled={tx.locked}
               aria-label={`Transaction ${i} data`}
-              className="min-w-0 flex-1 rounded-[12px] border border-border bg-surface px-2.5 py-1.5 font-mono text-xs text-text-primary placeholder:text-text-secondary/50 focus:border-accent focus:outline-none"
+              className={`min-w-0 flex-1 rounded-[12px] border px-2.5 py-1.5 font-mono text-xs text-text-primary placeholder:text-text-secondary/50 focus:border-accent focus:outline-none ${
+                tx.locked ? "border-accent/30 bg-accent/5 opacity-80" : "border-border bg-surface"
+              }`}
             />
-            {block.transactions.length > 1 && (
+            {block.transactions.length > 1 && !tx.locked && (
               <button
                 type="button"
                 onClick={() => onRemoveTransaction(i)}
