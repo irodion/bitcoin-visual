@@ -205,6 +205,7 @@ export function useMultisigState(): MultisigState {
   const signWithCosignerAction = useCallback(
     (cosignerIndex: number) => {
       if (!psbt || !redeemScript) return;
+      if (cosignerIndex < 0 || cosignerIndex >= cosigners.length) return;
       const cosigner = cosigners[cosignerIndex];
       if (!cosigner.privateKey || !cosigner.publicKey) return;
 
@@ -236,9 +237,14 @@ export function useMultisigState(): MultisigState {
 
   const finalizePSBTAction = useCallback(() => {
     if (!psbt) return;
-    const finalized = finalizePSBTMultisig(psbt, 0, 2);
-    setFinalizedTx(finalized);
-    setPsbtStep(4);
+    try {
+      const finalized = finalizePSBTMultisig(psbt, 0, 2);
+      setFinalizedTx(finalized);
+      setPsbtStep(4);
+    } catch {
+      // finalizePSBTMultisig can throw on insufficient/invalid signatures.
+      // In this educational UI the signing flow prevents that, but guard anyway.
+    }
   }, [psbt]);
 
   const simulateBroadcastAction = useCallback(() => {

@@ -142,7 +142,9 @@ export function buildP2WPKHScript(pubKeyHash: Uint8Array): Uint8Array {
 }
 
 export function buildP2SHScript(scriptHash: Uint8Array): Uint8Array {
-  // OP_HASH160 <20 bytes> OP_EQUAL
+  if (scriptHash.length !== 20) {
+    throw new Error(`buildP2SHScript: expected 20-byte script hash, got ${scriptHash.length}`);
+  }
   const script = new Uint8Array(23);
   script[0] = 0xa9; // OP_HASH160
   script[1] = 0x14; // push 20 bytes
@@ -152,7 +154,11 @@ export function buildP2SHScript(scriptHash: Uint8Array): Uint8Array {
 }
 
 export function buildP2WSHScript(witnessScriptHash: Uint8Array): Uint8Array {
-  // OP_0 <32 bytes>
+  if (witnessScriptHash.length !== 32) {
+    throw new Error(
+      `buildP2WSHScript: expected 32-byte witness script hash, got ${witnessScriptHash.length}`,
+    );
+  }
   const script = new Uint8Array(34);
   script[0] = 0x00; // OP_0 (witness version 0)
   script[1] = 0x20; // push 32 bytes
