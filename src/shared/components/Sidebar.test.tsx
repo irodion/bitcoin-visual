@@ -57,9 +57,9 @@ describe("Sidebar", () => {
         <Sidebar currentModuleKey="keys" mobileOpen={false} onMobileClose={() => {}} />,
       );
     });
-    // The hash link should have a completion indicator (the checkmark SVG child)
-    const hashLink = screen.getByLabelText("Hash Playground");
-    const checkmark = hashLink.querySelector("span.bg-success");
+    const hashLink = screen.getByLabelText("Hash Playground, completed");
+    expect(hashLink).toBeInTheDocument();
+    const checkmark = hashLink.querySelector("[aria-hidden]");
     expect(checkmark).toBeTruthy();
   });
 });
