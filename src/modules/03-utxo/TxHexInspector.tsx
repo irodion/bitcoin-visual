@@ -17,7 +17,7 @@ export function TxHexInspector({ serializedHex, segments, isSegWit }: TxHexInspe
   });
 
   return (
-    <div className="panel-cool rounded-[30px] border border-border p-5 md:p-6">
+    <div className="panel-cool rounded-section border border-border p-5 md:p-6">
       <div className="mb-1 flex items-center justify-between">
         <div className="text-[11px] font-medium uppercase tracking-widest text-text-secondary">
           Raw Transaction Hex
@@ -33,7 +33,7 @@ export function TxHexInspector({ serializedHex, segments, isSegWit }: TxHexInspe
         {serializedHex.length / 2} bytes &mdash; hover segments for details
       </div>
 
-      <div className="mt-3 break-all rounded-[16px] border border-border bg-surface p-4 font-mono text-sm leading-relaxed">
+      <div className="mt-3 break-all rounded-inner border border-border bg-surface p-4 font-mono text-sm leading-relaxed">
         {renderedSegments.map((seg) => (
           <ByteSegmentTooltip
             key={`${seg.label}-${seg.startByte}`}

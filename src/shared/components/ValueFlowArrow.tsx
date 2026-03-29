@@ -69,6 +69,13 @@ export function ValueFlowArrow({
         transition={PULSE_TRANSITION}
         tabIndex={description ? 0 : undefined}
         aria-describedby={description ? tooltipId : undefined}
+        onKeyDown={
+          description
+            ? (e: React.KeyboardEvent<HTMLDivElement>) => {
+                if (e.key === "Escape") e.currentTarget.blur();
+              }
+            : undefined
+        }
         className="group/pill absolute z-10 rounded-pill border border-border-strong bg-surface px-3 py-1 font-mono text-[11px] font-medium text-text-secondary shadow-sm"
       >
         {label}

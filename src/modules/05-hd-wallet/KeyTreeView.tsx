@@ -39,7 +39,7 @@ function AddressList({
           <motion.div
             key={entry.path}
             variants={itemVariants}
-            className="rounded-[16px] border border-border bg-surface-raised p-3"
+            className="rounded-inner border border-border bg-surface-raised p-3"
           >
             <div className="mb-1 flex items-center gap-2">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/10 text-[10px] font-bold text-accent">
@@ -81,7 +81,7 @@ export function KeyTreeView({
   if (!derivedTree) return null;
 
   return (
-    <div className="panel-cool rounded-[30px] border border-border p-6">
+    <div className="panel-cool rounded-section border border-border p-6">
       <h3 className="mb-1 text-lg font-bold text-text-primary">Key Tree</h3>
       <p className="mb-4 text-sm text-text-muted">
         BIP44 tree: first 5 addresses per branch (external + change)

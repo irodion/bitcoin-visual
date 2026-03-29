@@ -63,7 +63,7 @@ export function PSBTWorkflow({
   if (!allKeysGenerated) {
     return (
       <div className="mx-auto max-w-3xl">
-        <div className="panel-cool flex items-center justify-center rounded-[24px] border border-border p-10 text-center">
+        <div className="panel-cool flex items-center justify-center rounded-input border border-border p-10 text-center">
           <p className="text-sm text-text-muted">
             Complete <strong className="text-text-primary">Vault Setup</strong> first — generate all
             3 cosigner keys to begin the PSBT workflow.
@@ -95,7 +95,7 @@ export function PSBTWorkflow({
           onAction={createPSBT}
         >
           {psbtDisplayHex && psbtStep >= 1 && (
-            <div className="rounded-[20px] border border-border bg-surface p-3">
+            <div className="rounded-callout border border-border bg-surface p-3">
               <div className="mb-1 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
                 PSBT State
               </div>

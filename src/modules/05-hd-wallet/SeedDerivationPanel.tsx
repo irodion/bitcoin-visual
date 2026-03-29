@@ -22,13 +22,13 @@ export function SeedDerivationPanel({
 }: SeedDerivationPanelProps) {
   return (
     <div className="space-y-2">
-      <div className="panel-cool rounded-[24px] border border-border p-5">
+      <div className="panel-cool rounded-input border border-border p-5">
         <div className="mb-3 flex items-center gap-2.5">
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-xs font-bold text-accent">
             1
           </span>
           <span className="text-sm font-semibold text-text-primary">Seed (512 bits)</span>
-          <span className="rounded-badge bg-[#171E2C] px-2.5 py-1 font-mono text-[11px] text-text-secondary">
+          <span className="rounded-badge bg-badge-bg px-2.5 py-1 font-mono text-[11px] text-text-secondary">
             PBKDF2
           </span>
         </div>
@@ -56,7 +56,7 @@ export function SeedDerivationPanel({
             animationKey={generationKey}
           />
 
-          <div className="panel-cool rounded-[24px] border border-border p-5">
+          <div className="panel-cool rounded-input border border-border p-5">
             <div className="mb-3 flex items-center gap-2.5">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-xs font-bold text-accent">
                 2

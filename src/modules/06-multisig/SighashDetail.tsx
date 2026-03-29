@@ -10,7 +10,7 @@ export function SighashDetail({ details }: SighashDetailProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="rounded-[20px] border border-border bg-surface p-4">
+    <div className="rounded-callout border border-border bg-surface p-4">
       <button
         type="button"
         onClick={() => setExpanded((e) => !e)}

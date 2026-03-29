@@ -9,7 +9,7 @@ interface EntropyInputProps {
 
 export function EntropyInput({ value, onChange, onGenerate, error }: EntropyInputProps) {
   return (
-    <div className="panel-cool rounded-[30px] border border-border p-6">
+    <div className="panel-cool rounded-section border border-border p-6">
       <h3 className="mb-1 text-lg font-bold text-text-primary">Entropy Source</h3>
       <p className="mb-4 text-sm text-text-muted">Generate or paste 32 random bytes</p>
 
@@ -34,10 +34,10 @@ export function EntropyInput({ value, onChange, onGenerate, error }: EntropyInpu
         />
         {value.length > 0 && (
           <div className="mt-2 flex gap-2">
-            <span className="rounded-pill bg-[#171E2C] px-3 py-1 text-xs font-bold text-text-primary">
+            <span className="rounded-pill bg-badge-bg px-3 py-1 text-xs font-bold text-text-primary">
               {value.length} / 64 chars
             </span>
-            <span className="rounded-pill bg-[#171E2C] px-3 py-1 text-xs font-bold text-text-primary">
+            <span className="rounded-pill bg-badge-bg px-3 py-1 text-xs font-bold text-text-primary">
               {(value.match(/[0-9a-fA-F]{2}/g) ?? []).length} / 32 bytes
             </span>
           </div>

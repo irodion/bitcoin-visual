@@ -19,7 +19,7 @@ export function SecurityCallout({ children, variant = "danger" }: SecurityCallou
   return (
     <div
       role="alert"
-      className={`flex gap-3 rounded-[20px] border py-3 pl-4 pr-4 ${variantStyles[variant]}`}
+      className={`flex gap-3 rounded-callout border py-3 pl-4 pr-4 ${variantStyles[variant]}`}
     >
       <svg
         width="18"
