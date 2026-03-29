@@ -1,5 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 

@@ -9,3 +9,8 @@ export { ComingSoonPlaceholder } from "./ComingSoonPlaceholder";
 export { PageBackground } from "./PageBackground";
 export { Sidebar } from "./Sidebar";
 export { ConceptChain } from "./ConceptChain";
+export { OfflineIndicator } from "./OfflineIndicator";
+export { UpdateBanner } from "./UpdateBanner";
+export { InstallPrompt } from "./InstallPrompt";
+export { LoadingFallback } from "./LoadingFallback";
+export { ErrorBoundary } from "./ErrorBoundary";
