@@ -1,5 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import {
+  ErrorBoundary,
+  LoadingFallback,
+  OfflineIndicator,
+  UpdateBanner,
+  InstallPrompt,
+} from "./shared/components/index.ts";
 
 const Landing = lazy(() => import("./pages/Landing"));
 const HashPlayground = lazy(() => import("./modules/01-hash/HashPlayground"));
@@ -12,33 +19,32 @@ const AttackLab = lazy(() => import("./modules/07-attacks/AttackLab"));
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense
-        fallback={
-          <div className="flex min-h-screen items-center justify-center text-text-secondary">
-            Loading...
-          </div>
-        }
-      >
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/hash" element={<HashPlayground />} />
-          <Route path="/keys" element={<KeysExplorer />} />
-          <Route path="/utxo" element={<UTXOBuilder />} />
-          <Route path="/blockchain" element={<BlockchainSimulator />} />
-          <Route path="/hd-wallet" element={<HDWalletExplorer />} />
-          <Route path="/multisig" element={<MultisigVault />} />
-          <Route path="/attacks" element={<AttackLab />} />
-          <Route
-            path="*"
-            element={
-              <div className="flex min-h-screen items-center justify-center text-text-secondary">
-                404 — Page not found
-              </div>
-            }
-          />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <OfflineIndicator />
+      <UpdateBanner />
+      <InstallPrompt />
+      <BrowserRouter>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/hash" element={<HashPlayground />} />
+            <Route path="/keys" element={<KeysExplorer />} />
+            <Route path="/utxo" element={<UTXOBuilder />} />
+            <Route path="/blockchain" element={<BlockchainSimulator />} />
+            <Route path="/hd-wallet" element={<HDWalletExplorer />} />
+            <Route path="/multisig" element={<MultisigVault />} />
+            <Route path="/attacks" element={<AttackLab />} />
+            <Route
+              path="*"
+              element={
+                <div className="flex min-h-screen items-center justify-center text-text-secondary">
+                  404 — Page not found
+                </div>
+              }
+            />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

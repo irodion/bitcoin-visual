@@ -8,15 +8,41 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       includeAssets: ["icons/*.png"],
       manifest: false,
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         navigateFallback: "index.html",
+        clientsClaim: true,
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (
+            id.includes("@noble/hashes") ||
+            id.includes("@noble/curves") ||
+            id.includes("@scure/bip32") ||
+            id.includes("@scure/bip39") ||
+            id.includes("@scure/base")
+          ) {
+            return "vendor-crypto";
+          }
+          if (
+            id.includes("node_modules/react/") ||
+            id.includes("node_modules/react-dom/") ||
+            id.includes("node_modules/react-router") ||
+            id.includes("node_modules/framer-motion")
+          ) {
+            return "vendor-react";
+          }
+        },
+      },
+    },
+  },
   staged: {
     "*": "vp check --fix",
   },
