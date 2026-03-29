@@ -8,6 +8,7 @@ import {
 import {
   type BlockData,
   type BlockValidity,
+  type MockTransaction,
   DEFAULT_DIFFICULTY,
   ESTIMATED_HASHES,
   createInitialChain,
@@ -40,6 +41,7 @@ export interface BlockchainState {
   editBlockNonce: (blockIdx: number, nonce: number) => void;
   addTransaction: (blockIdx: number) => void;
   removeTransaction: (blockIdx: number, txIdx: number) => void;
+  addBlockWithTransactions: (transactions: MockTransaction[]) => void;
   startMining: (blockIdx: number) => void;
   stopMining: () => void;
   selectBlock: (idx: number | null) => void;
@@ -120,6 +122,7 @@ export function useBlockchainState(): BlockchainState {
 
   const editTransactionData = useCallback((blockIdx: number, txIdx: number, data: string) => {
     setBlocks((prev) => {
+      if (prev[blockIdx]?.transactions[txIdx]?.locked) return prev;
       const result = [...prev];
       const block = { ...result[blockIdx] };
       const transactions = [...block.transactions];
@@ -165,6 +168,7 @@ export function useBlockchainState(): BlockchainState {
   const removeTransaction = useCallback((blockIdx: number, txIdx: number) => {
     setBlocks((prev) => {
       const block = prev[blockIdx];
+      if (block.transactions[txIdx]?.locked) return prev;
       if (block.transactions.length <= 1) return prev;
       const result = [...prev];
       const updated = { ...block };
@@ -173,6 +177,27 @@ export function useBlockchainState(): BlockchainState {
       return relinkChain(result, blockIdx);
     });
   }, []);
+
+  const addBlockWithTransactions = useCallback(
+    (transactions: MockTransaction[]) => {
+      setBlocks((prev) => {
+        const lastBlock = prev[prev.length - 1];
+        const newBlock: BlockData = {
+          index: prev.length,
+          version: 1,
+          prevHash: lastBlock.hash,
+          transactions,
+          merkleRoot: new Uint8Array(32),
+          timestamp: Math.floor(Date.now() / 1000),
+          difficultyBits: difficulty,
+          nonce: 0,
+          hash: new Uint8Array(32),
+        };
+        return [...prev, recomputeBlock(newBlock)];
+      });
+    },
+    [difficulty],
+  );
 
   const miningStartFn = mining.startMining;
   const startMining = useCallback(
@@ -212,6 +237,7 @@ export function useBlockchainState(): BlockchainState {
     editBlockNonce,
     addTransaction,
     removeTransaction,
+    addBlockWithTransactions,
     startMining,
     stopMining: mining.stopMining,
     selectBlock,

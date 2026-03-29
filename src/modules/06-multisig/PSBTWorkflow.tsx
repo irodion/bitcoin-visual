@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { HexBox, ValueFlowArrow } from "../../shared/components/index.ts";
@@ -53,6 +54,12 @@ export function PSBTWorkflow({
   broadcastSimulated,
   sighashDetails,
 }: PSBTWorkflowProps) {
+  const navigate = useNavigate();
+  const handleBroadcast = () => {
+    simulateBroadcast();
+    void navigate("/blockchain");
+  };
+
   if (!allKeysGenerated) {
     return (
       <div className="mx-auto max-w-3xl">
@@ -184,10 +191,10 @@ export function PSBTWorkflow({
               {!broadcastSimulated ? (
                 <button
                   type="button"
-                  onClick={simulateBroadcast}
+                  onClick={handleBroadcast}
                   className="cursor-pointer rounded-pill border border-success/40 bg-success/10 px-5 py-2 text-sm font-bold text-success transition-opacity hover:opacity-90 active:opacity-80"
                 >
-                  Simulate Broadcast
+                  Broadcast &amp; Mine
                 </button>
               ) : (
                 <div className="flex items-center gap-2 rounded-badge border border-success/30 bg-success/10 px-3 py-2 text-sm font-medium text-success">
