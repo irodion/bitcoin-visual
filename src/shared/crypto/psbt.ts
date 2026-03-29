@@ -27,15 +27,34 @@ export interface PSBT {
   status: PSBTStatus;
 }
 
+// ── Helpers ──
+
+function validateInputIndex(psbt: PSBT, inputIndex: number): void {
+  if (!Number.isInteger(inputIndex) || inputIndex < 0 || inputIndex >= psbt.inputs.length) {
+    throw new RangeError(
+      `Invalid inputIndex for PSBT: ${inputIndex} (PSBT has ${psbt.inputs.length} inputs)`,
+    );
+  }
+}
+
 // ── Functions ──
 
-/** Create an unsigned PSBT from a transaction and witness metadata. */
+/**
+ * Create an unsigned PSBT from a transaction and witness metadata.
+ * Only supports single-input transactions — throws if tx has multiple inputs.
+ */
 export function createUnsignedPSBT(
   tx: Transaction,
   witnessScript: Uint8Array,
   inputValue: bigint,
   inputScriptPubKey: Uint8Array,
 ): PSBT {
+  if (tx.inputs.length !== 1) {
+    throw new Error(
+      `createUnsignedPSBT only supports single-input transactions (got ${tx.inputs.length}). ` +
+        "For multi-input PSBTs, per-input metadata is required.",
+    );
+  }
   const inputs: PSBTInput[] = tx.inputs.map((input) => ({
     prevTxid: input.txid,
     prevVout: input.vout,
@@ -61,6 +80,7 @@ export function addPartialSignature(
   pubKey: Uint8Array,
   signature: Uint8Array,
 ): PSBT {
+  validateInputIndex(psbt, inputIndex);
   const newInputs = psbt.inputs.map((input, i) => {
     if (i !== inputIndex) return input;
     const newSigs = new Map(input.partialSigs);
@@ -83,6 +103,7 @@ export function addPartialSignature(
 
 /** Count how many partial signatures exist for a given input. */
 export function countSignatures(psbt: PSBT, inputIndex: number): number {
+  validateInputIndex(psbt, inputIndex);
   return psbt.inputs[inputIndex].partialSigs.size;
 }
 
@@ -93,6 +114,7 @@ export function countSignatures(psbt: PSBT, inputIndex: number): number {
  * Signatures are ordered by their pubkey's position in the witness script (BIP67).
  */
 export function finalizePSBTMultisig(psbt: PSBT, inputIndex: number, m: number): Transaction {
+  validateInputIndex(psbt, inputIndex);
   const input = psbt.inputs[inputIndex];
   const sigCount = input.partialSigs.size;
   if (sigCount < m) {

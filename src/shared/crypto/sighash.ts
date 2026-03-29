@@ -114,6 +114,17 @@ export function computeBIP143SighashVerbose(
   value: bigint,
   sighashType = 0x01,
 ): SighashDetail {
+  if (sighashType !== 0x01) {
+    throw new Error(
+      `Only SIGHASH_ALL (0x01) is supported in this educational tool, got 0x${sighashType.toString(16)}`,
+    );
+  }
+  if (!Number.isInteger(inputIndex) || inputIndex < 0 || inputIndex >= tx.inputs.length) {
+    throw new RangeError(
+      `inputIndex out of range: ${inputIndex} (tx has ${tx.inputs.length} inputs)`,
+    );
+  }
+
   const hashPrevouts = computeHashPrevouts(tx);
   const hashSequence = computeHashSequence(tx);
   const hashOutputs = computeHashOutputs(tx);

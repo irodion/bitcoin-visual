@@ -14,6 +14,9 @@ export function signWithSighash(
   msgHash: Uint8Array,
   sighashType = 0x01,
 ): Uint8Array {
+  if (!Number.isInteger(sighashType) || sighashType < 0x00 || sighashType > 0xff) {
+    throw new RangeError(`sighashType must be a byte (0x00–0xff), got ${sighashType}`);
+  }
   const der = signECDSA(privKey, msgHash);
   const result = new Uint8Array(der.length + 1);
   result.set(der);
