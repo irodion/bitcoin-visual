@@ -165,7 +165,7 @@ describe("MultisigVault", () => {
     expect(screen.getByText(/TXID/)).toBeInTheDocument();
 
     // Simulate broadcast
-    await user.click(screen.getByText("Simulate Broadcast"));
+    await user.click(screen.getByText("Broadcast & Mine"));
     expect(screen.getByText(/broadcast to the network/)).toBeInTheDocument();
   });
 });

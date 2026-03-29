@@ -8,6 +8,7 @@ export interface MockTransaction {
   id: string;
   data: string;
   txid: Uint8Array;
+  locked?: boolean;
 }
 
 export interface BlockData {

@@ -21,6 +21,7 @@ import {
   signWithSighash,
 } from "../../shared/crypto/index.ts";
 import type { Transaction, PSBT, SighashDetail } from "../../shared/crypto/index.ts";
+import { useMempoolStore } from "../../shared/stores/index.ts";
 
 // ── Types ──
 
@@ -249,7 +250,17 @@ export function useMultisigState(): MultisigState {
 
   const simulateBroadcastAction = useCallback(() => {
     setBroadcastSimulated(true);
-  }, []);
+    if (finalizedTx) {
+      const txidBytes = computeTxID(finalizedTx);
+      const txHex = bytesToHex(serializeWitnessTransaction(finalizedTx));
+      const txidHex = bytesToHex(reverseBytes(txidBytes));
+      useMempoolStore.getState().setPendingTx({
+        txid: txidBytes,
+        txidHex,
+        data: `2-of-3 Multisig (${txHex.slice(0, 16)}\u2026)`,
+      });
+    }
+  }, [finalizedTx]);
 
   // ── Display values ──
 
