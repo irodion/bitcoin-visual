@@ -35,7 +35,8 @@ export default defineConfig({
             id.includes("node_modules/react/") ||
             id.includes("node_modules/react-dom/") ||
             id.includes("node_modules/react-router") ||
-            id.includes("node_modules/framer-motion")
+            id.includes("node_modules/framer-motion") ||
+            id.includes("node_modules/zustand")
           ) {
             return "vendor-react";
           }

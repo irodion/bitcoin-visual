@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { signECDSA, signWithSighash, verifyECDSA } from "./signing";
 import { generatePrivateKey, privateKeyToPublicKey } from "./keys";
 import { sha256 } from "./hash";

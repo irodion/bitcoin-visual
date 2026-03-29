@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { computeBIP143Sighash, computeBIP143SighashVerbose } from "./sighash";
 import { generatePrivateKey, privateKeyToPublicKey } from "./keys";
 import { createMultisigRedeemScript } from "./multisig";
