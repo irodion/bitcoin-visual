@@ -166,12 +166,22 @@ export function finalizePSBTMultisig(psbt: PSBT, inputIndex: number, m: number):
  * Script format: OP_M <33> <pk1> <33> <pk2> ... OP_N OP_CHECKMULTISIG
  */
 export function extractPubkeysFromScript(script: Uint8Array): Uint8Array[] {
+  if (script.length < 3) return [];
+  const firstOp = script[0];
+  const lastOp = script[script.length - 1];
+  const secondLastOp = script[script.length - 2];
+  // OP_1..OP_16 = 0x51..0x60, OP_CHECKMULTISIG = 0xae
+  if (firstOp < 0x51 || firstOp > 0x60) return [];
+  if (lastOp !== 0xae) return [];
+  if (secondLastOp < 0x51 || secondLastOp > 0x60) return [];
+
   const pubkeys: Uint8Array[] = [];
   let offset = 1; // skip OP_M
   while (offset < script.length - 2) {
     const len = script[offset];
-    if (len !== 33 && len !== 65) break; // not a pubkey push
+    if (len !== 33 && len !== 65) break;
     offset += 1;
+    if (offset + len > script.length - 2) break; // prevent slice past OP_N
     pubkeys.push(script.slice(offset, offset + len));
     offset += len;
   }
