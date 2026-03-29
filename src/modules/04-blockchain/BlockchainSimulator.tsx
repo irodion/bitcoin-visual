@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { motion, type Variants } from "framer-motion";
 import {
   ModuleLayout,
@@ -89,9 +89,10 @@ function TheoryContent() {
 export default function BlockchainSimulator() {
   const state = useBlockchainState();
   const { completed, complete } = useModuleCompletion("blockchain");
+  const initialNonces = useRef(state.blocks.map((b) => b.nonce));
 
   useEffect(() => {
-    if (!completed && state.blocks.some((b) => b.nonce > 0)) complete();
+    if (!completed && state.blocks.some((b, i) => b.nonce !== initialNonces.current[i])) complete();
   }, [state.blocks, completed, complete]);
 
   const selectedBlock =

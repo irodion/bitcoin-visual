@@ -1,3 +1,4 @@
+import { useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MODULES } from "../constants/modules.ts";
@@ -21,7 +22,13 @@ const BACKDROP_VARIANTS: Variants = {
   exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-function SidebarContent({ currentModuleKey }: { currentModuleKey: string }) {
+function SidebarContent({
+  currentModuleKey,
+  onClose,
+}: {
+  currentModuleKey: string;
+  onClose?: () => void;
+}) {
   const completedModules = useProgressStore((s) => s.completedModules);
 
   return (
@@ -29,6 +36,28 @@ function SidebarContent({ currentModuleKey }: { currentModuleKey: string }) {
       className="flex h-full w-14 flex-col items-center gap-1 border-r border-border py-3 panel-cool"
       aria-label="Module navigation"
     >
+      {onClose && (
+        <button
+          type="button"
+          className="mb-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-accent/10 hover:text-accent md:hidden"
+          onClick={onClose}
+          aria-label="Close sidebar"
+          autoFocus
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <path d="M4 4l8 8M12 4l-8 8" />
+          </svg>
+        </button>
+      )}
+
       <Link
         to="/"
         className="mb-1 flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-accent/10 hover:text-accent"
@@ -54,6 +83,11 @@ function SidebarContent({ currentModuleKey }: { currentModuleKey: string }) {
       {MODULES.map((mod) => {
         const isCurrent = mod.key === currentModuleKey;
         const isCompleted = completedModules.includes(mod.key);
+        const ariaLabel = mod.active
+          ? isCompleted
+            ? `${mod.title}, completed`
+            : mod.title
+          : `${mod.title} (coming soon)`;
 
         return (
           <div key={mod.key} className="group/nav relative">
@@ -67,12 +101,15 @@ function SidebarContent({ currentModuleKey }: { currentModuleKey: string }) {
                   background: isCurrent ? `${mod.color}28` : `${mod.color}12`,
                   color: mod.color,
                 }}
-                aria-label={mod.title}
+                aria-label={ariaLabel}
                 aria-current={isCurrent ? "page" : undefined}
               >
                 {mod.number}
                 {isCompleted && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-success text-white">
+                  <span
+                    className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-success text-white"
+                    aria-hidden="true"
+                  >
                     <svg
                       width="7"
                       height="7"
@@ -92,7 +129,7 @@ function SidebarContent({ currentModuleKey }: { currentModuleKey: string }) {
               <span
                 className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold opacity-30"
                 style={{ background: `${mod.color}12`, color: mod.color }}
-                aria-label={`${mod.title} (coming soon)`}
+                aria-label={ariaLabel}
               >
                 {mod.number}
               </span>
@@ -110,6 +147,21 @@ function SidebarContent({ currentModuleKey }: { currentModuleKey: string }) {
 }
 
 export function Sidebar({ currentModuleKey, mobileOpen, onMobileClose }: SidebarProps) {
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onMobileClose();
+    },
+    [onMobileClose],
+  );
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [mobileOpen, handleEscape]);
+
   return (
     <>
       <div className="hidden shrink-0 md:block">
@@ -129,13 +181,17 @@ export function Sidebar({ currentModuleKey, mobileOpen, onMobileClose }: Sidebar
               aria-hidden="true"
             />
             <motion.div
+              ref={drawerRef}
               className="fixed left-0 top-0 z-50 h-full md:hidden"
               variants={SIDEBAR_VARIANTS}
               initial="hidden"
               animate="visible"
               exit="exit"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Module navigation"
             >
-              <SidebarContent currentModuleKey={currentModuleKey} />
+              <SidebarContent currentModuleKey={currentModuleKey} onClose={onMobileClose} />
             </motion.div>
           </>
         )}

@@ -48,7 +48,11 @@ function ChainNode({
 }) {
   const isMd = size === "md";
   return (
-    <Link to={mod.route} className="group/chain flex flex-col items-center gap-1.5">
+    <Link
+      to={mod.route}
+      className="group/chain flex flex-col items-center gap-1.5"
+      aria-label={isCompleted ? `${mod.title}, completed` : mod.title}
+    >
       <div className="relative">
         <div
           className={`flex items-center justify-center rounded-full font-bold ${
@@ -65,6 +69,7 @@ function ChainNode({
             className={`absolute flex items-center justify-center rounded-full bg-success ${
               isMd ? "-right-1 -top-1 h-4 w-4" : "-right-0.5 -top-0.5 h-3.5 w-3.5"
             }`}
+            aria-hidden="true"
           >
             <CheckBadge size={isMd ? 8 : 7} />
           </div>
