@@ -6,6 +6,8 @@ import {
   TheoryCallout,
   ValueFlowArrow,
 } from "../../shared/components/index.ts";
+import { BTN_PRIMARY, BTN_GHOST } from "../../shared/components/styles.ts";
+import { useMempoolStore } from "../../shared/stores/index.ts";
 import { useBlockchainState } from "./useBlockchainState.ts";
 import { Block } from "./Block.tsx";
 import { MiningControls } from "./MiningControls.tsx";
@@ -88,8 +90,23 @@ function TheoryContent() {
 
 export default function BlockchainSimulator() {
   const state = useBlockchainState();
+  const pendingTx = useMempoolStore((s) => s.pendingTx);
+  const consumePendingTx = useMempoolStore((s) => s.consumePendingTx);
   const { completed, complete } = useModuleCompletion("blockchain");
   const initialNonces = useRef(state.blocks.map((b) => b.nonce));
+
+  const handleIncludeTx = () => {
+    const tx = consumePendingTx();
+    if (!tx) return;
+    state.addBlockWithTransactions([
+      {
+        id: `multisig-${tx.txidHex.slice(0, 8)}`,
+        data: tx.data,
+        txid: tx.txid,
+        locked: true,
+      },
+    ]);
+  };
 
   useEffect(() => {
     if (!completed && state.blocks.some((b, i) => b.nonce !== initialNonces.current[i])) complete();
@@ -125,6 +142,30 @@ export default function BlockchainSimulator() {
             miningBlockIndex={state.miningBlockIndex}
           />
         </motion.div>
+
+        {/* Pending transaction from Multisig */}
+        {pendingTx && (
+          <motion.div variants={stepVariants}>
+            <div className="flex items-center justify-between gap-4 rounded-card border border-accent/30 bg-surface-raised p-4">
+              <div className="min-w-0 space-y-1">
+                <p className="text-sm font-semibold text-accent">
+                  Pending Transaction from Multisig
+                </p>
+                <p className="truncate font-mono text-xs text-text-secondary">
+                  TXID: {pendingTx.txidHex.slice(0, 24)}&hellip;
+                </p>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <button type="button" onClick={() => consumePendingTx()} className={BTN_GHOST}>
+                  Dismiss
+                </button>
+                <button type="button" onClick={handleIncludeTx} className={BTN_PRIMARY}>
+                  Include in New Block
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Horizontal block chain */}
         <motion.div variants={stepVariants}>
