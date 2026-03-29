@@ -19,7 +19,7 @@ export function UpdateBanner() {
           <button
             type="button"
             className="cursor-pointer rounded-pill bg-accent px-4 py-1.5 text-xs font-bold text-[#111723] transition-opacity hover:opacity-90 active:opacity-80"
-            onClick={() => update()}
+            onClick={update}
           >
             Reload
           </button>

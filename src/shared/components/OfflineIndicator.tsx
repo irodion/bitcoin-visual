@@ -9,6 +9,7 @@ export function OfflineIndicator() {
       {!isOnline && (
         <motion.div
           className="fixed inset-x-0 top-0 z-40 flex items-center justify-center gap-2 border-b border-warning-border bg-warning-bg px-4 py-2 text-xs font-medium text-warning-text"
+          style={{ paddingTop: "env(safe-area-inset-top)" }}
           initial={{ y: -40 }}
           animate={{ y: 0 }}
           exit={{ y: -40 }}

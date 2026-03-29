@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vite-plus/test";
 import { render, screen, act } from "@testing-library/react";
 import { OfflineIndicator } from "./OfflineIndicator";
 
@@ -11,16 +11,21 @@ describe("OfflineIndicator", () => {
   });
 
   it("renders offline message when navigator.onLine is false", async () => {
-    const original = navigator.onLine;
-    Object.defineProperty(navigator, "onLine", { value: false, configurable: true });
+    const originalDescriptor = Object.getOwnPropertyDescriptor(navigator, "onLine");
 
-    await act(async () => {
-      render(<OfflineIndicator />);
-    });
+    try {
+      Object.defineProperty(navigator, "onLine", { value: false, configurable: true });
 
-    expect(screen.getByRole("status")).toBeInTheDocument();
-    expect(screen.getByText(/You are offline/)).toBeInTheDocument();
+      await act(async () => {
+        render(<OfflineIndicator />);
+      });
 
-    Object.defineProperty(navigator, "onLine", { value: original, configurable: true });
+      expect(screen.getByRole("status")).toBeInTheDocument();
+      expect(screen.getByText(/You are offline/)).toBeInTheDocument();
+    } finally {
+      if (originalDescriptor) {
+        Object.defineProperty(navigator, "onLine", originalDescriptor);
+      }
+    }
   });
 });

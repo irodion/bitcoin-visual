@@ -19,32 +19,34 @@ const AttackLab = lazy(() => import("./modules/07-attacks/AttackLab"));
 
 export default function App() {
   return (
-    <ErrorBoundary>
+    <>
       <OfflineIndicator />
       <UpdateBanner />
       <InstallPrompt />
-      <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/hash" element={<HashPlayground />} />
-            <Route path="/keys" element={<KeysExplorer />} />
-            <Route path="/utxo" element={<UTXOBuilder />} />
-            <Route path="/blockchain" element={<BlockchainSimulator />} />
-            <Route path="/hd-wallet" element={<HDWalletExplorer />} />
-            <Route path="/multisig" element={<MultisigVault />} />
-            <Route path="/attacks" element={<AttackLab />} />
-            <Route
-              path="*"
-              element={
-                <div className="flex min-h-screen items-center justify-center text-text-secondary">
-                  404 — Page not found
-                </div>
-              }
-            />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </ErrorBoundary>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/hash" element={<HashPlayground />} />
+              <Route path="/keys" element={<KeysExplorer />} />
+              <Route path="/utxo" element={<UTXOBuilder />} />
+              <Route path="/blockchain" element={<BlockchainSimulator />} />
+              <Route path="/hd-wallet" element={<HDWalletExplorer />} />
+              <Route path="/multisig" element={<MultisigVault />} />
+              <Route path="/attacks" element={<AttackLab />} />
+              <Route
+                path="*"
+                element={
+                  <div className="flex min-h-screen items-center justify-center text-text-secondary">
+                    404 — Page not found
+                  </div>
+                }
+              />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </>
   );
 }
