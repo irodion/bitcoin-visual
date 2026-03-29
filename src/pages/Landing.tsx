@@ -58,7 +58,7 @@ const MODULES: ModuleItem[] = [
     description: "Create 2-of-3 multisig scripts and sign with PSBTs.",
     route: "/multisig",
     color: "#A78BFA",
-    active: false,
+    active: true,
   },
   {
     number: 7,
