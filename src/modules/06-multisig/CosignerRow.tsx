@@ -18,7 +18,7 @@ export function CosignerRow({ cosigner, index, onGenerate }: CosignerRowProps) {
   const variant = COSIGNER_VARIANTS[index] ?? "default";
 
   return (
-    <div className="panel-cool rounded-[24px] border border-border p-5">
+    <div className="panel-cool rounded-input border border-border p-5">
       <div className="mb-3 flex items-center gap-2.5">
         <span className={`inline-block h-3 w-3 shrink-0 rounded-full ${dotClass}`} />
         <span className="text-sm font-bold text-text-primary">

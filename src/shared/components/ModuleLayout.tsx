@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, useRef, useEffect, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { TheoryPanel } from "./TheoryPanel";
 import { PageBackground } from "./PageBackground";
@@ -27,6 +27,67 @@ interface ModuleLayoutProps {
   headerNotice?: ReactNode;
 }
 
+function TabBar({
+  tabs,
+  activeTab,
+  onTabChange,
+}: {
+  tabs: Tab[];
+  activeTab: string;
+  onTabChange: (key: string) => void;
+}) {
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+  useEffect(() => {
+    tabRefs.current.get(activeTab)?.focus();
+  }, [activeTab]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const keys = tabs.map((t) => t.key);
+    const idx = keys.indexOf(activeTab);
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      onTabChange(keys[(idx + 1) % keys.length]);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      onTabChange(keys[(idx - 1 + keys.length) % keys.length]);
+    }
+  };
+
+  return (
+    <div
+      className="flex rounded-pill border border-border bg-surface-raised p-0.5"
+      role="tablist"
+      aria-label="View mode"
+      onKeyDown={handleKeyDown}
+    >
+      {tabs.map((tab) => {
+        const isSelected = activeTab === tab.key;
+        return (
+          <button
+            key={tab.key}
+            ref={(el) => {
+              if (el) tabRefs.current.set(tab.key, el);
+            }}
+            type="button"
+            role="tab"
+            aria-selected={isSelected}
+            tabIndex={isSelected ? 0 : -1}
+            onClick={() => onTabChange(tab.key)}
+            className={`cursor-pointer rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors ${
+              isSelected
+                ? "bg-accent text-text-on-accent"
+                : "text-text-secondary hover:text-text-primary"
+            }`}
+          >
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ModuleLayout({
   moduleKey,
   title,
@@ -42,7 +103,7 @@ export function ModuleLayout({
 
   return (
     <PageBackground>
-      <div className="relative z-10 mx-4 my-4 overflow-hidden rounded-[34px] border border-border bg-module-shell shadow-container md:mx-7 md:my-5">
+      <div className="relative z-10 mx-4 my-4 overflow-hidden rounded-shell border border-border bg-module-shell shadow-container md:mx-7 md:my-5">
         <div className="flex">
           <Sidebar
             currentModuleKey={moduleKey}
@@ -111,30 +172,11 @@ export function ModuleLayout({
                   )}
 
                   {tabConfig && (
-                    <div
-                      className="flex rounded-pill border border-border bg-surface-raised p-0.5"
-                      role="group"
-                      aria-label="View mode"
-                    >
-                      {tabConfig.tabs.map((tab) => {
-                        const isSelected = tabConfig.activeTab === tab.key;
-                        return (
-                          <button
-                            key={tab.key}
-                            type="button"
-                            aria-pressed={isSelected}
-                            onClick={() => !isSelected && tabConfig.onTabChange(tab.key)}
-                            className={`cursor-pointer rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors ${
-                              isSelected
-                                ? "bg-accent text-[#0D1420]"
-                                : "text-text-secondary hover:text-text-primary"
-                            }`}
-                          >
-                            {tab.label}
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <TabBar
+                      tabs={tabConfig.tabs}
+                      activeTab={tabConfig.activeTab}
+                      onTabChange={tabConfig.onTabChange}
+                    />
                   )}
                 </div>
               </div>
@@ -149,7 +191,12 @@ export function ModuleLayout({
               style={{ minHeight: "calc(100dvh - 140px)" }}
             >
               <TheoryPanel moduleKey={moduleKey}>{theoryContent}</TheoryPanel>
-              <main className="flex-1 overflow-y-auto p-5 md:p-8">{children}</main>
+              <main
+                className="flex-1 overflow-y-auto p-5 md:p-8"
+                {...(tabConfig ? { role: "tabpanel" } : {})}
+              >
+                {children}
+              </main>
             </div>
           </div>
         </div>
