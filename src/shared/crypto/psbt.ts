@@ -88,17 +88,7 @@ export function addPartialSignature(
     return { ...input, partialSigs: newSigs };
   });
 
-  const sigCount = newInputs[inputIndex].partialSigs.size;
-  let status: PSBTStatus;
-  if (sigCount === 0) {
-    status = "unsigned";
-  } else {
-    // We don't know m from the PSBT alone, so mark as partially_signed.
-    // The caller checks threshold via countSignatures.
-    status = "partially_signed";
-  }
-
-  return { ...psbt, inputs: newInputs, status };
+  return { ...psbt, inputs: newInputs, status: "partially_signed" };
 }
 
 /** Count how many partial signatures exist for a given input. */
