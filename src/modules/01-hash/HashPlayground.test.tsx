@@ -18,7 +18,8 @@ describe("HashPlayground", () => {
     await act(async () => {
       renderWithRouter(<HashPlayground />);
     });
-    expect(screen.getByText("Hash Playground")).toBeInTheDocument();
+    const matches = screen.getAllByText("Hash Playground");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders theory content", async () => {

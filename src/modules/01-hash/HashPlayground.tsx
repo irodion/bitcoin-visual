@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { sha256, sha256d } from "../../shared/crypto/index.ts";
 import {
@@ -9,6 +9,7 @@ import {
   TheoryCallout,
 } from "../../shared/components/index.ts";
 import { BTN_PRIMARY, BTN_GHOST, TEXTAREA, LABEL } from "../../shared/components/styles.ts";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 const encoder = new TextEncoder();
 
@@ -180,6 +181,11 @@ function TheoryContent() {
 export default function HashPlayground() {
   const [input, setInput] = useState("Hello, Bitcoin!");
   const [mode, setMode] = useState<"normal" | "avalanche">("normal");
+  const { completed, complete } = useModuleCompletion("hash");
+
+  useEffect(() => {
+    if (!completed && input.length > 0) complete();
+  }, [input, completed, complete]);
 
   const inputBytes = useMemo(() => encoder.encode(input), [input]);
   const sha256Hash = useMemo(() => sha256(inputBytes), [inputBytes]);

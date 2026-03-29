@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
 import {
   ModuleLayout,
@@ -10,6 +10,7 @@ import { useBlockchainState } from "./useBlockchainState.ts";
 import { Block } from "./Block.tsx";
 import { MiningControls } from "./MiningControls.tsx";
 import { MerkleTreePanel } from "./MerkleTreePanel.tsx";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -87,6 +88,11 @@ function TheoryContent() {
 
 export default function BlockchainSimulator() {
   const state = useBlockchainState();
+  const { completed, complete } = useModuleCompletion("blockchain");
+
+  useEffect(() => {
+    if (!completed && state.blocks.some((b) => b.nonce > 0)) complete();
+  }, [state.blocks, completed, complete]);
 
   const selectedBlock =
     state.selectedBlockIndex !== null ? state.blocks[state.selectedBlockIndex] : null;

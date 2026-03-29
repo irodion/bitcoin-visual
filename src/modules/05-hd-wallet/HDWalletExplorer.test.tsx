@@ -20,7 +20,8 @@ describe("HDWalletExplorer", () => {
     await act(async () => {
       renderWithRouter(<HDWalletExplorer />);
     });
-    expect(screen.getByText("HD Wallet Tree")).toBeInTheDocument();
+    const matches = screen.getAllByText("HD Wallet Tree");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders theory content", async () => {

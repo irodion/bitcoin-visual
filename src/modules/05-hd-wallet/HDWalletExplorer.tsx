@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ModuleLayout,
@@ -11,6 +12,7 @@ import { MnemonicPanel } from "./MnemonicPanel.tsx";
 import { SeedDerivationPanel } from "./SeedDerivationPanel.tsx";
 import { PathBuilder } from "./PathBuilder.tsx";
 import { KeyTreeView } from "./KeyTreeView.tsx";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 function TheoryContent() {
   return (
@@ -62,6 +64,11 @@ function TheoryContent() {
 
 export default function HDWalletExplorer() {
   const state = useHDState();
+  const { completed, complete } = useModuleCompletion("hd-wallet");
+
+  useEffect(() => {
+    if (!completed && state.isValidMnemonic && state.seed) complete();
+  }, [state.isValidMnemonic, state.seed, completed, complete]);
 
   return (
     <ModuleLayout
