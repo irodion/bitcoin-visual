@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
 import { STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useMultisigState } from "./useMultisigState.ts";
 import { VaultSetupPanel } from "./VaultSetupPanel.tsx";
 import { PSBTWorkflow } from "./PSBTWorkflow.tsx";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 const TABS = [
   { key: "setup", label: "Vault Setup" },
@@ -53,6 +55,11 @@ function TheoryContent() {
 
 export default function MultisigVault() {
   const state = useMultisigState();
+  const { completed, complete } = useModuleCompletion("multisig");
+
+  useEffect(() => {
+    if (!completed && state.allKeysGenerated) complete();
+  }, [state.allKeysGenerated, completed, complete]);
 
   return (
     <ModuleLayout

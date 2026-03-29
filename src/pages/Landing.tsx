@@ -1,74 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion, type Variants } from "framer-motion";
 import { PageBackground } from "../shared/components/index.ts";
-
-interface ModuleItem {
-  number: number;
-  title: string;
-  description: string;
-  route: string;
-  color: string;
-  active: boolean;
-}
-
-const MODULES: ModuleItem[] = [
-  {
-    number: 1,
-    title: "Hash Playground",
-    description: "SHA-256 and SHA-256d — type anything, watch the fingerprint materialize.",
-    route: "/hash",
-    color: "#F7931A",
-    active: true,
-  },
-  {
-    number: 2,
-    title: "Keys & Addresses",
-    description: "Generate a private key, derive public key, and encode Bitcoin addresses.",
-    route: "/keys",
-    color: "#36CFC9",
-    active: true,
-  },
-  {
-    number: 3,
-    title: "UTXO & Transactions",
-    description: "Build and inspect raw Bitcoin transactions, input by input.",
-    route: "/utxo",
-    color: "#7DD3FC",
-    active: true,
-  },
-  {
-    number: 4,
-    title: "Blockchain & Mining",
-    description: "Mine blocks, adjust difficulty, and see how the chain grows.",
-    route: "/blockchain",
-    color: "#22C55E",
-    active: false,
-  },
-  {
-    number: 5,
-    title: "HD Wallet Tree",
-    description: "BIP-32/39 hierarchical deterministic key derivation visualized.",
-    route: "/hd-wallet",
-    color: "#FBBF24",
-    active: false,
-  },
-  {
-    number: 6,
-    title: "Multisig Vault",
-    description: "Create 2-of-3 multisig scripts and sign with PSBTs.",
-    route: "/multisig",
-    color: "#A78BFA",
-    active: true,
-  },
-  {
-    number: 7,
-    title: "Attack Lab",
-    description: "Nonce reuse, xpub leaks, and other real-world crypto pitfalls.",
-    route: "/attacks",
-    color: "#FF6B6B",
-    active: false,
-  },
-];
+import { ConceptChain } from "../shared/components/ConceptChain.tsx";
+import { MODULES } from "../shared/constants/modules.ts";
+import { useProgressStore } from "../shared/stores/index.ts";
+import { BTN_PRIMARY } from "../shared/components/styles.ts";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -86,6 +22,8 @@ const cardVariants: Variants = {
 const CARD_STYLE = { background: "linear-gradient(180deg, #121A28, #0C1320)" };
 
 export default function Landing() {
+  const completedModules = useProgressStore((s) => s.completedModules);
+
   return (
     <PageBackground glowSize={700} amberOpacity={0.22} tealOpacity={0.16}>
       <div className="relative z-10 mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-20">
@@ -94,7 +32,7 @@ export default function Landing() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12 text-center md:mb-16"
+          className="mb-10 text-center md:mb-14"
         >
           <div className="mb-4 inline-block rounded-pill border border-border-amber bg-warning-bg px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.18em] text-warning-text">
             Interactive Bitcoin Cryptography
@@ -109,7 +47,25 @@ export default function Landing() {
             Learn Bitcoin cryptography by doing. Every hash, key, and signature computed live in
             your browser — no backend, no secrets leave your machine.
           </p>
+          <Link to="/hash" className={`${BTN_PRIMARY} mt-6 inline-flex items-center gap-2`}>
+            Start Learning
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 3l5 5-5 5" />
+            </svg>
+          </Link>
         </motion.div>
+
+        {/* Concept Chain */}
+        <ConceptChain className="mb-12 md:mb-14" />
 
         {/* Module grid */}
         <motion.div
@@ -119,6 +75,7 @@ export default function Landing() {
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
           {MODULES.map((mod) => {
+            const isCompleted = completedModules.includes(mod.key);
             const cardClasses = `block rounded-card border p-6 transition-all ${
               mod.active
                 ? "group border-border shadow-container hover:border-border-strong hover:shadow-[0_18px_48px_rgba(0,0,0,0.36)]"
@@ -133,15 +90,24 @@ export default function Landing() {
                   >
                     {mod.number}
                   </span>
-                  {mod.active ? (
-                    <span className="rounded-badge bg-accent/10 px-2.5 py-1 text-[11px] font-bold text-accent">
-                      ACTIVE
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-badge bg-surface-raised px-2.5 py-1 text-[11px] font-medium text-text-muted">
+                      ~{mod.estimatedMinutes} min
                     </span>
-                  ) : (
-                    <span className="rounded-badge bg-surface-raised px-2.5 py-1 text-[11px] font-bold text-text-muted">
-                      COMING SOON
-                    </span>
-                  )}
+                    {mod.active && isCompleted ? (
+                      <span className="rounded-badge bg-success/10 px-2.5 py-1 text-[11px] font-bold text-success">
+                        COMPLETED
+                      </span>
+                    ) : mod.active ? (
+                      <span className="rounded-badge bg-accent/10 px-2.5 py-1 text-[11px] font-bold text-accent">
+                        ACTIVE
+                      </span>
+                    ) : (
+                      <span className="rounded-badge bg-surface-raised px-2.5 py-1 text-[11px] font-bold text-text-muted">
+                        COMING SOON
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h2 className="mb-1 text-lg font-bold text-text-primary transition-colors group-hover:text-accent">
                   {mod.title}

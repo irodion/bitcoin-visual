@@ -16,7 +16,8 @@ describe("ModuleLayout", () => {
         </ModuleLayout>,
       );
     });
-    expect(screen.getByText("Hash Playground")).toBeInTheDocument();
+    const matches = screen.getAllByText("Hash Playground");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders back-to-home link", async () => {

@@ -13,7 +13,8 @@ describe("UTXOBuilder", () => {
     await act(async () => {
       renderWithRouter(<UTXOBuilder />);
     });
-    expect(screen.getByText("UTXO & Transactions")).toBeInTheDocument();
+    const matches = screen.getAllByText("UTXO & Transactions");
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders theory content", async () => {

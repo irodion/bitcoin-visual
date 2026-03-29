@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
 import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
 import { useUTXOState } from "./useUTXOState.ts";
@@ -5,6 +6,7 @@ import { UTXOPool } from "./UTXOPool.tsx";
 import { TransactionBuilder } from "./TransactionBuilder.tsx";
 import { TxHexInspector } from "./TxHexInspector.tsx";
 import { TxIDPanel } from "./TxIDPanel.tsx";
+import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -75,6 +77,11 @@ function TheoryContent() {
 
 export default function UTXOBuilder() {
   const state = useUTXOState();
+  const { completed, complete } = useModuleCompletion("utxo");
+
+  useEffect(() => {
+    if (!completed && state.isValid && state.txid) complete();
+  }, [state.isValid, state.txid, completed, complete]);
 
   const activeTab = state.isSegWit ? "segwit" : "legacy";
   const displayHex = state.isSegWit ? state.witnessSerializedHex : state.serializedHex;
