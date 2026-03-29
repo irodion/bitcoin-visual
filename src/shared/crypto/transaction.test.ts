@@ -5,6 +5,8 @@ import {
   serializeWitnessTransaction,
   buildP2PKHScript,
   buildP2WPKHScript,
+  buildP2SHScript,
+  buildP2WSHScript,
   buildP2PKHScriptSig,
   computeTxID,
   reverseBytes,
@@ -334,5 +336,30 @@ describe("mapTransactionSegments", () => {
     const serialized = serializeWitnessTransaction(tx);
     const lastSeg = segments[segments.length - 1];
     expect(lastSeg.endByte).toBe(serialized.length);
+  });
+});
+
+describe("buildP2SHScript", () => {
+  it("produces a 23-byte script with OP_HASH160 and OP_EQUAL", () => {
+    const hash = new Uint8Array(20).fill(0xef);
+    const script = buildP2SHScript(hash);
+
+    expect(script.length).toBe(23);
+    expect(script[0]).toBe(0xa9); // OP_HASH160
+    expect(script[1]).toBe(0x14); // push 20
+    expect(script.slice(2, 22)).toEqual(hash);
+    expect(script[22]).toBe(0x87); // OP_EQUAL
+  });
+});
+
+describe("buildP2WSHScript", () => {
+  it("produces a 34-byte script with OP_0 and 32-byte push", () => {
+    const hash = new Uint8Array(32).fill(0xde);
+    const script = buildP2WSHScript(hash);
+
+    expect(script.length).toBe(34);
+    expect(script[0]).toBe(0x00); // OP_0
+    expect(script[1]).toBe(0x20); // push 32
+    expect(script.slice(2)).toEqual(hash);
   });
 });

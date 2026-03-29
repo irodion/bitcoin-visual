@@ -141,6 +141,31 @@ export function buildP2WPKHScript(pubKeyHash: Uint8Array): Uint8Array {
   return script;
 }
 
+export function buildP2SHScript(scriptHash: Uint8Array): Uint8Array {
+  if (scriptHash.length !== 20) {
+    throw new Error(`buildP2SHScript: expected 20-byte script hash, got ${scriptHash.length}`);
+  }
+  const script = new Uint8Array(23);
+  script[0] = 0xa9; // OP_HASH160
+  script[1] = 0x14; // push 20 bytes
+  script.set(scriptHash, 2);
+  script[22] = 0x87; // OP_EQUAL
+  return script;
+}
+
+export function buildP2WSHScript(witnessScriptHash: Uint8Array): Uint8Array {
+  if (witnessScriptHash.length !== 32) {
+    throw new Error(
+      `buildP2WSHScript: expected 32-byte witness script hash, got ${witnessScriptHash.length}`,
+    );
+  }
+  const script = new Uint8Array(34);
+  script[0] = 0x00; // OP_0 (witness version 0)
+  script[1] = 0x20; // push 32 bytes
+  script.set(witnessScriptHash, 2);
+  return script;
+}
+
 export function buildP2PKHScriptSig(signature: Uint8Array, pubKey: Uint8Array): Uint8Array {
   // <sigLen> <sig> <pubKeyLen> <pubKey>
   const buf = new Uint8Array(1 + signature.length + 1 + pubKey.length);
