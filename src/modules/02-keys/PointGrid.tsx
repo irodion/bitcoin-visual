@@ -123,6 +123,7 @@ interface PointDotProps {
   point: AffinePoint;
   index: number;
   role: "default" | "selectedP" | "selectedQ" | "result" | "trace";
+  interactive: boolean;
   onClick?: () => void;
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
@@ -136,10 +137,25 @@ const ROLE_STYLES = {
   trace: { fill: "var(--color-info)", r: 5, opacity: 0.8 },
 } as const;
 
-function PointDot({ point, index, role, onClick, onHoverStart, onHoverEnd }: PointDotProps) {
+function PointDot({
+  point,
+  index,
+  role,
+  interactive,
+  onClick,
+  onHoverStart,
+  onHoverEnd,
+}: PointDotProps) {
   const style = ROLE_STYLES[role];
   const cx = toSvgX(point.x);
   const cy = toSvgY(point.y);
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if ((e.key === "Enter" || e.key === " ") && onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  }
 
   return (
     <motion.circle
@@ -159,12 +175,14 @@ function PointDot({ point, index, role, onClick, onHoverStart, onHoverEnd }: Poi
         delay: role === "default" ? index * 0.002 : 0,
         ...(role === "result" ? { r: { duration: 1.2, repeat: Infinity, ease: "easeInOut" } } : {}),
       }}
-      style={{ cursor: onClick ? "pointer" : "default" }}
-      onClick={onClick}
+      style={{ cursor: interactive ? "pointer" : "default" }}
+      onClick={interactive ? onClick : undefined}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
-      role={onClick ? "button" : undefined}
-      aria-label={onClick ? `Point (${point.x}, ${point.y})` : undefined}
+      onKeyDown={interactive ? handleKeyDown : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      role={interactive ? "button" : undefined}
+      aria-label={interactive ? `Point (${point.x}, ${point.y})` : undefined}
     />
   );
 }
@@ -223,19 +241,21 @@ export function PointGrid({
         viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
         className="w-full"
         role="img"
-        aria-label={`Elliptic curve points over F\u2082\u2081: 72 points on y\u00B2 = x\u00B3 + 9x + 1`}
+        aria-label={`Elliptic curve points over F\u2086\u2081: 72 points on y\u00B2 = x\u00B3 + 9x + 1`}
       >
         <GridLines />
 
         {/* All curve points */}
         {points.map((pt, i) => {
           const role = getRole(pt);
+          const isInteractive = selectionMode !== "none" && !!onPointClick;
           return (
             <PointDot
               key={`${pt.x}-${pt.y}`}
               point={pt}
               index={i}
               role={role}
+              interactive={isInteractive}
               onClick={onPointClick ? () => onPointClick(pt) : undefined}
               onHoverStart={() => setHoveredPoint(pt)}
               onHoverEnd={() => setHoveredPoint(null)}

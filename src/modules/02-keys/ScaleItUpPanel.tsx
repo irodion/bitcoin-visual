@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { secp256k1 } from "@noble/curves/secp256k1.js";
+import { hexToBytes } from "@noble/hashes/utils.js";
 import { STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { HexBox } from "../../shared/components/index.ts";
+import { isValidPrivateKey } from "../../shared/crypto/index.ts";
 import { TOY_P, TOY_A, TOY_B, TOY_ORDER, TOY_BASE } from "../../shared/crypto/toyEC.ts";
 
 // ── secp256k1 constants for display ──
@@ -43,6 +45,8 @@ function CompareRow({
 function YourKeyPanel({ entropyHex }: { entropyHex: string }) {
   const keyData = useMemo(() => {
     if (!/^[0-9a-fA-F]{64}$/.test(entropyHex)) return null;
+    const bytes = hexToBytes(entropyHex);
+    if (!isValidPrivateKey(bytes)) return null;
     try {
       const k = BigInt("0x" + entropyHex);
       const point = secp256k1.Point.BASE.multiply(k).toAffine();

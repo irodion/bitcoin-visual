@@ -197,6 +197,7 @@ export function scalarMultiplyWithSteps(k: bigint, P: ECPoint): ScalarStep[] {
 
 // ── Point Enumeration ──
 
+// Module-level cache — safe because the toy curve parameters (TOY_P, TOY_A, TOY_B) are constants.
 let _allPoints: AffinePoint[] | null = null;
 
 /** Enumerate all affine points on the toy curve (memoized) */

@@ -167,7 +167,7 @@ describe("KeysExplorer", () => {
 
     const curvesTab = screen.getByRole("tab", { name: "Elliptic Curves" });
     expect(curvesTab).toHaveAttribute("aria-selected", "true");
-    expect(await screen.findByText("Point Addition")).toBeInTheDocument();
+    expect(await screen.findByRole("tab", { name: "Point Addition" })).toBeInTheDocument();
   });
 
   it("switches back to pipeline and preserves entropy", async () => {

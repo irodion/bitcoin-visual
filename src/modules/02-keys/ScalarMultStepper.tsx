@@ -23,6 +23,8 @@ function BinaryDisplay({ value, highlightBit }: { value: number; highlightBit: n
   return (
     <div className="flex items-center gap-0.5 font-mono text-sm">
       <span className="mr-2 text-xs text-text-muted">binary:</span>
+      {/* Bits are MSB-first; index 0 is the leading 1-bit (Init step).
+         highlightBit is the step index (0-based), mapping to bit string index highlightBit + 1. */}
       {bits.split("").map((bit, i) => (
         <span
           key={i}
@@ -237,7 +239,7 @@ export function ScalarMultStepper({
         <AnimatePresence>
           {scalarSteps.map((step, i) => (
             <StepCard
-              key={i}
+              key={`${scalar}-${i}`}
               step={step}
               index={i}
               isActive={i === currentStepIndex}
