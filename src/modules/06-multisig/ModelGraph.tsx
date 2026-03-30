@@ -121,6 +121,7 @@ function GraphEdgeElement({
   const dx = to.x - from.x;
   const dy = to.y - from.y;
   const len = Math.sqrt(dx * dx + dy * dy);
+  if (len === 0) return null;
   const pad = 30;
   const x1 = from.x + (dx / len) * pad;
   const y1 = from.y + (dy / len) * pad;
