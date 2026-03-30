@@ -140,4 +140,52 @@ describe("KeysExplorer", () => {
 
     expect(firstValue).not.toBe(secondValue);
   });
+
+  it("renders tab bar with Key Pipeline and Elliptic Curves tabs", async () => {
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+    expect(screen.getByText("Key Pipeline")).toBeInTheDocument();
+    expect(screen.getByText("Elliptic Curves")).toBeInTheDocument();
+  });
+
+  it("defaults to Key Pipeline tab", async () => {
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+    expect(screen.getByRole("tab", { name: "Key Pipeline" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  });
+
+  it("switches to Elliptic Curves tab on click", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Elliptic Curves" }));
+
+    const curvesTab = screen.getByRole("tab", { name: "Elliptic Curves" });
+    expect(curvesTab).toHaveAttribute("aria-selected", "true");
+    expect(await screen.findByRole("tab", { name: "Point Addition" })).toBeInTheDocument();
+  });
+
+  it("switches back to pipeline and preserves entropy", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+
+    await user.click(screen.getByText("Generate Random Key"));
+    const input = screen.getByLabelText(/custom entropy/i) as HTMLInputElement;
+    const entropy = input.value;
+
+    await user.click(screen.getByRole("tab", { name: "Elliptic Curves" }));
+    await user.click(screen.getByRole("tab", { name: "Key Pipeline" }));
+
+    const inputAfter = (await screen.findByLabelText(/custom entropy/i)) as HTMLInputElement;
+    expect(inputAfter.value).toBe(entropy);
+  });
 });
