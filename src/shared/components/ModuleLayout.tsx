@@ -37,9 +37,13 @@ function TabBar({
   onTabChange: (key: string) => void;
 }) {
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const keyboardNav = useRef(false);
 
   useEffect(() => {
-    tabRefs.current.get(activeTab)?.focus();
+    if (keyboardNav.current) {
+      tabRefs.current.get(activeTab)?.focus();
+      keyboardNav.current = false;
+    }
   }, [activeTab]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -47,9 +51,11 @@ function TabBar({
     const idx = keys.indexOf(activeTab);
     if (e.key === "ArrowRight") {
       e.preventDefault();
+      keyboardNav.current = true;
       onTabChange(keys[(idx + 1) % keys.length]);
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
+      keyboardNav.current = true;
       onTabChange(keys[(idx - 1 + keys.length) % keys.length]);
     }
   };

@@ -114,4 +114,60 @@ describe("ModuleLayout", () => {
     await userEvent.keyboard("{ArrowRight}");
     expect(onTabChange).toHaveBeenCalledWith("b");
   });
+
+  it("navigates tabs backwards with ArrowLeft", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "b",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[1].focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(onTabChange).toHaveBeenCalledWith("a");
+  });
+
+  it("wraps around with ArrowRight on last tab", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "b",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[1].focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(onTabChange).toHaveBeenCalledWith("a");
+  });
 });

@@ -54,6 +54,10 @@
   --color-text-on-accent: #111723;
   --color-badge-bg: #171e2c;
   --color-ghost-bg: #151d2b;
+  --color-badge-info-border: #2f4963;
+  --color-badge-info-bg: #142434;
+  --color-badge-warm-border: #5a3e17;
+  --color-badge-warm-bg: #2a1d10;
 
   /* Glows */
   --color-glow-accent: rgba(247, 147, 26, 0.06);
