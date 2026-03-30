@@ -59,9 +59,9 @@ Use `Set` or `Map` for lookups instead of `.some()`/`.find()` inside render loop
 
 Add `tabIndex={0}` and an `onKeyDown` handler for Enter and Space at the same time as adding click handlers. Don't defer a11y to review.
 
-### Run commands through `./node_modules/.bin/vp` (not `vp`, `npx vitest`, or `pnpm exec`)
+### In Bash tool calls, run commands through `./node_modules/.bin/vp`
 
-The `vp` shell function requires profile loading. Use the local binary path directly.
+The short `vp` form works in the developer's terminal (shell profile defines the function) but not in Bash tool calls which don't load the profile. Use the full local binary path. Don't fall back to `npx vitest` or `pnpm exec` — they resolve to different binaries.
 
 ## Reference Docs
 
