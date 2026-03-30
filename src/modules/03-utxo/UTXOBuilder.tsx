@@ -1,25 +1,13 @@
 import { useEffect } from "react";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
+import { CONTAINER_VARIANTS, STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useUTXOState } from "./useUTXOState.ts";
 import { UTXOPool } from "./UTXOPool.tsx";
 import { TransactionBuilder } from "./TransactionBuilder.tsx";
 import { TxHexInspector } from "./TxHexInspector.tsx";
 import { TxIDPanel } from "./TxIDPanel.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const stepVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-};
 
 const TABS = [
   { key: "legacy", label: "Legacy P2PKH" },
@@ -101,12 +89,12 @@ export default function UTXOBuilder() {
       }}
     >
       <motion.div
-        variants={containerVariants}
+        variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate="visible"
         className="mx-auto max-w-3xl space-y-5"
       >
-        <motion.div variants={stepVariants}>
+        <motion.div variants={STEP_VARIANTS}>
           <UTXOPool
             utxos={state.utxos}
             selectedIds={state.selectedIds}
@@ -115,7 +103,7 @@ export default function UTXOBuilder() {
           />
         </motion.div>
 
-        <motion.div variants={stepVariants}>
+        <motion.div variants={STEP_VARIANTS}>
           <TransactionBuilder
             selectedUtxos={state.selectedUtxos}
             recipientAmountBTC={state.recipientAmountBTC}
@@ -131,7 +119,7 @@ export default function UTXOBuilder() {
         </motion.div>
 
         {state.isValid && displayHex && (
-          <motion.div variants={stepVariants}>
+          <motion.div variants={STEP_VARIANTS}>
             <TxHexInspector
               serializedHex={displayHex}
               segments={state.hexSegments}
@@ -141,7 +129,7 @@ export default function UTXOBuilder() {
         )}
 
         {state.isValid && state.txidIntermediate && state.txid && (
-          <motion.div variants={stepVariants}>
+          <motion.div variants={STEP_VARIANTS}>
             <TxIDPanel
               txidIntermediate={state.txidIntermediate}
               txid={state.txid}

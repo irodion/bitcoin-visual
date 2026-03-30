@@ -23,7 +23,7 @@ export function UTXOCoin({ utxo, isSelected, onToggle }: UTXOCoinProps) {
       }}
       animate={{ scale: isSelected ? 1.02 : 1 }}
       transition={{ duration: 0.15 }}
-      className={`cursor-pointer rounded-[20px] border p-4 text-left transition-all ${
+      className={`cursor-pointer rounded-callout border p-4 text-left transition-all ${
         isSelected
           ? "border-accent bg-accent-muted shadow-[0_0_16px_rgba(247,147,26,0.2)]"
           : "border-border bg-surface-raised hover:border-border-strong"

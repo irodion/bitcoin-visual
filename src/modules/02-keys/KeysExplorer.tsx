@@ -1,5 +1,5 @@
 import { type ReactNode, useState, useEffect } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { generatePrivateKey } from "../../shared/crypto/index.ts";
 import {
@@ -9,23 +9,11 @@ import {
   TheoryConceptCard,
   TheoryCallout,
 } from "../../shared/components/index.ts";
+import { CONTAINER_VARIANTS, STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useKeyPipeline, type PipelineResult } from "./useKeyPipeline.ts";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 import { EntropyInput } from "./EntropyInput.tsx";
 import { PipelineStep } from "./PipelineStep.tsx";
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const stepVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-};
 
 interface StepDef {
   arrow?: { label: string; description: string };
@@ -194,12 +182,12 @@ export default function KeysExplorer() {
           <AnimatePresence mode="wait">
             <motion.div
               key={generationKey}
-              variants={containerVariants}
+              variants={CONTAINER_VARIANTS}
               initial="hidden"
               animate="visible"
               className="space-y-2 pt-4"
             >
-              <motion.div variants={stepVariants}>
+              <motion.div variants={STEP_VARIANTS}>
                 <PipelineStep
                   stepNumber={1}
                   title="Entropy"
@@ -213,7 +201,7 @@ export default function KeysExplorer() {
                 PIPELINE_STEPS.map((step, i) => (
                   <div key={step.title}>
                     {step.arrow && (
-                      <motion.div variants={stepVariants}>
+                      <motion.div variants={STEP_VARIANTS}>
                         <ValueFlowArrow
                           label={step.arrow.label}
                           description={step.arrow.description}
@@ -221,7 +209,7 @@ export default function KeysExplorer() {
                         />
                       </motion.div>
                     )}
-                    <motion.div variants={stepVariants}>
+                    <motion.div variants={STEP_VARIANTS}>
                       <PipelineStep
                         stepNumber={i + 2}
                         title={step.title}

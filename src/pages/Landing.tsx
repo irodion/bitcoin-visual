@@ -114,7 +114,7 @@ export default function Landing() {
                 </h2>
                 <p className="text-sm leading-relaxed text-text-secondary">{mod.description}</p>
                 {mod.active && (
-                  <div className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-accent opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
                     Open module
                     <svg
                       width="14"

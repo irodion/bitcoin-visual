@@ -36,4 +36,15 @@ describe("ValueFlowArrow", () => {
     });
     expect(screen.getByText("Elliptic curve point multiplication")).toBeInTheDocument();
   });
+
+  it("has role=tooltip with aria-describedby linking trigger to tooltip", async () => {
+    await act(async () => {
+      render(<ValueFlowArrow label="HASH160" description="SHA-256 then RIPEMD-160" />);
+    });
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip).toHaveTextContent("SHA-256 then RIPEMD-160");
+
+    const trigger = screen.getByText("HASH160").closest("[aria-describedby]");
+    expect(trigger).toHaveAttribute("aria-describedby", tooltip.id);
+  });
 });

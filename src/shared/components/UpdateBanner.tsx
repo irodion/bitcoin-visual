@@ -18,7 +18,7 @@ export function UpdateBanner() {
           <span className="text-sm text-text-primary">New version available</span>
           <button
             type="button"
-            className="cursor-pointer rounded-pill bg-accent px-4 py-1.5 text-xs font-bold text-[#111723] transition-opacity hover:opacity-90 active:opacity-80"
+            className="cursor-pointer rounded-pill bg-accent px-4 py-1.5 text-xs font-bold text-text-on-accent transition-opacity hover:opacity-90 active:opacity-80"
             onClick={update}
           >
             Reload
