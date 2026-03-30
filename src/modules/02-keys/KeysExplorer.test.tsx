@@ -153,8 +153,10 @@ describe("KeysExplorer", () => {
     await act(async () => {
       renderWithRouter(<KeysExplorer />);
     });
-    const pipelineTab = screen.getByText("Key Pipeline").closest("button");
-    expect(pipelineTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Key Pipeline" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
   });
 
   it("switches to Elliptic Curves tab on click", async () => {
@@ -183,7 +185,7 @@ describe("KeysExplorer", () => {
     await user.click(screen.getByRole("tab", { name: "Elliptic Curves" }));
     await user.click(screen.getByRole("tab", { name: "Key Pipeline" }));
 
-    const inputAfter = screen.getByLabelText(/custom entropy/i) as HTMLInputElement;
+    const inputAfter = (await screen.findByLabelText(/custom entropy/i)) as HTMLInputElement;
     expect(inputAfter.value).toBe(entropy);
   });
 });
