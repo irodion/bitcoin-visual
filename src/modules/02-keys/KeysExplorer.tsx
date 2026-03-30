@@ -14,6 +14,14 @@ import { useKeyPipeline, type PipelineResult } from "./useKeyPipeline.ts";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 import { EntropyInput } from "./EntropyInput.tsx";
 import { PipelineStep } from "./PipelineStep.tsx";
+import { EllipticCurvesTab } from "./EllipticCurvesTab.tsx";
+
+type KeysTabKey = "pipeline" | "curves";
+
+const TABS = [
+  { key: "pipeline", label: "Key Pipeline" },
+  { key: "curves", label: "Elliptic Curves" },
+];
 
 interface StepDef {
   arrow?: { label: string; description: string };
@@ -93,7 +101,7 @@ const PIPELINE_STEPS: StepDef[] = [
   },
 ];
 
-function TheoryContent() {
+function PipelineTheory() {
   return (
     <>
       <h3>Private Keys</h3>
@@ -146,9 +154,58 @@ function TheoryContent() {
   );
 }
 
+function ECTheory() {
+  return (
+    <>
+      <h3>Elliptic Curves</h3>
+      <p>
+        An elliptic curve is defined by <strong>y² = x³ + ax + b</strong>. Over a finite field F
+        <sub>p</sub>, the set of solutions forms a mathematical group used for public key
+        cryptography.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="Point Addition"
+          description="Draw a line through P and Q, find the third intersection with the curve, then reflect across the x-axis. This defines P + Q."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="Point Doubling"
+          description="When P = Q, use the tangent line at P instead of a secant. This is how we compute 2P."
+        />
+        <TheoryConceptCard
+          dot="info"
+          title="Scalar Multiplication"
+          description="k × P = P added to itself k times. The double-and-add algorithm makes this efficient: O(log k) operations."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="Finite Fields"
+          description="Real curves use integers mod a prime p. Points become discrete — no continuous line, but the same algebraic rules apply."
+        />
+      </div>
+
+      <TheoryCallout
+        label="ONE-WAY TRAPDOOR"
+        title="The Discrete Logarithm Problem"
+        description="Given k × P and P, finding k is computationally infeasible for large curves. This is what makes public key cryptography secure."
+      />
+
+      <h3>Toy Curve</h3>
+      <p>
+        This playground uses F<sub>61</sub> (y² = x³ + 9x + 1) with only 72 points. The math is
+        identical to secp256k1 — the security comes from the field size.
+      </p>
+    </>
+  );
+}
+
 export default function KeysExplorer() {
   const [entropyHex, setEntropyHex] = useState("");
   const [generationKey, setGenerationKey] = useState(0);
+  const [activeTab, setActiveTab] = useState<KeysTabKey>("pipeline");
   const pipeline = useKeyPipeline(entropyHex);
   const { completed, complete } = useModuleCompletion("keys");
 
@@ -168,64 +225,93 @@ export default function KeysExplorer() {
       title="Keys & Address Generator"
       moduleNumber={2}
       subtitle="Generate a private key, derive the public key, and encode Bitcoin addresses step by step."
-      theoryContent={<TheoryContent />}
+      theoryContent={activeTab === "pipeline" ? <PipelineTheory /> : <ECTheory />}
+      tabConfig={{
+        tabs: TABS,
+        activeTab,
+        onTabChange: (key) => setActiveTab(key as KeysTabKey),
+      }}
     >
-      <div className="mx-auto max-w-2xl space-y-2">
-        <EntropyInput
-          value={entropyHex}
-          onChange={setEntropyHex}
-          onGenerate={handleGenerate}
-          error={pipeline.error}
-        />
+      <AnimatePresence mode="wait">
+        {activeTab === "pipeline" && (
+          <motion.div
+            key="pipeline"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <div className="mx-auto max-w-2xl space-y-2">
+              <EntropyInput
+                value={entropyHex}
+                onChange={setEntropyHex}
+                onGenerate={handleGenerate}
+                error={pipeline.error}
+              />
 
-        {(pipeline.isValid || pipeline.entropy) && (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={generationKey}
-              variants={CONTAINER_VARIANTS}
-              initial="hidden"
-              animate="visible"
-              className="space-y-2 pt-4"
-            >
-              <motion.div variants={STEP_VARIANTS}>
-                <PipelineStep
-                  stepNumber={1}
-                  title="Entropy"
-                  algorithm="CSPRNG"
-                  algorithmDetail="Cryptographically secure pseudorandom number generator — 32 random bytes from the OS"
-                  value={pipeline.entropy}
-                />
-              </motion.div>
-
-              {pipeline.isValid &&
-                PIPELINE_STEPS.map((step, i) => (
-                  <div key={step.title}>
-                    {step.arrow && (
-                      <motion.div variants={STEP_VARIANTS}>
-                        <ValueFlowArrow
-                          label={step.arrow.label}
-                          description={step.arrow.description}
-                          animationKey={entropyHex}
-                        />
-                      </motion.div>
-                    )}
+              {(pipeline.isValid || pipeline.entropy) && (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={generationKey}
+                    variants={CONTAINER_VARIANTS}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-2 pt-4"
+                  >
                     <motion.div variants={STEP_VARIANTS}>
                       <PipelineStep
-                        stepNumber={i + 2}
-                        title={step.title}
-                        algorithm={step.algorithm}
-                        algorithmDetail={step.algorithmDetail}
-                        value={step.value(pipeline)}
-                        hexVariant={step.hexVariant}
-                        overlay={step.overlay}
+                        stepNumber={1}
+                        title="Entropy"
+                        algorithm="CSPRNG"
+                        algorithmDetail="Cryptographically secure pseudorandom number generator — 32 random bytes from the OS"
+                        value={pipeline.entropy}
                       />
                     </motion.div>
-                  </div>
-                ))}
-            </motion.div>
-          </AnimatePresence>
+
+                    {pipeline.isValid &&
+                      PIPELINE_STEPS.map((step, i) => (
+                        <div key={step.title}>
+                          {step.arrow && (
+                            <motion.div variants={STEP_VARIANTS}>
+                              <ValueFlowArrow
+                                label={step.arrow.label}
+                                description={step.arrow.description}
+                                animationKey={entropyHex}
+                              />
+                            </motion.div>
+                          )}
+                          <motion.div variants={STEP_VARIANTS}>
+                            <PipelineStep
+                              stepNumber={i + 2}
+                              title={step.title}
+                              algorithm={step.algorithm}
+                              algorithmDetail={step.algorithmDetail}
+                              value={step.value(pipeline)}
+                              hexVariant={step.hexVariant}
+                              overlay={step.overlay}
+                            />
+                          </motion.div>
+                        </div>
+                      ))}
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </div>
+          </motion.div>
         )}
-      </div>
+
+        {activeTab === "curves" && (
+          <motion.div
+            key="curves"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <EllipticCurvesTab entropyHex={entropyHex} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ModuleLayout>
   );
 }
