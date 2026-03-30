@@ -173,4 +173,32 @@ describe("ModuleLayout", () => {
     await userEvent.keyboard("{ArrowRight}");
     expect(onTabChange).toHaveBeenCalledWith("a");
   });
+
+  it("wraps around with ArrowLeft on first tab", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "a",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[0].focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(onTabChange).toHaveBeenCalledWith("b");
+  });
 });
