@@ -33,8 +33,8 @@ export interface Cosigner {
 }
 
 export interface MultisigState {
-  activeTab: "setup" | "sign";
-  setActiveTab: (tab: "setup" | "sign") => void;
+  activeTab: "setup" | "sign" | "models";
+  setActiveTab: (tab: "setup" | "sign" | "models") => void;
 
   cosigners: Cosigner[];
   generateCosignerKey: (index: number) => void;
@@ -79,7 +79,7 @@ const FEE = 2_000n; // 2000 sats
 // ── Hook ──
 
 export function useMultisigState(): MultisigState {
-  const [activeTab, setActiveTab] = useState<"setup" | "sign">("setup");
+  const [activeTab, setActiveTab] = useState<"setup" | "sign" | "models">("setup");
   const [cosigners, setCosigners] = useState<Cosigner[]>(
     COSIGNER_LABELS.map((label, i) => ({
       id: i + 1,

@@ -2,7 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { HexBox, ValueFlowArrow } from "../../shared/components/index.ts";
-import { STEP_VARIANTS, CONTAINER_VARIANTS } from "../../shared/components/styles.ts";
+import {
+  STEP_VARIANTS,
+  CONTAINER_VARIANTS,
+  CHECK_ICON_PATH,
+} from "../../shared/components/styles.ts";
 import { PSBTStepCard } from "./PSBTStepCard.tsx";
 import { SignatureTracker } from "./SignatureTracker.tsx";
 import { SighashDetail } from "./SighashDetail.tsx";
@@ -205,7 +209,7 @@ export function PSBTWorkflow({
                     fill="currentColor"
                     aria-hidden="true"
                   >
-                    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z" />
+                    <path d={CHECK_ICON_PATH} />
                   </svg>
                   Transaction broadcast to the network (simulated)
                 </div>
