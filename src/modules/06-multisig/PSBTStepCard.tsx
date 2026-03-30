@@ -21,8 +21,8 @@ const statusStyles: Record<StepStatus, string> = {
 
 const circleBg: Record<StepStatus, string> = {
   pending: "bg-surface-raised text-text-muted",
-  active: "bg-accent text-[#111723]",
-  complete: "bg-success text-[#111723]",
+  active: "bg-accent text-text-on-accent",
+  complete: "bg-success text-text-on-accent",
 };
 
 export function PSBTStepCard({
@@ -35,7 +35,7 @@ export function PSBTStepCard({
   children,
 }: PSBTStepCardProps) {
   return (
-    <div className={`panel-cool rounded-[24px] border p-5 transition-all ${statusStyles[status]}`}>
+    <div className={`panel-cool rounded-input border p-5 transition-all ${statusStyles[status]}`}>
       <div className="mb-3 flex items-center gap-2.5">
         <span
           className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${circleBg[status]}`}

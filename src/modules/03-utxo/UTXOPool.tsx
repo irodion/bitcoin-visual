@@ -12,7 +12,7 @@ export function UTXOPool({ utxos, selectedIds, totalInputSats, onToggle }: UTXOP
   const selectedCount = selectedIds.size;
 
   return (
-    <div className="panel-cool rounded-[30px] border border-border p-5 md:p-6">
+    <div className="panel-cool rounded-section border border-border p-5 md:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="text-[11px] font-medium uppercase tracking-widest text-text-secondary">
           UTXO Pool

@@ -134,7 +134,7 @@ export function MerkleTreePanel({
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 rounded-[16px] border border-accent/20 bg-accent/5 px-4 py-3"
+            className="mt-4 rounded-inner border border-accent/20 bg-accent/5 px-4 py-3"
           >
             <p className="text-sm text-text-primary">
               To verify{" "}

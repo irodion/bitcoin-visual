@@ -31,7 +31,7 @@ export function TransactionBuilder({
   const isBalanced = isValid && totalInputSats === totalOutputSats;
 
   return (
-    <div className="panel-cool rounded-[30px] border border-border p-5 md:p-6">
+    <div className="panel-cool rounded-section border border-border p-5 md:p-6">
       <div className="mb-4 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
         Transaction Builder{" "}
         <span className="ml-1 rounded-badge bg-surface-raised px-2 py-0.5 text-text-muted">
@@ -52,7 +52,7 @@ export function TransactionBuilder({
               {selectedUtxos.map((utxo) => (
                 <div
                   key={utxo.id}
-                  className="flex items-center justify-between rounded-[16px] border border-border bg-surface px-4 py-2.5"
+                  className="flex items-center justify-between rounded-inner border border-border bg-surface px-4 py-2.5"
                 >
                   <div>
                     <span className="text-sm font-medium text-text-primary">{utxo.label}</span>
@@ -82,7 +82,7 @@ export function TransactionBuilder({
           </label>
           <div className="space-y-2">
             {/* Recipient */}
-            <div className="rounded-[16px] border border-border bg-surface p-3">
+            <div className="rounded-inner border border-border bg-surface p-3">
               <div className="mb-1.5 text-[10px] font-medium uppercase tracking-widest text-text-muted">
                 Recipient
               </div>
@@ -100,7 +100,7 @@ export function TransactionBuilder({
 
             {/* Change */}
             {changeAmountSats > 0n && (
-              <div className="flex items-center justify-between rounded-[16px] border border-border bg-surface px-4 py-2.5">
+              <div className="flex items-center justify-between rounded-inner border border-border bg-surface px-4 py-2.5">
                 <span className="text-sm text-text-secondary">Change</span>
                 <span className="font-mono text-sm text-teal">
                   {satsToBtc(changeAmountSats)} BTC
@@ -109,7 +109,7 @@ export function TransactionBuilder({
             )}
 
             {/* Fee */}
-            <div className="flex items-center justify-between rounded-[16px] border border-dashed border-border bg-surface px-4 py-2.5">
+            <div className="flex items-center justify-between rounded-inner border border-dashed border-border bg-surface px-4 py-2.5">
               <span className="text-sm text-text-secondary">Fee (fixed)</span>
               <span className="font-mono text-sm text-warning-text">{satsToBtc(feeSats)} BTC</span>
             </div>

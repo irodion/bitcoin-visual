@@ -51,7 +51,7 @@ export function PathBuilder({
   fullPathString,
 }: PathBuilderProps) {
   return (
-    <div className="panel-warm rounded-[30px] border border-border-amber p-6">
+    <div className="panel-warm rounded-section border border-border-amber p-6">
       <h3 className="mb-1 text-lg font-bold text-text-primary">Derivation Path</h3>
       <p className="mb-4 text-sm text-text-muted">
         Click a segment to learn what it controls. The full BIP44 path is shown below.
@@ -123,7 +123,7 @@ export function PathBuilder({
       <p className="mb-4 font-mono text-xs text-text-secondary">{fullPathString}</p>
 
       {selectedSegmentIndex !== null && (
-        <div className="mb-4 rounded-[20px] border border-border bg-surface-raised p-4">
+        <div className="mb-4 rounded-callout border border-border bg-surface-raised p-4">
           <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent">
             {SEGMENT_META[selectedSegmentIndex].name}
           </p>

@@ -121,7 +121,7 @@ interface TheoryConceptCardProps {
 
 export function TheoryConceptCard({ dot, title, description }: TheoryConceptCardProps) {
   return (
-    <div className="rounded-[20px] border border-[#1E2B3D] bg-[#101827] p-4">
+    <div className="rounded-callout border border-border bg-surface-raised p-4">
       <div className="flex items-center gap-2.5">
         <span
           className="inline-block h-3 w-3 shrink-0 rounded-full"
@@ -144,7 +144,7 @@ interface TheoryCalloutProps {
 
 export function TheoryCallout({ label, title, description }: TheoryCalloutProps) {
   return (
-    <div className="rounded-[20px] border border-warning-border bg-warning-bg p-4">
+    <div className="rounded-callout border border-warning-border bg-warning-bg p-4">
       <div className="text-[12px] font-medium uppercase tracking-[0.16em] text-warning-text">
         {label}
       </div>

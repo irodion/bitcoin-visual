@@ -1,31 +1,23 @@
 import { Fragment, useEffect, useRef } from "react";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ModuleLayout,
   TheoryConceptCard,
   TheoryCallout,
   ValueFlowArrow,
 } from "../../shared/components/index.ts";
-import { BTN_PRIMARY, BTN_GHOST } from "../../shared/components/styles.ts";
+import {
+  BTN_PRIMARY,
+  BTN_GHOST,
+  CONTAINER_VARIANTS,
+  STEP_VARIANTS,
+} from "../../shared/components/styles.ts";
 import { useMempoolStore } from "../../shared/stores/index.ts";
 import { useBlockchainState } from "./useBlockchainState.ts";
 import { Block } from "./Block.tsx";
 import { MiningControls } from "./MiningControls.tsx";
 import { MerkleTreePanel } from "./MerkleTreePanel.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const stepVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-};
 
 function TheoryContent() {
   return (
@@ -125,13 +117,13 @@ export default function BlockchainSimulator() {
       statusText="LIVE SIMULATION"
     >
       <motion.div
-        variants={containerVariants}
+        variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate="visible"
         className="mx-auto max-w-5xl space-y-6"
       >
         {/* Difficulty / Mining controls */}
-        <motion.div variants={stepVariants}>
+        <motion.div variants={STEP_VARIANTS}>
           <MiningControls
             difficulty={state.difficulty}
             onDifficultyChange={state.setDifficulty}
@@ -145,7 +137,7 @@ export default function BlockchainSimulator() {
 
         {/* Pending transaction from Multisig */}
         {pendingTx && (
-          <motion.div variants={stepVariants}>
+          <motion.div variants={STEP_VARIANTS}>
             <div className="flex items-center justify-between gap-4 rounded-card border border-accent/30 bg-surface-raised p-4">
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-semibold text-accent">
@@ -168,7 +160,7 @@ export default function BlockchainSimulator() {
         )}
 
         {/* Horizontal block chain */}
-        <motion.div variants={stepVariants}>
+        <motion.div variants={STEP_VARIANTS}>
           <div className="flex items-start gap-0 overflow-x-auto pb-4">
             {state.blocks.map((block, i) => (
               <Fragment key={block.index}>
@@ -207,7 +199,7 @@ export default function BlockchainSimulator() {
 
         {/* Merkle tree panel (expanded when a block is selected) */}
         {selectedBlock && state.merkleTree && (
-          <motion.div variants={stepVariants}>
+          <motion.div variants={STEP_VARIANTS}>
             <MerkleTreePanel
               block={selectedBlock}
               merkleTree={state.merkleTree}

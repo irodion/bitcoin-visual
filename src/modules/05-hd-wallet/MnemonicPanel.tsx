@@ -24,7 +24,7 @@ export function MnemonicPanel({
   words,
 }: MnemonicPanelProps) {
   return (
-    <div className="panel-cool rounded-[30px] border border-border p-6">
+    <div className="panel-cool rounded-section border border-border p-6">
       <h3 className="mb-1 text-lg font-bold text-text-primary">Mnemonic Phrase</h3>
       <p className="mb-4 text-sm text-text-muted">
         Generate a BIP39 mnemonic or paste your own to explore key derivation

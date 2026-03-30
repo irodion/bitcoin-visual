@@ -76,7 +76,7 @@ function DiffHexColumn({
   charKey: "orig" | "mod";
 }) {
   return (
-    <div className="panel-cool rounded-[24px] border border-border p-4">
+    <div className="panel-cool rounded-input border border-border p-4">
       <div className="mb-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
         {title}
       </div>
@@ -237,7 +237,7 @@ export default function HashPlayground() {
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="space-y-5">
-              <div className="panel-cool rounded-[30px] border border-border p-6">
+              <div className="panel-cool rounded-section border border-border p-6">
                 <h3 className="text-lg font-bold text-text-primary md:text-[22px]">Input Lab</h3>
                 <p className="mb-4 text-sm text-text-muted">Human-readable message</p>
 
@@ -257,19 +257,19 @@ export default function HashPlayground() {
                 />
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-pill bg-[#171E2C] px-3 py-1.5 text-sm font-bold text-text-primary">
+                  <span className="rounded-pill bg-badge-bg px-3 py-1.5 text-sm font-bold text-text-primary">
                     {input.length} chars
                   </span>
-                  <span className="rounded-pill bg-[#171E2C] px-3 py-1.5 text-sm font-bold text-text-primary">
+                  <span className="rounded-pill bg-badge-bg px-3 py-1.5 text-sm font-bold text-text-primary">
                     {inputBytes.length} bytes
                   </span>
-                  <span className="rounded-pill bg-[#171E2C] px-3 py-1.5 text-sm font-bold text-text-primary">
+                  <span className="rounded-pill bg-badge-bg px-3 py-1.5 text-sm font-bold text-text-primary">
                     UTF-8 encoded
                   </span>
                 </div>
               </div>
 
-              <div className="panel-warm rounded-[30px] border border-border-amber p-6">
+              <div className="panel-warm rounded-section border border-border-amber p-6">
                 <h3 className="mb-3 text-lg font-bold text-warning-heading">Quick Actions</h3>
                 <div className="flex flex-wrap gap-3">
                   <button type="button" onClick={handleRandomInput} className={BTN_PRIMARY}>
@@ -300,17 +300,17 @@ export default function HashPlayground() {
                 animationKey={sha256Hex}
               />
 
-              <div className="panel-cool rounded-[30px] border border-border p-6">
+              <div className="panel-cool rounded-section border border-border p-6">
                 <div className="mb-3 flex flex-wrap items-center gap-3">
                   <h3 className="text-lg font-bold text-text-primary md:text-[22px]">
                     SHA-256 Readout
                   </h3>
-                  <span className="rounded-badge border border-[#2F4963] bg-[#142434] px-3 py-1 text-[12px] font-bold text-info">
+                  <span className="rounded-badge border border-badge-info-border bg-badge-info-bg px-3 py-1 text-[12px] font-bold text-info">
                     256-BIT OUTPUT
                   </span>
                 </div>
                 <HexBox value={sha256Hash} label="SHA-256 Hash" variant="info" />
-                <span className="mt-2 inline-block rounded-badge bg-[#162233] px-3 py-1 text-[12px] font-bold text-text-secondary">
+                <span className="mt-2 inline-block rounded-badge bg-badge-info-bg px-3 py-1 text-[12px] font-bold text-text-secondary">
                   DETERMINISTIC
                 </span>
               </div>
@@ -321,17 +321,17 @@ export default function HashPlayground() {
                 animationKey={sha256dHex}
               />
 
-              <div className="panel-warm rounded-[30px] border border-border-amber p-6">
+              <div className="panel-warm rounded-section border border-border-amber p-6">
                 <div className="mb-3 flex flex-wrap items-center gap-3">
                   <h3 className="text-lg font-bold text-warning-heading md:text-[22px]">
                     SHA-256d Readout
                   </h3>
-                  <span className="rounded-badge border border-[#5A3E17] bg-[#2A1D10] px-3 py-1 text-[12px] font-bold text-warning-text">
+                  <span className="rounded-badge border border-badge-warm-border bg-badge-warm-bg px-3 py-1 text-[12px] font-bold text-warning-text">
                     BITCOIN DOUBLE HASH
                   </span>
                 </div>
                 <HexBox value={sha256dHash} label="SHA-256d (Double Hash)" variant="warm" />
-                <span className="mt-2 inline-block rounded-badge bg-[#2A1D10] px-3 py-1 text-[12px] font-bold text-warning-text">
+                <span className="mt-2 inline-block rounded-badge bg-badge-warm-bg px-3 py-1 text-[12px] font-bold text-warning-text">
                   ANTI-EXTENSION
                 </span>
               </div>
@@ -353,7 +353,7 @@ export default function HashPlayground() {
           </p>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="panel-cool rounded-[24px] border border-border p-4">
+            <div className="panel-cool rounded-input border border-border p-4">
               <label htmlFor="avalanche-original" className={LABEL}>
                 Original
               </label>
@@ -368,7 +368,7 @@ export default function HashPlayground() {
                 className={TEXTAREA}
               />
             </div>
-            <div className="panel-cool rounded-[24px] border border-border p-4">
+            <div className="panel-cool rounded-input border border-border p-4">
               <label htmlFor="avalanche-modified" className={LABEL}>
                 Modified
               </label>
@@ -384,7 +384,7 @@ export default function HashPlayground() {
 
           <DiffHex original={sha256Hash} modified={sha256Modified} />
 
-          <div className="rounded-[30px] border border-border bg-[#0E1521] p-6">
+          <div className="rounded-section border border-border bg-[#0E1521] p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-text-primary md:text-[22px]">
@@ -394,7 +394,7 @@ export default function HashPlayground() {
                   One changed character can flip most of the 256 output bits.
                 </p>
               </div>
-              <div className="rounded-[26px] border border-[#314055] bg-[#171E2D] px-5 py-3 text-center">
+              <div className="rounded-input border border-border-secondary bg-badge-bg px-5 py-3 text-center">
                 <div className="text-[12px] font-medium uppercase tracking-[0.14em] text-text-secondary">
                   BITS CHANGED
                 </div>

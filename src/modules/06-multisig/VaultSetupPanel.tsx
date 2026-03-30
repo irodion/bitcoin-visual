@@ -64,7 +64,7 @@ export function VaultSetupPanel({
             </motion.div>
 
             <motion.div variants={STEP_VARIANTS}>
-              <div className="panel-warm rounded-[24px] border border-border-amber p-5">
+              <div className="panel-warm rounded-input border border-border-amber p-5">
                 <div className="mb-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
                   Redeem Script ({redeemScript.length} bytes)
                 </div>
@@ -79,13 +79,13 @@ export function VaultSetupPanel({
 
             <motion.div variants={STEP_VARIANTS}>
               <div className="grid gap-3 md:grid-cols-2">
-                <div className="panel-cool rounded-[24px] border border-border p-5">
+                <div className="panel-cool rounded-input border border-border p-5">
                   <div className="mb-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
                     P2SH Address
                   </div>
                   <HexBox value={p2shAddress} label="Legacy (starts with 3)" variant="default" />
                 </div>
-                <div className="panel-cool rounded-[24px] border border-border p-5">
+                <div className="panel-cool rounded-input border border-border p-5">
                   <div className="mb-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
                     P2WSH Address
                   </div>

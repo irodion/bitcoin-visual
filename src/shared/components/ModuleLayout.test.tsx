@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vite-plus/test";
+import { describe, it, expect, vi } from "vite-plus/test";
 import { render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { ModuleLayout } from "./ModuleLayout";
 
@@ -51,5 +52,153 @@ describe("ModuleLayout", () => {
       );
     });
     expect(screen.getByText("Sandbox content")).toBeInTheDocument();
+  });
+
+  it("renders tabs with correct ARIA roles", async () => {
+    let activeTab = "a";
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab,
+            onTabChange: (key) => {
+              activeTab = key;
+            },
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    expect(screen.getByRole("tablist")).toBeInTheDocument();
+
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs).toHaveLength(2);
+    expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    expect(tabs[0]).toHaveAttribute("id", "tab-a");
+    expect(tabs[1]).toHaveAttribute("aria-selected", "false");
+
+    const panel = screen.getByRole("tabpanel");
+    expect(panel).toHaveAttribute("aria-labelledby", "tab-a");
+  });
+
+  it("navigates tabs with arrow keys", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "a",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[0].focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(onTabChange).toHaveBeenCalledWith("b");
+  });
+
+  it("navigates tabs backwards with ArrowLeft", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "b",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[1].focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(onTabChange).toHaveBeenCalledWith("a");
+  });
+
+  it("wraps around with ArrowRight on last tab", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "b",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[1].focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(onTabChange).toHaveBeenCalledWith("a");
+  });
+
+  it("wraps around with ArrowLeft on first tab", async () => {
+    const onTabChange = vi.fn();
+    await act(async () => {
+      renderWithRouter(
+        <ModuleLayout
+          moduleKey="test"
+          title="Test"
+          theoryContent={<p>Theory</p>}
+          tabConfig={{
+            tabs: [
+              { key: "a", label: "Tab A" },
+              { key: "b", label: "Tab B" },
+            ],
+            activeTab: "a",
+            onTabChange,
+          }}
+        >
+          <p>Content</p>
+        </ModuleLayout>,
+      );
+    });
+
+    const tabs = screen.getAllByRole("tab");
+    tabs[0].focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(onTabChange).toHaveBeenCalledWith("b");
   });
 });

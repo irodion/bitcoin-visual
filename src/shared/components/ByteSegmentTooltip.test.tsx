@@ -41,4 +41,25 @@ describe("ByteSegmentTooltip", () => {
     expect(screen.getByText("bytes 85–88")).toBeInTheDocument();
     expect(screen.getByText("Block height or timestamp lock")).toBeInTheDocument();
   });
+
+  it("has role=tooltip and aria-describedby", async () => {
+    await act(async () => {
+      render(
+        <ByteSegmentTooltip
+          label="version"
+          byteRange="bytes 0–3"
+          description="Transaction version"
+          color="text-amber-400"
+        >
+          01000000
+        </ByteSegmentTooltip>,
+      );
+    });
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip).toBeInTheDocument();
+
+    const trigger = screen.getByText("01000000").closest("[aria-describedby]");
+    expect(trigger).toHaveAttribute("aria-describedby", tooltip.id);
+  });
 });
