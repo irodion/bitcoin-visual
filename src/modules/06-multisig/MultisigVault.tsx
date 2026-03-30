@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
 import { STEP_VARIANTS } from "../../shared/components/styles.ts";
-import { useMultisigState } from "./useMultisigState.ts";
+import { useMultisigState, type MultisigTabKey } from "./useMultisigState.ts";
 import { VaultSetupPanel } from "./VaultSetupPanel.tsx";
 import { PSBTWorkflow } from "./PSBTWorkflow.tsx";
 import { SecurityModelsPanel } from "./SecurityModelsPanel.tsx";
@@ -79,7 +79,7 @@ export default function MultisigVault() {
       tabConfig={{
         tabs: TABS,
         activeTab: state.activeTab,
-        onTabChange: (key) => state.setActiveTab(key as "setup" | "sign" | "models"),
+        onTabChange: (key) => state.setActiveTab(key as MultisigTabKey),
       }}
     >
       <AnimatePresence mode="wait">
