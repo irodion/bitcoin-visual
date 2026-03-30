@@ -83,8 +83,11 @@ describe("ModuleLayout", () => {
     const tabs = screen.getAllByRole("tab");
     expect(tabs).toHaveLength(2);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    expect(tabs[0]).toHaveAttribute("id", "tab-a");
     expect(tabs[1]).toHaveAttribute("aria-selected", "false");
-    expect(screen.getByRole("tabpanel")).toBeInTheDocument();
+
+    const panel = screen.getByRole("tabpanel");
+    expect(panel).toHaveAttribute("aria-labelledby", "tab-a");
   });
 
   it("navigates tabs with arrow keys", async () => {
