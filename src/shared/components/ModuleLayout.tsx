@@ -75,6 +75,7 @@ function TabBar({
             ref={(el) => {
               if (el) tabRefs.current.set(tab.key, el);
             }}
+            id={`tab-${tab.key}`}
             type="button"
             role="tab"
             aria-selected={isSelected}
@@ -199,7 +200,9 @@ export function ModuleLayout({
               <TheoryPanel moduleKey={moduleKey}>{theoryContent}</TheoryPanel>
               <main
                 className="flex-1 overflow-y-auto p-5 md:p-8"
-                {...(tabConfig ? { role: "tabpanel" } : {})}
+                {...(tabConfig
+                  ? { role: "tabpanel", "aria-labelledby": `tab-${tabConfig.activeTab}` }
+                  : {})}
               >
                 {children}
               </main>
