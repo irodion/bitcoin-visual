@@ -2,14 +2,16 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
 import { STEP_VARIANTS } from "../../shared/components/styles.ts";
-import { useMultisigState } from "./useMultisigState.ts";
+import { useMultisigState, type MultisigTabKey } from "./useMultisigState.ts";
 import { VaultSetupPanel } from "./VaultSetupPanel.tsx";
 import { PSBTWorkflow } from "./PSBTWorkflow.tsx";
+import { SecurityModelsPanel } from "./SecurityModelsPanel.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 const TABS = [
   { key: "setup", label: "Vault Setup" },
   { key: "sign", label: "Sign & Broadcast" },
+  { key: "models", label: "Security Models" },
 ];
 
 function TheoryContent() {
@@ -42,6 +44,11 @@ function TheoryContent() {
           title="CHECKMULTISIG Bug"
           description="Bitcoin's OP_CHECKMULTISIG has a famous off-by-one error: it pops one extra item from the stack. A dummy OP_0 must be included in every multisig witness."
         />
+        <TheoryConceptCard
+          dot="success"
+          title="Custody Models"
+          description="The same M-of-N primitive supports radically different trust models depending on who holds the keys. The Security Models tab explores six real-world configurations."
+        />
       </div>
 
       <TheoryCallout
@@ -72,11 +79,11 @@ export default function MultisigVault() {
       tabConfig={{
         tabs: TABS,
         activeTab: state.activeTab,
-        onTabChange: (key) => state.setActiveTab(key as "setup" | "sign"),
+        onTabChange: (key) => state.setActiveTab(key as MultisigTabKey),
       }}
     >
       <AnimatePresence mode="wait">
-        {state.activeTab === "setup" ? (
+        {state.activeTab === "setup" && (
           <motion.div
             key="setup"
             variants={STEP_VARIANTS}
@@ -95,7 +102,8 @@ export default function MultisigVault() {
               p2wshAddress={state.p2wshAddress}
             />
           </motion.div>
-        ) : (
+        )}
+        {state.activeTab === "sign" && (
           <motion.div
             key="sign"
             variants={STEP_VARIANTS}
@@ -120,6 +128,17 @@ export default function MultisigVault() {
               broadcastSimulated={state.broadcastSimulated}
               sighashDetails={state.sighashDetails}
             />
+          </motion.div>
+        )}
+        {state.activeTab === "models" && (
+          <motion.div
+            key="models"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <SecurityModelsPanel />
           </motion.div>
         )}
       </AnimatePresence>

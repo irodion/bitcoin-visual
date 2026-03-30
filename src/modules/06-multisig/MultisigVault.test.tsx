@@ -168,4 +168,100 @@ describe("MultisigVault", () => {
     await user.click(screen.getByText("Broadcast & Mine"));
     expect(screen.getByText(/broadcast to the network/)).toBeInTheDocument();
   });
+
+  // ── Security Models tab tests ──
+
+  it("AC10: renders Security Models tab with Model A", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByText("Security Models"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Model A: Single Key")).toBeInTheDocument();
+    });
+  });
+
+  it("AC11: model navigation with Next / Previous", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByText("Security Models"));
+    await waitFor(() => {
+      expect(screen.getByText("Model A: Single Key")).toBeInTheDocument();
+    });
+
+    // Navigate forward
+    await user.click(screen.getByText("Next →"));
+    await waitFor(() => {
+      expect(screen.getByText("Model B: Single-User Multisig")).toBeInTheDocument();
+    });
+
+    // Navigate back
+    await user.click(screen.getByText("← Previous"));
+    await waitFor(() => {
+      expect(screen.getByText("Model A: Single Key")).toBeInTheDocument();
+    });
+  });
+
+  it("AC12: model stepper direct click jumps to correct model", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByText("Security Models"));
+    await waitFor(() => {
+      expect(screen.getByText("Model A: Single Key")).toBeInTheDocument();
+    });
+
+    // Click stepper circle for Model D
+    await user.click(screen.getByRole("tab", { name: /Model D/i }));
+    await waitFor(() => {
+      expect(screen.getByText("Model D: Trustless Escrow")).toBeInTheDocument();
+    });
+  });
+
+  it("AC13: tradeoff annotations visible", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByText("Security Models"));
+    await waitFor(() => {
+      expect(screen.getByText(/Single point of failure/)).toBeInTheDocument();
+    });
+  });
+
+  it("AC14: all 6 models render without crash", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByText("Security Models"));
+    await waitFor(() => {
+      expect(screen.getByText("Model A: Single Key")).toBeInTheDocument();
+    });
+
+    const titles = [
+      "Model B: Single-User Multisig",
+      "Model C: Two-Party Multisig",
+      "Model D: Trustless Escrow",
+      "Model E: User + Policy Oracle",
+      "Model F: Enterprise Custody",
+    ];
+
+    for (const title of titles) {
+      await user.click(screen.getByText("Next →"));
+      await waitFor(() => {
+        expect(screen.getByText(title)).toBeInTheDocument();
+      });
+    }
+  });
 });
