@@ -305,12 +305,12 @@ export default function HashPlayground() {
                   <h3 className="text-lg font-bold text-text-primary md:text-[22px]">
                     SHA-256 Readout
                   </h3>
-                  <span className="rounded-badge border border-[#2F4963] bg-[#142434] px-3 py-1 text-[12px] font-bold text-info">
+                  <span className="rounded-badge border border-badge-info-border bg-badge-info-bg px-3 py-1 text-[12px] font-bold text-info">
                     256-BIT OUTPUT
                   </span>
                 </div>
                 <HexBox value={sha256Hash} label="SHA-256 Hash" variant="info" />
-                <span className="mt-2 inline-block rounded-badge bg-[#162233] px-3 py-1 text-[12px] font-bold text-text-secondary">
+                <span className="mt-2 inline-block rounded-badge bg-badge-info-bg px-3 py-1 text-[12px] font-bold text-text-secondary">
                   DETERMINISTIC
                 </span>
               </div>
@@ -326,12 +326,12 @@ export default function HashPlayground() {
                   <h3 className="text-lg font-bold text-warning-heading md:text-[22px]">
                     SHA-256d Readout
                   </h3>
-                  <span className="rounded-badge border border-[#5A3E17] bg-[#2A1D10] px-3 py-1 text-[12px] font-bold text-warning-text">
+                  <span className="rounded-badge border border-badge-warm-border bg-badge-warm-bg px-3 py-1 text-[12px] font-bold text-warning-text">
                     BITCOIN DOUBLE HASH
                   </span>
                 </div>
                 <HexBox value={sha256dHash} label="SHA-256d (Double Hash)" variant="warm" />
-                <span className="mt-2 inline-block rounded-badge bg-[#2A1D10] px-3 py-1 text-[12px] font-bold text-warning-text">
+                <span className="mt-2 inline-block rounded-badge bg-badge-warm-bg px-3 py-1 text-[12px] font-bold text-warning-text">
                   ANTI-EXTENSION
                 </span>
               </div>
