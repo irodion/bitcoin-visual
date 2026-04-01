@@ -205,6 +205,11 @@ export function computeLegacySighash(
   subscript: Uint8Array,
   sighashType = 0x01,
 ): Uint8Array {
+  if (sighashType !== 0x01) {
+    throw new Error(
+      `Only SIGHASH_ALL (0x01) is supported in this educational tool, got 0x${sighashType.toString(16)}`,
+    );
+  }
   if (!Number.isInteger(inputIndex) || inputIndex < 0 || inputIndex >= tx.inputs.length) {
     throw new RangeError(
       `inputIndex out of range: ${inputIndex} (tx has ${tx.inputs.length} inputs)`,

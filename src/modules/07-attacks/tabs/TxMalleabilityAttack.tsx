@@ -191,7 +191,7 @@ export function TxMalleabilityAttack({ onAttackRun }: { onAttackRun?: () => void
                       serializedHex={r.originalTxHex}
                       segments={r.originalSegments}
                       isSegWit={state.txMode === "segwit"}
-                      changedBytes={r.changedBytes}
+                      changedBytes={r.changedBytesOrig}
                     />
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export function TxMalleabilityAttack({ onAttackRun }: { onAttackRun?: () => void
                       serializedHex={r.malleatedTxHex}
                       segments={r.malleatedSegments}
                       isSegWit={state.txMode === "segwit"}
-                      changedBytes={r.changedBytes}
+                      changedBytes={r.changedBytesMal}
                     />
                   </div>
                 </div>
