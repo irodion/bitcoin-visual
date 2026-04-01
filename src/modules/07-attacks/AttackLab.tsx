@@ -8,14 +8,21 @@ import { NonceReuseAttack } from "./tabs/NonceReuseAttack.tsx";
 import { XpubLeakAttack } from "./tabs/XpubLeakAttack.tsx";
 import { BrainWalletAttack } from "./tabs/BrainWalletAttack.tsx";
 import { RainbowTableAttack } from "./tabs/RainbowTableAttack.tsx";
+import { TxMalleabilityAttack } from "./tabs/TxMalleabilityAttack.tsx";
 
-type AttackTabKey = "nonce-reuse" | "xpub-leak" | "brain-wallet" | "rainbow-table";
+type AttackTabKey =
+  | "nonce-reuse"
+  | "xpub-leak"
+  | "brain-wallet"
+  | "rainbow-table"
+  | "tx-malleability";
 
 const TABS = [
   { key: "nonce-reuse", label: "Nonce Reuse" },
   { key: "xpub-leak", label: "xpub Leak" },
   { key: "brain-wallet", label: "Weak Entropy" },
   { key: "rainbow-table", label: "Rainbow Table" },
+  { key: "tx-malleability", label: "Tx Malleability" },
 ];
 
 function NonceReuseTheory() {
@@ -163,11 +170,59 @@ function RainbowTableTheory() {
   );
 }
 
+function TxMalleabilityTheory() {
+  return (
+    <>
+      <h3>Transaction Malleability</h3>
+      <p>
+        A third party can alter a signed transaction's signature encoding without invalidating it.
+        Since the TxID is computed from the full serialized transaction (including the signature),
+        the TxID changes — while the payment itself remains identical.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="The Mechanism"
+          description="Every ECDSA signature (r, s) has a valid complement (r, n − s). Flipping s in the scriptSig changes the serialized bytes and thus the TxID, without affecting what the transaction does."
+        />
+        <TheoryConceptCard
+          dot="accent"
+          title="Why Both s and n − s Verify"
+          description="ECDSA verification computes a point R = u₁·G + u₂·Q and checks R.x against r. Replacing s with −s negates both u₁ and u₂, producing −R. On an elliptic curve, negating a point flips y but keeps x identical: (x, y) → (x, −y). Since verification only checks the x-coordinate, both s and n − s pass."
+        />
+        <TheoryConceptCard
+          dot="info"
+          title="Strict vs. Permissive Verification"
+          description="BIP-62 introduced the low-S rule: only accept s ≤ n/2. This is a policy choice, not a math constraint — it picks one of the two valid forms by convention. Modern nodes reject high-S signatures at relay time, but pre-2015 nodes and the raw ECDSA math accept both."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="The Vulnerability"
+          description="Any network observer can malleate unconfirmed transactions. Systems that track payments by TxID — like exchange withdrawal systems — lose track of them and may re-send funds."
+        />
+        <TheoryConceptCard
+          dot="success"
+          title="The Fix (SegWit)"
+          description="BIP-141 Segregated Witness moves signature data to the witness, which is excluded from the TxID hash. The TxID becomes immutable once inputs and outputs are set."
+        />
+      </div>
+
+      <TheoryCallout
+        label="Real-World"
+        title="Mt. Gox (2014)"
+        description="Mt. Gox cited transaction malleability when halting withdrawals in February 2014. Attackers malleated withdrawal transactions so the exchange's TxID-based tracking failed, potentially triggering duplicate payouts. While not the sole cause of Mt. Gox's ~744k BTC loss, it exposed a critical flaw: never use TxIDs as immutable payment identifiers."
+      />
+    </>
+  );
+}
+
 const THEORY_CONTENT: Record<AttackTabKey, () => React.JSX.Element> = {
   "nonce-reuse": NonceReuseTheory,
   "xpub-leak": XpubLeakTheory,
   "brain-wallet": BrainWalletTheory,
   "rainbow-table": RainbowTableTheory,
+  "tx-malleability": TxMalleabilityTheory,
 };
 
 export default function AttackLab() {
@@ -241,6 +296,17 @@ export default function AttackLab() {
             exit="hidden"
           >
             <RainbowTableAttack onAttackRun={() => setHasInteracted(true)} />
+          </motion.div>
+        )}
+        {activeTab === "tx-malleability" && (
+          <motion.div
+            key="tx-malleability"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <TxMalleabilityAttack onAttackRun={() => setHasInteracted(true)} />
           </motion.div>
         )}
       </AnimatePresence>

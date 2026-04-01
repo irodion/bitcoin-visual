@@ -27,8 +27,9 @@ export {
   mapTransactionSegments,
 } from "./transaction";
 export type { Transaction, TxInput, TxOutput, TxSegment } from "./transaction";
-export { signECDSA, signWithSighash, verifyECDSA } from "./signing";
-export { computeBIP143Sighash, computeBIP143SighashVerbose } from "./sighash";
+export { signECDSA, signWithSighash, verifyECDSA, verifyECDSAPermissive } from "./signing";
+export { computeBIP143Sighash, computeBIP143SighashVerbose, computeLegacySighash } from "./sighash";
+export { parseDERSignature, encodeDERSignature, malleateSignatureS } from "./malleability";
 export type { SighashDetail } from "./sighash";
 export {
   createUnsignedPSBT,

@@ -3,19 +3,15 @@ import { bytesToHex } from "@noble/hashes/utils.js";
 import { bytesToNumberBE } from "@noble/curves/utils.js";
 import {
   generatePrivateKey,
-  privateKeyToPublicKey,
   sha256,
   signWithNonce,
   recoverNonceFromTwoSigs,
   recoverPrivKeyFromNonce,
 } from "../../shared/crypto/index.ts";
 import { useStepReveal } from "./useStepReveal.ts";
+import { bigintToHex64, generateKeyPair } from "./attackUtils.ts";
 
 const encoder = new TextEncoder();
-
-function bigintToHex64(n: bigint): string {
-  return n.toString(16).padStart(64, "0");
-}
 
 interface SignatureHex {
   rHex: string;
@@ -51,12 +47,6 @@ export interface NonceReuseState {
   signBoth: () => void;
   toggleStepByStep: () => void;
   revealNext: () => void;
-}
-
-function generateKeyPair() {
-  const priv = generatePrivateKey();
-  const pub = privateKeyToPublicKey(priv);
-  return { priv, pub, privHex: bytesToHex(priv), pubHex: bytesToHex(pub) };
 }
 
 export function useNonceReuseState(): NonceReuseState {

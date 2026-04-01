@@ -5,9 +5,16 @@ interface TxHexInspectorProps {
   serializedHex: string;
   segments: TxSegment[];
   isSegWit: boolean;
+  /** Byte indices to highlight as changed (e.g., diffed against another tx). */
+  changedBytes?: Set<number>;
 }
 
-export function TxHexInspector({ serializedHex, segments, isSegWit }: TxHexInspectorProps) {
+export function TxHexInspector({
+  serializedHex,
+  segments,
+  isSegWit,
+  changedBytes,
+}: TxHexInspectorProps) {
   // Each byte = 2 hex chars, so segment byte offsets map to charStart = startByte * 2
   const renderedSegments = segments.map((seg) => {
     const charStart = seg.startByte * 2;
@@ -42,10 +49,59 @@ export function TxHexInspector({ serializedHex, segments, isSegWit }: TxHexInspe
             description={seg.description}
             color={seg.color}
           >
-            {seg.hex}
+            {changedBytes ? renderWithHighlights(seg.hex, seg.startByte, changedBytes) : seg.hex}
           </ByteSegmentTooltip>
         ))}
       </div>
     </div>
   );
+}
+
+/** Render a hex string with changed bytes highlighted inline. */
+function renderWithHighlights(hex: string, startByte: number, changedBytes: Set<number>) {
+  const elements: React.ReactNode[] = [];
+  let run = "";
+  let runChanged = false;
+
+  for (let i = 0; i < hex.length; i += 2) {
+    const byteIndex = startByte + i / 2;
+    const isChanged = changedBytes.has(byteIndex);
+    const pair = hex.slice(i, i + 2);
+
+    if (i === 0) {
+      runChanged = isChanged;
+      run = pair;
+      continue;
+    }
+
+    if (isChanged === runChanged) {
+      run += pair;
+    } else {
+      elements.push(
+        runChanged ? (
+          <span key={i} className="rounded-sm bg-danger/25 text-danger">
+            {run}
+          </span>
+        ) : (
+          run
+        ),
+      );
+      run = pair;
+      runChanged = isChanged;
+    }
+  }
+
+  if (run) {
+    elements.push(
+      runChanged ? (
+        <span key="last" className="rounded-sm bg-danger/25 text-danger">
+          {run}
+        </span>
+      ) : (
+        run
+      ),
+    );
+  }
+
+  return elements;
 }
