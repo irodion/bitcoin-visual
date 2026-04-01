@@ -8,6 +8,7 @@ import {
   LABEL,
   CHECK_ICON_PATH,
 } from "../../shared/components/styles.ts";
+import { SecurityCallout } from "../../shared/components/index.ts";
 import { SECURITY_MODELS } from "./securityModelsData.ts";
 import { ModelGraph } from "./ModelGraph.tsx";
 
@@ -188,6 +189,13 @@ export function SecurityModelsPanel() {
           Next →
         </button>
       </motion.div>
+
+      <SecurityCallout variant="warning">
+        <strong>Bitfinex 2-of-3 Breach (2016).</strong> Bitfinex used a 2-of-3 multisig setup with
+        BitGo holding one key. Despite the multisig design, Bitfinex's servers remained a single
+        point of failure — attackers breached them and bypassed BitGo's co-signing controls,
+        stealing ~120,000 BTC. Multisig is only as strong as the custody architecture around it.
+      </SecurityCallout>
     </motion.div>
   );
 }
