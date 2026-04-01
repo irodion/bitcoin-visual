@@ -9,9 +9,12 @@ import {
 } from "../../shared/crypto/index.ts";
 import {
   BRAIN_WALLET_HALL_OF_SHAME,
-  BRAIN_WALLET_PHRASES,
   type BrainWalletEntry,
 } from "./data/brainWalletHallOfShame.ts";
+
+const BRAIN_WALLET_MAP = new Map<string, BrainWalletEntry>(
+  BRAIN_WALLET_HALL_OF_SHAME.map((e) => [e.passphrase.toLowerCase(), e]),
+);
 
 const encoder = new TextEncoder();
 
@@ -74,11 +77,7 @@ export function useBrainWalletState(): BrainWalletState {
 
   const hallOfShameMatch = useMemo<BrainWalletEntry | null>(() => {
     if (mode !== "phrase" || phrase === "") return null;
-    if (!BRAIN_WALLET_PHRASES.has(phrase.toLowerCase())) return null;
-    return (
-      BRAIN_WALLET_HALL_OF_SHAME.find((e) => e.passphrase.toLowerCase() === phrase.toLowerCase()) ??
-      null
-    );
+    return BRAIN_WALLET_MAP.get(phrase.toLowerCase()) ?? null;
   }, [mode, phrase]);
 
   const generateRngKey = useCallback(() => {

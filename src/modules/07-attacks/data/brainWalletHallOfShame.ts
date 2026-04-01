@@ -42,7 +42,3 @@ export const BRAIN_WALLET_HALL_OF_SHAME: readonly BrainWalletEntry[] = [
   { passphrase: "brainwallet", address: "1JgwwRW1ZuE4joFcQpEWyBayojhVfpA8Cp", note: "Swept 2013" },
   { passphrase: "hunter2", address: "16gjiBTKieg9mf62LnBnposd3kHsfdhqjk", note: "Swept instantly" },
 ] as const;
-
-export const BRAIN_WALLET_PHRASES = new Set(
-  BRAIN_WALLET_HALL_OF_SHAME.map((e) => e.passphrase.toLowerCase()),
-);
