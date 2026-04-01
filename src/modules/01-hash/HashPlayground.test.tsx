@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vite-plus/test";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { bytesToHex } from "@noble/hashes/utils.js";
@@ -93,8 +93,9 @@ describe("HashPlayground", () => {
     await user.click(screen.getByText("Avalanche Analysis"));
     expect(await screen.findByLabelText(/Modified/)).toBeInTheDocument();
 
-    // Close avalanche — both hash readouts should still be visible
+    // Close avalanche — avalanche content should be gone, hash readouts remain
     await user.click(screen.getByText("Avalanche Analysis"));
+    await waitFor(() => expect(screen.queryByLabelText(/Modified/)).not.toBeInTheDocument());
     expect(screen.getByText("SHA-256 Hash")).toBeInTheDocument();
   });
 });
