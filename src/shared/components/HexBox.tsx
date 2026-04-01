@@ -21,11 +21,11 @@ const variantColors = {
 } as const;
 
 const variantGlow = {
-  default: "shadow-[inset_0_0_20px_rgba(247,147,26,0.04)]",
-  danger: "shadow-[inset_0_0_20px_rgba(255,107,107,0.04)]",
-  info: "shadow-[inset_0_0_20px_rgba(125,211,252,0.04)]",
-  success: "shadow-[inset_0_0_20px_rgba(34,197,94,0.04)]",
-  warm: "shadow-[inset_0_0_20px_rgba(247,147,26,0.06)]",
+  default: "shadow-[inset_0_0_24px_rgba(247,147,26,0.08)]",
+  danger: "shadow-[inset_0_0_24px_rgba(255,107,107,0.10)]",
+  info: "shadow-[inset_0_0_24px_rgba(125,211,252,0.08)]",
+  success: "shadow-[inset_0_0_24px_rgba(34,197,94,0.08)]",
+  warm: "shadow-[inset_0_0_24px_rgba(247,147,26,0.10)]",
 } as const;
 
 const variantDot = {
