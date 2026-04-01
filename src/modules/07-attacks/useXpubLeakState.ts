@@ -113,7 +113,7 @@ export function useXpubLeakState(): XpubLeakState {
       childPrivKey: child.privateKey!,
       childPrivKeyHex: bytesToHex(child.privateKey!),
     };
-  }, [seedState.seedHex]);
+  }, [seedState]);
 
   const attacked =
     recoveredParentPrivHex !== null || attackError !== null || compareNormal !== null;

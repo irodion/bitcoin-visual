@@ -176,6 +176,11 @@ function resolveAttackResultsProps(
 export function XpubLeakAttack({ onAttackRun }: { onAttackRun?: () => void }) {
   const state = useXpubLeakState();
 
+  const singleMode = state.derivationMode === "hardened" ? "hardened" : "normal";
+  const normalProps = resolveAttackResultsProps(state, "normal");
+  const hardenedProps = resolveAttackResultsProps(state, "hardened");
+  const singleProps = resolveAttackResultsProps(state, singleMode);
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex flex-wrap items-center gap-3">
@@ -252,10 +257,7 @@ export function XpubLeakAttack({ onAttackRun }: { onAttackRun?: () => void }) {
                 <div className="space-y-4 rounded-section border border-danger/20 p-5">
                   <div className="text-sm font-semibold text-danger">Normal Derivation (m/0)</div>
                   <motion.div variants={CONTAINER_VARIANTS} initial="hidden" animate="visible">
-                    {(() => {
-                      const props = resolveAttackResultsProps(state, "normal");
-                      return props ? <AttackResults mode="normal" {...props} /> : null;
-                    })()}
+                    {normalProps && <AttackResults mode="normal" {...normalProps} />}
                   </motion.div>
                 </div>
                 <div className="space-y-4 rounded-section border border-success/20 p-5">
@@ -263,10 +265,7 @@ export function XpubLeakAttack({ onAttackRun }: { onAttackRun?: () => void }) {
                     Hardened Derivation (m/0&apos;)
                   </div>
                   <motion.div variants={CONTAINER_VARIANTS} initial="hidden" animate="visible">
-                    {(() => {
-                      const props = resolveAttackResultsProps(state, "hardened");
-                      return props ? <AttackResults mode="hardened" {...props} /> : null;
-                    })()}
+                    {hardenedProps && <AttackResults mode="hardened" {...hardenedProps} />}
                   </motion.div>
                 </div>
               </div>
@@ -277,11 +276,7 @@ export function XpubLeakAttack({ onAttackRun }: { onAttackRun?: () => void }) {
                 animate="visible"
                 className="space-y-4"
               >
-                {(() => {
-                  const mode = state.derivationMode === "hardened" ? "hardened" : "normal";
-                  const props = resolveAttackResultsProps(state, mode);
-                  return props ? <AttackResults mode={mode} {...props} /> : null;
-                })()}
+                {singleProps && <AttackResults mode={singleMode} {...singleProps} />}
               </motion.div>
             )}
           </motion.div>
