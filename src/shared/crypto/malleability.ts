@@ -6,13 +6,20 @@ const n = secp256k1.Point.Fn.ORDER;
 
 /** Parse a DER-encoded ECDSA signature into its (r, s) components. */
 export function parseDERSignature(der: Uint8Array): { r: bigint; s: bigint } {
+  if (der.length < 8) {
+    throw new Error(`Invalid DER: too short (${der.length} bytes)`);
+  }
   if (der[0] !== 0x30) {
     throw new Error(`Invalid DER: expected SEQUENCE tag 0x30, got 0x${der[0].toString(16)}`);
   }
-  // der[1] = total length of contents
+  const seqLen = der[1];
+  if (seqLen + 2 !== der.length) {
+    throw new Error(
+      `Invalid DER: SEQUENCE length ${seqLen} does not match buffer (${der.length} bytes)`,
+    );
+  }
   let offset = 2;
 
-  // Parse r
   if (der[offset] !== 0x02) {
     throw new Error(
       `Invalid DER: expected INTEGER tag 0x02 for r, got 0x${der[offset].toString(16)}`,
@@ -21,19 +28,35 @@ export function parseDERSignature(der: Uint8Array): { r: bigint; s: bigint } {
   offset += 1;
   const rLen = der[offset];
   offset += 1;
+  if (offset + rLen > der.length) {
+    throw new Error(`Invalid DER: r length ${rLen} exceeds buffer`);
+  }
   const r = bytesToNumberBE(der.slice(offset, offset + rLen));
   offset += rLen;
 
-  // Parse s
-  if (der[offset] !== 0x02) {
+  if (offset >= der.length || der[offset] !== 0x02) {
     throw new Error(
-      `Invalid DER: expected INTEGER tag 0x02 for s, got 0x${der[offset].toString(16)}`,
+      `Invalid DER: expected INTEGER tag 0x02 for s, got 0x${offset < der.length ? der[offset].toString(16) : "EOF"}`,
     );
   }
   offset += 1;
   const sLen = der[offset];
   offset += 1;
+  if (offset + sLen > der.length) {
+    throw new Error(`Invalid DER: s length ${sLen} exceeds buffer`);
+  }
   const s = bytesToNumberBE(der.slice(offset, offset + sLen));
+  offset += sLen;
+
+  if (offset !== der.length) {
+    throw new Error(`Invalid DER: ${der.length - offset} trailing bytes`);
+  }
+  if (r <= 0n || r >= n) {
+    throw new Error("Invalid DER: r out of range");
+  }
+  if (s <= 0n || s >= n) {
+    throw new Error("Invalid DER: s out of range");
+  }
 
   return { r, s };
 }

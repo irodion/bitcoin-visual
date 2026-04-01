@@ -40,7 +40,8 @@ export interface MalleabilityResult {
   verifMalleatedPermissive: boolean;
   originalSegments: TxSegment[];
   malleatedSegments: TxSegment[];
-  changedBytes: Set<number>;
+  changedBytesOrig: Set<number>;
+  changedBytesMal: Set<number>;
 }
 
 export interface TxMalleabilityState {
@@ -155,16 +156,33 @@ export function useTxMalleabilityState(): TxMalleabilityState {
     const verifMalleatedStrict = verifyECDSA(keyPair.pub, sighash, malleatedDER);
     const verifMalleatedPermissive = verifyECDSAPermissive(keyPair.pub, sighash, malleatedDER);
 
-    const changedBytes = new Set<number>();
-    const shorter = Math.min(origHex.length, malHex.length);
-    for (let i = 0; i < shorter; i += 2) {
-      if (origHex[i] !== malHex[i] || origHex[i + 1] !== malHex[i + 1]) {
-        changedBytes.add(i / 2);
-      }
+    const origBytes = origHex.length / 2;
+    const malBytes = malHex.length / 2;
+    const minLen = Math.min(origBytes, malBytes);
+
+    let commonPrefix = 0;
+    while (
+      commonPrefix < minLen &&
+      origHex.slice(commonPrefix * 2, commonPrefix * 2 + 2) ===
+        malHex.slice(commonPrefix * 2, commonPrefix * 2 + 2)
+    ) {
+      commonPrefix++;
     }
-    for (let i = shorter; i < Math.max(origHex.length, malHex.length); i += 2) {
-      changedBytes.add(i / 2);
+
+    let commonSuffix = 0;
+    while (
+      commonSuffix < minLen - commonPrefix &&
+      origHex.slice((origBytes - 1 - commonSuffix) * 2, (origBytes - 1 - commonSuffix) * 2 + 2) ===
+        malHex.slice((malBytes - 1 - commonSuffix) * 2, (malBytes - 1 - commonSuffix) * 2 + 2)
+    ) {
+      commonSuffix++;
     }
+
+    const changedBytesOrig = new Set<number>();
+    for (let i = commonPrefix; i < origBytes - commonSuffix; i++) changedBytesOrig.add(i);
+
+    const changedBytesMal = new Set<number>();
+    for (let i = commonPrefix; i < malBytes - commonSuffix; i++) changedBytesMal.add(i);
 
     setResult({
       originalR: bigintToHex64(original.r),
@@ -183,7 +201,8 @@ export function useTxMalleabilityState(): TxMalleabilityState {
       verifMalleatedPermissive,
       originalSegments: origSegments,
       malleatedSegments: malSegments,
-      changedBytes,
+      changedBytesOrig,
+      changedBytesMal,
     });
 
     resetReveal(reveal.stepByStep);

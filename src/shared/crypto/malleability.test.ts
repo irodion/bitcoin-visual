@@ -27,7 +27,23 @@ describe("parseDERSignature", () => {
   });
 
   it("throws on invalid DER tag", () => {
-    expect(() => parseDERSignature(new Uint8Array([0x31, 0x00]))).toThrow("SEQUENCE tag");
+    expect(() =>
+      parseDERSignature(new Uint8Array([0x31, 0x06, 0x02, 0x01, 0x01, 0x02, 0x01, 0x01])),
+    ).toThrow("SEQUENCE tag");
+  });
+
+  it("throws on too-short buffer", () => {
+    expect(() => parseDERSignature(new Uint8Array([0x30, 0x00]))).toThrow("too short");
+  });
+
+  it("throws on trailing bytes", () => {
+    const privKey = generatePrivateKey();
+    const msgHash = sha256(new Uint8Array([1]));
+    const der = signECDSA(privKey, msgHash);
+    const withTrailing = new Uint8Array(der.length + 1);
+    withTrailing.set(der);
+    withTrailing[der.length] = 0x01;
+    expect(() => parseDERSignature(withTrailing)).toThrow("SEQUENCE length");
   });
 });
 

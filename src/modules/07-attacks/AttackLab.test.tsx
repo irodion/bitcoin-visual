@@ -295,9 +295,7 @@ describe("AttackLab", () => {
 
     await user.click(screen.getByRole("tab", { name: "Tx Malleability" }));
 
-    await waitFor(() => {
-      expect(screen.getByText("Malleate Transaction")).toBeInTheDocument();
-    });
+    expect(await screen.findByRole("button", { name: "Malleate Transaction" })).toBeInTheDocument();
   });
 
   it("tx malleability: legacy mode shows changed TxID", async () => {
@@ -308,15 +306,10 @@ describe("AttackLab", () => {
 
     await user.click(screen.getByRole("tab", { name: "Tx Malleability" }));
 
-    await waitFor(() => {
-      expect(screen.getByText("Malleate Transaction")).toBeInTheDocument();
-    });
+    const malleateBtn = await screen.findByRole("button", { name: "Malleate Transaction" });
+    await user.click(malleateBtn);
 
-    await user.click(screen.getByText("Malleate Transaction"));
-
-    await waitFor(() => {
-      expect(screen.getByText(/malleation succeeded/)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(/malleation succeeded/)).toBeInTheDocument();
   });
 
   it("tx malleability: segwit mode shows unchanged TxID", async () => {
@@ -327,16 +320,13 @@ describe("AttackLab", () => {
 
     await user.click(screen.getByRole("tab", { name: "Tx Malleability" }));
 
-    await waitFor(() => {
-      expect(screen.getByText("SegWit (P2WPKH)")).toBeInTheDocument();
-    });
+    const segwitOption = await screen.findByRole("radio", { name: "SegWit (P2WPKH)" });
+    await user.click(segwitOption);
 
-    await user.click(screen.getByText("SegWit (P2WPKH)"));
-    await user.click(screen.getByText("Malleate Transaction"));
+    const malleateBtn = await screen.findByRole("button", { name: "Malleate Transaction" });
+    await user.click(malleateBtn);
 
-    await waitFor(() => {
-      expect(screen.getByText(/SegWit protects/)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(/SegWit protects/)).toBeInTheDocument();
   });
 
   it("rainbow table: salt toggle defeats lookup", async () => {
