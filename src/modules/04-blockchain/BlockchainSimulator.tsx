@@ -1,11 +1,6 @@
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  ModuleLayout,
-  TheoryConceptCard,
-  TheoryCallout,
-  ValueFlowArrow,
-} from "../../shared/components/index.ts";
+import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
 import {
   BTN_PRIMARY,
   BTN_GHOST,
@@ -17,6 +12,7 @@ import { useBlockchainState } from "./useBlockchainState.ts";
 import { Block } from "./Block.tsx";
 import { MiningControls } from "./MiningControls.tsx";
 import { MerkleTreePanel } from "./MerkleTreePanel.tsx";
+import { BlockChainConnectors } from "./ChainLink.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
 function TheoryContent() {
@@ -86,6 +82,9 @@ export default function BlockchainSimulator() {
   const consumePendingTx = useMempoolStore((s) => s.consumePendingTx);
   const { completed, complete } = useModuleCompletion("blockchain");
   const initialNonces = useRef(state.blocks.map((b) => b.nonce));
+  const chainContainerRef = useRef<HTMLDivElement>(null);
+  const merklePanelRef = useRef<HTMLDivElement>(null);
+  const chainValidity = useMemo(() => state.validity.map((v) => v.chainValid), [state.validity]);
 
   const handleIncludeTx = () => {
     const tx = consumePendingTx();
@@ -106,6 +105,15 @@ export default function BlockchainSimulator() {
 
   const selectedBlock =
     state.selectedBlockIndex !== null ? state.blocks[state.selectedBlockIndex] : null;
+
+  // Scroll Merkle tree panel into view when a block is selected
+  useEffect(() => {
+    if (selectedBlock && merklePanelRef.current?.scrollIntoView) {
+      requestAnimationFrame(() => {
+        merklePanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }
+  }, [selectedBlock]);
 
   return (
     <ModuleLayout
@@ -161,45 +169,40 @@ export default function BlockchainSimulator() {
 
         {/* Horizontal block chain */}
         <motion.div variants={STEP_VARIANTS}>
-          <div className="flex items-start gap-0 overflow-x-auto pb-4">
+          <div
+            ref={chainContainerRef}
+            className="relative flex items-start gap-6 overflow-x-auto pb-4"
+          >
             {state.blocks.map((block, i) => (
-              <Fragment key={block.index}>
-                {i > 0 && (
-                  <div className="flex shrink-0 items-center px-1">
-                    <ValueFlowArrow
-                      label="prev hash"
-                      description="Each block references the previous block's hash, forming an immutable chain."
-                      direction="horizontal"
-                    />
-                  </div>
-                )}
-                <div className="shrink-0">
-                  <Block
-                    block={block}
-                    validity={state.validity[i]}
-                    isSelected={state.selectedBlockIndex === i}
-                    isMining={state.isMining && state.miningBlockIndex === i}
-                    miningNonce={state.currentNonce}
-                    miningHashRate={state.hashRate}
-                    onEditTransactionData={(txIdx, data) =>
-                      state.editTransactionData(i, txIdx, data)
-                    }
-                    onEditNonce={(nonce) => state.editBlockNonce(i, nonce)}
-                    onAddTransaction={() => state.addTransaction(i)}
-                    onRemoveTransaction={(txIdx) => state.removeTransaction(i, txIdx)}
-                    onMine={() => state.startMining(i)}
-                    onStopMine={state.stopMining}
-                    onSelect={() => state.selectBlock(i)}
-                  />
-                </div>
-              </Fragment>
+              <div key={block.index} className="shrink-0">
+                <Block
+                  block={block}
+                  validity={state.validity[i]}
+                  isSelected={state.selectedBlockIndex === i}
+                  isMining={state.isMining && state.miningBlockIndex === i}
+                  miningNonce={state.currentNonce}
+                  miningHashRate={state.hashRate}
+                  onEditTransactionData={(txIdx, data) => state.editTransactionData(i, txIdx, data)}
+                  onEditNonce={(nonce) => state.editBlockNonce(i, nonce)}
+                  onAddTransaction={() => state.addTransaction(i)}
+                  onRemoveTransaction={(txIdx) => state.removeTransaction(i, txIdx)}
+                  onMine={() => state.startMining(i)}
+                  onStopMine={state.stopMining}
+                  onSelect={() => state.selectBlock(i)}
+                />
+              </div>
             ))}
+            <BlockChainConnectors
+              containerRef={chainContainerRef}
+              blockCount={state.blocks.length}
+              chainValidity={chainValidity}
+            />
           </div>
         </motion.div>
 
         {/* Merkle tree panel (expanded when a block is selected) */}
         {selectedBlock && state.merkleTree && (
-          <motion.div variants={STEP_VARIANTS}>
+          <motion.div ref={merklePanelRef} variants={STEP_VARIANTS}>
             <MerkleTreePanel
               block={selectedBlock}
               merkleTree={state.merkleTree}
