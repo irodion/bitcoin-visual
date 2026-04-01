@@ -84,7 +84,7 @@ export const MODULES: ModuleInfo[] = [
     description: "Nonce reuse, xpub leaks, and other real-world crypto pitfalls.",
     route: "/attacks",
     color: "#FF6B6B",
-    active: false,
+    active: true,
     estimatedMinutes: 15,
     prerequisites: [],
   },

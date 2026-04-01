@@ -27,7 +27,7 @@ describe("Sidebar", () => {
     expect(screen.getByLabelText("Blockchain & Mining")).toBeInTheDocument();
     expect(screen.getByLabelText("HD Wallet Tree")).toBeInTheDocument();
     expect(screen.getByLabelText("Multisig Vault")).toBeInTheDocument();
-    expect(screen.getByLabelText("Attack Lab (coming soon)")).toBeInTheDocument();
+    expect(screen.getByLabelText("Attack Lab")).toBeInTheDocument();
   });
 
   it("highlights current module", async () => {
