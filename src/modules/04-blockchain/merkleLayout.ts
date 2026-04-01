@@ -81,6 +81,8 @@ export function buildProofEdgeMap(
     // XOR toggles even↔odd; clamp to padded level bounds for ghost duplicates
     const siblingIdx = Math.min(nodeIdx ^ 1, paddedLevels[childLevel].length - 1);
 
+    // When nodeIdx === siblingIdx (odd-level self-duplicate), the sibling entry
+    // intentionally overwrites the target entry for the same key. Covered by tests.
     map.set(edgeKey(parentLevel, parentIdx, childLevel, nodeIdx), {
       stepNumber: i,
       role: "target",

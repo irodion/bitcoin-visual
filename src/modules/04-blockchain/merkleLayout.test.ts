@@ -22,7 +22,7 @@ describe("buildTreeEdges", () => {
     expect(edges[1]).toEqual({ parentLevel: 1, parentIndex: 0, childLevel: 0, childIndex: 1 });
   });
 
-  it("returns 4 edges for a 3-leaf tree (odd duplication)", () => {
+  it("returns 5 edges for a 3-leaf tree (odd duplication)", () => {
     const tree = buildMerkleTree([leaf("tx0"), leaf("tx1"), leaf("tx2")]);
     // Level 0: 3 leaves, Level 1: 2 nodes, Level 2: 1 root
     const edges = buildTreeEdges(tree);
