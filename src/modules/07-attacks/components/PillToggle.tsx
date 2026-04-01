@@ -31,11 +31,11 @@ export function PillToggle<T extends string>({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     const keys = options.map((o) => o.key);
     const idx = keys.indexOf(value);
-    if (e.key === "ArrowRight") {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
       keyboardNav.current = true;
       onChange(keys[(idx + 1) % keys.length]);
-    } else if (e.key === "ArrowLeft") {
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
       keyboardNav.current = true;
       onChange(keys[(idx - 1 + keys.length) % keys.length]);
