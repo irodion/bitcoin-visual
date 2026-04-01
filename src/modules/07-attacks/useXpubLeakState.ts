@@ -82,7 +82,9 @@ const HARDENED_FAILURE =
 
 export function useXpubLeakState(): XpubLeakState {
   const [seedState, setSeedState] = useState(generateSeedState);
-  const [derivationMode, setDerivationMode] = useState<"normal" | "hardened" | "compare">("normal");
+  const [derivationMode, setDerivationModeRaw] = useState<"normal" | "hardened" | "compare">(
+    "normal",
+  );
   const reveal = useStepReveal();
 
   const [recoveredParentPrivHex, setRecoveredParentPrivHex] = useState<string | null>(null);
@@ -95,6 +97,16 @@ export function useXpubLeakState(): XpubLeakState {
     siblings: SiblingEntry[];
   } | null>(null);
   const [compareHardened, setCompareHardened] = useState<{ error: string } | null>(null);
+
+  const setDerivationMode = useCallback((mode: "normal" | "hardened" | "compare") => {
+    setDerivationModeRaw(mode);
+    setRecoveredParentPrivHex(null);
+    setSiblings([]);
+    setAttackError(null);
+    setHmacILHex(null);
+    setCompareNormal(null);
+    setCompareHardened(null);
+  }, []);
 
   const childIndex = 5;
 
