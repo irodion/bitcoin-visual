@@ -1,4 +1,5 @@
 import { sha256d } from "./hash";
+import { serializeTransaction } from "./transaction";
 import type { Transaction } from "./transaction";
 
 export interface SighashDetail {
@@ -187,4 +188,45 @@ export function computeBIP143SighashVerbose(
   const sighash = sha256d(preimage);
 
   return { hashPrevouts, hashSequence, hashOutputs, preimage, sighash };
+}
+
+// ── Legacy Sighash (pre-SegWit) ──
+
+/**
+ * Compute the legacy sighash for a P2PKH input (SIGHASH_ALL only).
+ *
+ * Algorithm: clone the transaction, replace all scriptSigs with empty,
+ * set the signing input's scriptSig to the subscript (the UTXO's scriptPubKey),
+ * serialize, append the sighash type as a 4-byte LE uint32, then SHA-256d.
+ */
+export function computeLegacySighash(
+  tx: Transaction,
+  inputIndex: number,
+  subscript: Uint8Array,
+  sighashType = 0x01,
+): Uint8Array {
+  if (sighashType !== 0x01) {
+    throw new Error(
+      `Only SIGHASH_ALL (0x01) is supported in this educational tool, got 0x${sighashType.toString(16)}`,
+    );
+  }
+  if (!Number.isInteger(inputIndex) || inputIndex < 0 || inputIndex >= tx.inputs.length) {
+    throw new RangeError(
+      `inputIndex out of range: ${inputIndex} (tx has ${tx.inputs.length} inputs)`,
+    );
+  }
+
+  const modifiedInputs = tx.inputs.map((input, i) => ({
+    ...input,
+    scriptSig: i === inputIndex ? subscript : new Uint8Array(0),
+  }));
+
+  const modifiedTx = { ...tx, inputs: modifiedInputs };
+  const serialized = serializeTransaction(modifiedTx);
+
+  const preimage = new Uint8Array(serialized.length + 4);
+  preimage.set(serialized);
+  writeUint32LE(preimage, sighashType, serialized.length);
+
+  return sha256d(preimage);
 }

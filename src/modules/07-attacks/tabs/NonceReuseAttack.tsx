@@ -13,8 +13,7 @@ import { FormulaStep } from "../components/FormulaStep.tsx";
 import { AttackResultBadge } from "../components/AttackResultBadge.tsx";
 import { PillToggle } from "../components/PillToggle.tsx";
 import { useNonceReuseState } from "../useNonceReuseState.ts";
-
-const SECP256K1_N = "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141";
+import { SECP256K1_N_HEX } from "../attackUtils.ts";
 
 const NONCE_OPTIONS = [
   { key: "same" as const, label: "Same nonce k" },
@@ -154,7 +153,7 @@ export function NonceReuseAttack({ onAttackRun }: { onAttackRun?: () => void }) 
                     { label: "z\u2082 = SHA-256(msg2)", value: sr.z2Hex },
                     { label: "s\u2081", value: sr.sig1.sHex },
                     { label: "s\u2082", value: sr.sig2.sHex },
-                    { label: "n (curve order)", value: SECP256K1_N },
+                    { label: "n (curve order)", value: SECP256K1_N_HEX },
                   ]}
                   result={
                     sr.recoveredKHex

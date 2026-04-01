@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HexBox, CopyButton } from "../../../shared/components/index.ts";
 import { BTN_GHOST, SECTION_LABEL, STEP_VARIANTS } from "../../../shared/components/styles.ts";
@@ -24,6 +24,7 @@ interface FormulaStepProps {
   failureMessage?: string;
   revealed?: boolean;
   onReveal?: () => void;
+  children?: ReactNode;
 }
 
 export function FormulaStep({
@@ -36,6 +37,7 @@ export function FormulaStep({
   failureMessage,
   revealed = true,
   onReveal,
+  children,
 }: FormulaStepProps) {
   const regionId = useId();
 
@@ -110,6 +112,8 @@ export function FormulaStep({
               />
             )
           )}
+
+          {children}
         </div>
       )}
     </motion.div>

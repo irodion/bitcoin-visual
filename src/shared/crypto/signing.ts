@@ -32,3 +32,16 @@ export function verifyECDSA(
 ): boolean {
   return secp256k1.verify(signature, msgHash, pubKey, { prehash: false, format: "der" });
 }
+
+/** Verify ECDSA without enforcing low-S (BIP-62). For educational use only. */
+export function verifyECDSAPermissive(
+  pubKey: Uint8Array,
+  msgHash: Uint8Array,
+  signature: Uint8Array,
+): boolean {
+  return secp256k1.verify(signature, msgHash, pubKey, {
+    prehash: false,
+    format: "der",
+    lowS: false,
+  });
+}
