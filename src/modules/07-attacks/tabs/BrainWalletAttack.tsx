@@ -20,6 +20,8 @@ const MODE_OPTIONS = [
 
 export function BrainWalletAttack({ onAttackRun }: { onAttackRun?: () => void }) {
   const state = useBrainWalletState();
+  const isPhraseMode = state.mode === "phrase";
+  const normalizedPhrase = state.phrase.toLowerCase();
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -147,7 +149,11 @@ export function BrainWalletAttack({ onAttackRun }: { onAttackRun?: () => void })
                 <p className="text-sm text-text-secondary">Derived from human-chosen phrase</p>
               </>
             ) : (
-              <p className="text-sm text-text-muted">Type a phrase to derive a key</p>
+              <p className="text-sm text-text-muted">
+                {state.mode === "custom-bytes"
+                  ? "Enter custom bytes to derive a key"
+                  : "Type a phrase to derive a key"}
+              </p>
             )}
           </div>
 
@@ -197,9 +203,7 @@ export function BrainWalletAttack({ onAttackRun }: { onAttackRun?: () => void })
             </thead>
             <tbody className="divide-y divide-border/50">
               {BRAIN_WALLET_HALL_OF_SHAME.map((entry) => {
-                const isMatch =
-                  state.mode === "phrase" &&
-                  entry.passphrase.toLowerCase() === state.phrase.toLowerCase();
+                const isMatch = isPhraseMode && entry.passphrase.toLowerCase() === normalizedPhrase;
                 return (
                   <tr key={entry.passphrase} className={isMatch ? "bg-danger/10" : ""}>
                     <td className="px-3 py-2 font-mono text-xs text-text-primary">

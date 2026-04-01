@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HexBox } from "../../../shared/components/index.ts";
 import {
@@ -21,6 +21,10 @@ const SOURCE_OPTIONS = [
 export function RainbowTableAttack({ onAttackRun }: { onAttackRun?: () => void }) {
   const state = useRainbowTableState();
   const [showFullTable, setShowFullTable] = useState(false);
+  const matchIndex = useMemo(
+    () => RAINBOW_TABLE.findIndex((e) => e.sha256 === state.displayHash),
+    [state.displayHash],
+  );
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -158,7 +162,7 @@ export function RainbowTableAttack({ onAttackRun }: { onAttackRun?: () => void }
                 </thead>
                 <tbody className="divide-y divide-border/50">
                   {RAINBOW_TABLE.slice(0, state.entriesChecked).map((entry, i) => {
-                    const isMatch = entry.sha256 === state.displayHash;
+                    const isMatch = i === matchIndex;
                     return (
                       <tr
                         key={entry.password}

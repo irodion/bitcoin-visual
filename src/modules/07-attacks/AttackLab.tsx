@@ -163,6 +163,13 @@ function RainbowTableTheory() {
   );
 }
 
+const THEORY_CONTENT: Record<AttackTabKey, () => React.JSX.Element> = {
+  "nonce-reuse": NonceReuseTheory,
+  "xpub-leak": XpubLeakTheory,
+  "brain-wallet": BrainWalletTheory,
+  "rainbow-table": RainbowTableTheory,
+};
+
 export default function AttackLab() {
   const [activeTab, setActiveTab] = useState<AttackTabKey>("nonce-reuse");
   const { completed, complete } = useModuleCompletion("attacks");
@@ -180,17 +187,10 @@ export default function AttackLab() {
       title="Attack Lab"
       moduleNumber={7}
       subtitle="Demonstrate real cryptographic attacks in a safe sandbox."
-      theoryContent={
-        activeTab === "nonce-reuse" ? (
-          <NonceReuseTheory />
-        ) : activeTab === "xpub-leak" ? (
-          <XpubLeakTheory />
-        ) : activeTab === "brain-wallet" ? (
-          <BrainWalletTheory />
-        ) : (
-          <RainbowTableTheory />
-        )
-      }
+      theoryContent={(() => {
+        const Theory = THEORY_CONTENT[activeTab];
+        return <Theory />;
+      })()}
       headerNotice={<AttackDisclaimer />}
       tabConfig={{
         tabs: TABS,
