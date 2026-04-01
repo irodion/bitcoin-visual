@@ -33,13 +33,14 @@ export function Block({
   onStopMine,
   onSelect,
 }: BlockProps) {
-  const validBorder = "border-success/40 shadow-[0_0_20px_rgba(34,197,94,0.06)]";
-  const invalidBorder = "border-danger/60 shadow-[0_0_20px_rgba(255,107,107,0.08)]";
+  const validBorder = "border-success/40 shadow-[0_0_24px_rgba(34,197,94,0.10)]";
+  const invalidBorder = "border-danger/60 shadow-[0_0_24px_rgba(255,107,107,0.12)]";
   const selectedRing = isSelected ? "ring-2 ring-accent/30" : "";
 
   return (
     <div
-      className={`flex w-[320px] shrink-0 flex-col gap-3 rounded-card border bg-surface-raised p-5 transition-shadow ${
+      data-block-card
+      className={`flex w-[320px] shrink-0 flex-col gap-3 rounded-card border bg-surface-raised p-5 transition-all duration-500 ${
         validity.isValid ? validBorder : invalidBorder
       } ${selectedRing}`}
     >
@@ -70,17 +71,19 @@ export function Block({
               ❌ Invalid
             </span>
           )}
-          <span
-            className={`text-xs text-text-secondary transition-transform ${isSelected ? "rotate-180" : ""}`}
-            aria-hidden="true"
-          >
-            ▼
-          </span>
         </div>
       </button>
 
       {/* Previous Hash */}
-      <HexBox value={block.prevHash} label="Previous Hash" variant="info" truncate maxLength={16} />
+      <div data-chain-prev={block.index} data-testid={`chain-prev-${block.index}`}>
+        <HexBox
+          value={block.prevHash}
+          label="Previous Hash"
+          variant="info"
+          truncate
+          maxLength={16}
+        />
+      </div>
 
       {/* Transactions */}
       <div className="space-y-1.5">
@@ -148,13 +151,15 @@ export function Block({
       </div>
 
       {/* Block Hash */}
-      <HexBox
-        value={block.hash}
-        label="Block Hash"
-        variant={validity.isValid ? "success" : "danger"}
-        truncate
-        maxLength={16}
-      />
+      <div data-chain-hash={block.index} data-testid={`chain-hash-${block.index}`}>
+        <HexBox
+          value={block.hash}
+          label="Block Hash"
+          variant={validity.isValid ? "success" : "danger"}
+          truncate
+          maxLength={16}
+        />
+      </div>
 
       {/* Invalidity reason */}
       {!validity.isValid && (
@@ -163,6 +168,25 @@ export function Block({
           {validity.hashValid && !validity.chainValid && "Previous hash mismatch"}
         </p>
       )}
+
+      {/* Merkle tree CTA */}
+      <button
+        type="button"
+        onClick={onSelect}
+        className={`flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-inner border px-3 py-2 text-xs font-semibold transition-colors ${
+          isSelected
+            ? "border-accent/40 bg-accent/10 text-accent"
+            : "border-border bg-surface text-text-secondary hover:border-accent/30 hover:text-accent"
+        }`}
+      >
+        <span
+          className={`transition-transform ${isSelected ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        >
+          ▼
+        </span>
+        {isSelected ? "Hide Merkle Tree" : "View Merkle Tree"}
+      </button>
 
       {/* Mining controls */}
       {!validity.isValid &&
