@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vite-plus/test";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { bytesToHex } from "@noble/hashes/utils.js";
@@ -42,7 +42,7 @@ describe("HashPlayground", () => {
       renderWithRouter(<HashPlayground />);
     });
 
-    const textarea = screen.getByLabelText("Input");
+    const textarea = screen.getByLabelText("Message");
     await user.clear(textarea);
     await user.type(textarea, "test");
 
@@ -50,24 +50,24 @@ describe("HashPlayground", () => {
     expect(screen.getByText(newHash)).toBeInTheDocument();
   });
 
-  it("switches to avalanche mode", async () => {
+  it("expands avalanche section", async () => {
     const user = userEvent.setup();
     await act(async () => {
       renderWithRouter(<HashPlayground />);
     });
 
-    await user.click(screen.getByText("Avalanche Demo"));
-    expect(screen.getByLabelText("Modified")).toBeInTheDocument();
+    await user.click(screen.getByText("Avalanche Analysis"));
+    expect(await screen.findByLabelText(/Modified/)).toBeInTheDocument();
   });
 
-  it("shows bit difference counter in avalanche mode", async () => {
+  it("shows bit difference counter in avalanche section", async () => {
     const user = userEvent.setup();
     await act(async () => {
       renderWithRouter(<HashPlayground />);
     });
 
-    await user.click(screen.getByText("Avalanche Demo"));
-    expect(screen.getByText(/of 256 bits differ/)).toBeInTheDocument();
+    await user.click(screen.getByText("Avalanche Analysis"));
+    expect(await screen.findByText(/of 256/)).toBeInTheDocument();
   });
 
   it("random input button changes hash", async () => {
@@ -83,16 +83,19 @@ describe("HashPlayground", () => {
     expect(screen.queryByText(initialHash)).not.toBeInTheDocument();
   });
 
-  it("returns to normal mode from avalanche", async () => {
+  it("collapses avalanche section", async () => {
     const user = userEvent.setup();
     await act(async () => {
       renderWithRouter(<HashPlayground />);
     });
 
-    await user.click(screen.getByText("Avalanche Demo"));
-    expect(screen.getByText("Back to Normal")).toBeInTheDocument();
+    // Open avalanche
+    await user.click(screen.getByText("Avalanche Analysis"));
+    expect(await screen.findByLabelText(/Modified/)).toBeInTheDocument();
 
-    await user.click(screen.getByText("Back to Normal"));
+    // Close avalanche — avalanche content should be gone, hash readouts remain
+    await user.click(screen.getByText("Avalanche Analysis"));
+    await waitFor(() => expect(screen.queryByLabelText(/Modified/)).not.toBeInTheDocument());
     expect(screen.getByText("SHA-256 Hash")).toBeInTheDocument();
   });
 });

@@ -17,6 +17,9 @@ export const INPUT =
 export const LABEL =
   "mb-2 block text-[11px] font-medium uppercase tracking-widest text-text-secondary";
 
+export const SECTION_LABEL =
+  "text-[11px] font-semibold uppercase tracking-[0.18em] text-text-muted";
+
 export const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
