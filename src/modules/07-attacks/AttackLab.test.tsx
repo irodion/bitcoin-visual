@@ -19,12 +19,14 @@ describe("AttackLab", () => {
     expect(screen.getByText(/Educational Only/)).toBeInTheDocument();
   });
 
-  it("shows Nonce Reuse and xpub Leak tabs", async () => {
+  it("shows all four attack tabs", async () => {
     await act(async () => {
       renderWithRouter(<AttackLab />);
     });
     expect(screen.getByRole("tab", { name: "Nonce Reuse" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "xpub Leak" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Weak Entropy" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Rainbow Table" })).toBeInTheDocument();
   });
 
   it("defaults to Nonce Reuse tab", async () => {
@@ -197,5 +199,113 @@ describe("AttackLab", () => {
       const protectedBadges = screen.getAllByText(/parent key safe/);
       expect(protectedBadges.length).toBeGreaterThanOrEqual(1);
     });
+  });
+
+  it("switches to Weak Entropy tab and shows passphrase input", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Weak Entropy" }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Passphrase")).toBeInTheDocument();
+    });
+  });
+
+  it("brain wallet: typing a known phrase triggers warning banner", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Weak Entropy" }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Passphrase")).toBeInTheDocument();
+    });
+
+    await user.clear(screen.getByLabelText("Passphrase"));
+    await user.type(screen.getByLabelText("Passphrase"), "password");
+
+    await waitFor(() => {
+      expect(screen.getByText(/Known brain wallet phrase/)).toBeInTheDocument();
+    });
+  });
+
+  it("brain wallet: Generate Random Key shows RNG-derived key", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Weak Entropy" }));
+
+    const genBtn = await screen.findByText("Generate Random Key");
+    await user.click(genBtn);
+
+    await waitFor(() => {
+      const csprngLabels = screen.getAllByText(/CSPRNG/);
+      expect(csprngLabels.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  it("switches to Rainbow Table tab and shows Crack button", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Rainbow Table" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Crack")).toBeInTheDocument();
+    });
+  });
+
+  it("rainbow table: crack succeeds for selected hash", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Rainbow Table" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Crack")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText("Crack"));
+
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Cracked:/)).toBeInTheDocument();
+      },
+      { timeout: 5000 },
+    );
+  });
+
+  it("rainbow table: salt toggle defeats lookup", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Rainbow Table" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Enable Salt")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByLabelText("Enable salt"));
+    await user.click(screen.getByText("Crack"));
+
+    await waitFor(
+      () => {
+        expect(screen.getByText(/No match/)).toBeInTheDocument();
+      },
+      { timeout: 5000 },
+    );
   });
 });
