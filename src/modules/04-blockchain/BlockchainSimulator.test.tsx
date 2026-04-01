@@ -218,8 +218,10 @@ describe("BlockchainSimulator", () => {
     await act(async () => {
       renderWithRouter(<BlockchainSimulator />);
     });
-    // 3 blocks render, each with data-chain-hash and data-chain-prev attributes
-    const container = document.querySelector("[data-chain-hash]");
-    expect(container).not.toBeNull();
+    // 3 blocks render, each with chain hash and prev markers
+    const hashMarkers = screen.getAllByTestId(/^chain-hash-/);
+    expect(hashMarkers.length).toBe(3);
+    const prevMarkers = screen.getAllByTestId(/^chain-prev-/);
+    expect(prevMarkers.length).toBe(3);
   });
 });

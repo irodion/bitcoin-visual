@@ -75,7 +75,7 @@ export function Block({
       </button>
 
       {/* Previous Hash */}
-      <div data-chain-prev={block.index}>
+      <div data-chain-prev={block.index} data-testid={`chain-prev-${block.index}`}>
         <HexBox
           value={block.prevHash}
           label="Previous Hash"
@@ -151,7 +151,7 @@ export function Block({
       </div>
 
       {/* Block Hash */}
-      <div data-chain-hash={block.index}>
+      <div data-chain-hash={block.index} data-testid={`chain-hash-${block.index}`}>
         <HexBox
           value={block.hash}
           label="Block Hash"

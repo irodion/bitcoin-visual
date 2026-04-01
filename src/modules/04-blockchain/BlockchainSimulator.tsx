@@ -108,11 +108,12 @@ export default function BlockchainSimulator() {
 
   // Scroll Merkle tree panel into view when a block is selected
   useEffect(() => {
-    if (selectedBlock && merklePanelRef.current?.scrollIntoView) {
-      requestAnimationFrame(() => {
-        merklePanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-    }
+    const el = merklePanelRef.current;
+    if (!selectedBlock || !el?.scrollIntoView) return;
+    const rafId = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    return () => cancelAnimationFrame(rafId);
   }, [selectedBlock]);
 
   return (
