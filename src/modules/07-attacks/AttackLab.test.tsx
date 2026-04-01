@@ -19,7 +19,7 @@ describe("AttackLab", () => {
     expect(screen.getByText(/Educational Only/)).toBeInTheDocument();
   });
 
-  it("shows all four attack tabs", async () => {
+  it("shows all five attack tabs", async () => {
     await act(async () => {
       renderWithRouter(<AttackLab />);
     });
@@ -27,6 +27,7 @@ describe("AttackLab", () => {
     expect(screen.getByRole("tab", { name: "xpub Leak" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Weak Entropy" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Rainbow Table" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Tx Malleability" })).toBeInTheDocument();
   });
 
   it("defaults to Nonce Reuse tab", async () => {
@@ -284,6 +285,58 @@ describe("AttackLab", () => {
       },
       { timeout: 5000 },
     );
+  });
+
+  it("switches to Tx Malleability tab and shows Malleate button", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Tx Malleability" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Malleate Transaction")).toBeInTheDocument();
+    });
+  });
+
+  it("tx malleability: legacy mode shows changed TxID", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Tx Malleability" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Malleate Transaction")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText("Malleate Transaction"));
+
+    await waitFor(() => {
+      expect(screen.getByText(/malleation succeeded/)).toBeInTheDocument();
+    });
+  });
+
+  it("tx malleability: segwit mode shows unchanged TxID", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<AttackLab />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Tx Malleability" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("SegWit (P2WPKH)")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText("SegWit (P2WPKH)"));
+    await user.click(screen.getByText("Malleate Transaction"));
+
+    await waitFor(() => {
+      expect(screen.getByText(/SegWit protects/)).toBeInTheDocument();
+    });
   });
 
   it("rainbow table: salt toggle defeats lookup", async () => {

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vite-plus/test";
-import { signECDSA, signWithSighash, verifyECDSA } from "./signing";
+import { signECDSA, signWithSighash, verifyECDSA, verifyECDSAPermissive } from "./signing";
+import { malleateSignatureS } from "./malleability";
 import { generatePrivateKey, privateKeyToPublicKey } from "./keys";
 import { sha256 } from "./hash";
 
@@ -66,5 +67,21 @@ describe("verifyECDSA", () => {
     const hash2 = sha256(new Uint8Array([2]));
     const sig = signECDSA(privKey, hash1);
     expect(verifyECDSA(pubKey, hash2, sig)).toBe(false);
+  });
+});
+
+describe("verifyECDSAPermissive", () => {
+  it("accepts a high-S signature that strict verify rejects", () => {
+    const privKey = generatePrivateKey();
+    const pubKey = privateKeyToPublicKey(privKey);
+    const msgHash = sha256(new Uint8Array([1, 2, 3]));
+    const der = signECDSA(privKey, msgHash);
+
+    const { malleatedDER } = malleateSignatureS(der);
+
+    // Strict rejects high-S
+    expect(verifyECDSA(pubKey, msgHash, malleatedDER)).toBe(false);
+    // Permissive accepts
+    expect(verifyECDSAPermissive(pubKey, msgHash, malleatedDER)).toBe(true);
   });
 });

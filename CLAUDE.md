@@ -59,6 +59,10 @@ Use `Set` or `Map` for lookups instead of `.some()`/`.find()` inside render loop
 
 Add `tabIndex={0}` and an `onKeyDown` handler for Enter and Space at the same time as adding click handlers. Don't defer a11y to review.
 
+### Use literal Unicode characters in JSX strings, never escape sequences
+
+Write `→`, `—`, `′`, `✓`, `✗` directly — not `\u2192`, `\u2014`, `\u2032`, `\u2713`, `\u2717`. Escape sequences are unreadable in source and harder to review.
+
 ### In Bash tool calls, run commands through `./node_modules/.bin/vp`
 
 The short `vp` form works in the developer's terminal (shell profile defines the function) but not in Bash tool calls which don't load the profile. Use the full local binary path. Don't fall back to `npx vitest` or `pnpm exec` — they resolve to different binaries.
