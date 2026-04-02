@@ -23,15 +23,15 @@ export function BitGrid({ original, modified, diffCount }: BitGridProps) {
   return (
     <div>
       <div
-        className="grid grid-cols-[repeat(16,1fr)] gap-[2px]"
+        className="grid grid-cols-[repeat(64,1fr)] gap-[1px]"
         role="img"
         aria-label={`Bit grid: ${diffCount} of 256 bits differ (${pct}%)`}
       >
         {bits.map((flipped, i) => (
           <div
             key={i}
-            className={`aspect-square rounded-[3px] transition-[filter] duration-150 hover:brightness-125 ${
-              flipped ? "bg-danger shadow-[0_0_4px_rgba(255,107,107,0.3)]" : "bg-teal/60"
+            className={`h-2 rounded-[2px] transition-[filter] duration-150 hover:brightness-125 ${
+              flipped ? "bg-danger shadow-[0_0_3px_rgba(255,107,107,0.3)]" : "bg-teal/60"
             }`}
             title={`Bit ${i}: ${flipped ? "flipped" : "same"}`}
           />
