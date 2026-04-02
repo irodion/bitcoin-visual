@@ -79,6 +79,94 @@
   --radius-sm: 12px;
 }
 
+/* ── Light theme overrides ── */
+
+.light {
+  --color-bg: #f5f2ed;
+  --color-module-shell: #faf8f5;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f9f7f4;
+  --color-surface-warm: #fdf6ee;
+
+  --color-accent: #d97706;
+  --color-accent-muted: rgba(217, 119, 6, 0.12);
+
+  --color-teal: #0d9488;
+  --color-teal-muted: rgba(13, 148, 136, 0.1);
+
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-info: #0284c7;
+
+  --color-warning-bg: #fef3c7;
+  --color-warning-border: #d97706;
+  --color-warning-text: #92400e;
+  --color-warning-heading: #78350f;
+  --color-warning-body: #a16207;
+
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #78716c;
+
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-strong: rgba(0, 0, 0, 0.15);
+  --color-border-amber: rgba(217, 119, 6, 0.3);
+  --color-border-secondary: #d6d3d1;
+
+  --color-input-bg: #ffffff;
+  --color-input-border: #d6d3d1;
+
+  --color-text-on-accent: #ffffff;
+  --color-badge-bg: #f5f5f4;
+  --color-ghost-bg: #fafaf9;
+  --color-badge-info-border: #bae6fd;
+  --color-badge-info-bg: #f0f9ff;
+  --color-badge-warm-border: #fed7aa;
+  --color-badge-warm-bg: #fffbeb;
+
+  --color-glow-accent: rgba(217, 119, 6, 0.04);
+  --color-glow-teal: rgba(13, 148, 136, 0.04);
+}
+
+html.light {
+  background: linear-gradient(135deg, #f5f2ed, #faf8f5, #fef8ee);
+}
+
+.light .bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.04) 1.5px, transparent 1.5px);
+}
+
+.light .panel-cool {
+  background: linear-gradient(180deg, #ffffff, #faf8f5);
+}
+
+.light .panel-warm {
+  background: linear-gradient(135deg, #fef8ee, #faf8f5);
+}
+
+.light .shadow-container {
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.08);
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.light ::selection {
+  background: var(--color-accent-muted);
+  color: var(--color-text-primary);
+}
+
+/* ── Dialog backdrop ── */
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
 /* ── Utility classes ── */
 
 .bg-dot-grid {

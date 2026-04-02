@@ -49,6 +49,17 @@ describe("Sidebar", () => {
     expect(screen.getByLabelText("Home")).toBeInTheDocument();
   });
 
+  it("renders settings link", async () => {
+    await act(async () => {
+      renderWithRouter(
+        <Sidebar currentModuleKey="hash" mobileOpen={false} onMobileClose={() => {}} />,
+      );
+    });
+    const settingsLink = screen.getByLabelText("Settings");
+    expect(settingsLink).toBeInTheDocument();
+    expect(settingsLink.closest("a")).toHaveAttribute("href", "/settings");
+  });
+
   it("shows completion dot for completed modules", async () => {
     useProgressStore.getState().markCompleted("hash");
 
