@@ -290,7 +290,8 @@ function formatDisplayTxid(leBytes: Uint8Array): string {
 function describeSequence(seq: number): string {
   const hex = (seq >>> 0).toString(16).padStart(8, "0");
   if (seq === 0xffffffff) return `0x${hex} — final, no replacement`;
-  return `0x${hex} — enables RBF / timelocks`;
+  if (seq === 0xfffffffe) return `0x${hex} — enables locktime but not opt-in RBF`;
+  return `0x${hex} — enables opt-in RBF and may affect relative timelocks (BIP68)`;
 }
 
 function describeScriptPubKey(script: Uint8Array): string {
@@ -317,7 +318,9 @@ function describeScriptSig(script: Uint8Array): string {
     if (remaining > 1) {
       const pkLen = script[1 + sigLen];
       if (1 + sigLen + 1 + pkLen === script.length) {
-        return `<${sigLen}-byte DER signature> <${pkLen}-byte compressed pubkey> — proves ownership`;
+        const pkType =
+          pkLen === 33 ? "compressed" : pkLen === 65 ? "uncompressed" : `${pkLen}-byte`;
+        return `<${sigLen}-byte DER signature> <${pkType} pubkey> — proves ownership`;
       }
     }
   }

@@ -451,6 +451,28 @@ describe("mapTransactionSegments", () => {
     expect(ssLen.description).toMatch(/empty|SegWit/i);
   });
 
+  it("shows generic empty message for legacy tx with empty scriptSig", () => {
+    const tx: Transaction = {
+      version: 1,
+      inputs: [
+        {
+          txid: new Uint8Array(32),
+          vout: 0,
+          scriptSig: new Uint8Array(0),
+          sequence: 0xffffffff,
+        },
+      ],
+      outputs: [{ value: 50000n, scriptPubKey: new Uint8Array(22) }],
+      locktime: 0,
+    };
+
+    const segments = mapTransactionSegments(tx, false);
+    const ssLen = segments.find((s) => s.label === "Input 0 → ScriptSig Length");
+    if (!ssLen) throw new Error('Missing segment "Input 0 → ScriptSig Length"');
+    expect(ssLen.description).toContain("no unlocking script");
+    expect(ssLen.description).not.toMatch(/SegWit/i);
+  });
+
   it("produces witness sub-field segments", () => {
     const tx: Transaction = {
       version: 2,
