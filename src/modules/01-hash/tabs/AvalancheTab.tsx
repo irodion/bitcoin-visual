@@ -126,7 +126,7 @@ export function AvalancheTab({ input, setInput, onInteract }: AvalancheTabProps)
                         : "hover:bg-surface-raised"
                     }`}
                   >
-                    {char === " " ? "\u00A0" : char}
+                    {char === " " ? " " : char}
                   </span>
                 ))
               )}
