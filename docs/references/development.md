@@ -58,6 +58,32 @@ it("renders", async () => {
 });
 ```
 
+## Web Worker Conventions
+
+Workers live in `src/workers/`. Each worker file exports its message type interfaces and handles `self.onmessage`.
+
+### Creating a worker from a component
+
+```typescript
+const worker = new Worker(new URL("../../workers/myWorker.ts", import.meta.url), {
+  type: "module",
+});
+```
+
+### Lifecycle pattern (see `useMiningWorker.ts`, `useHashChallengeWorker.ts`)
+
+1. Store worker in `useRef<Worker | null>`
+2. Terminate + null ref on unmount via `useEffect` cleanup
+3. In `start()`: terminate previous worker, create new, assign handlers, post message
+4. Guard every handler: `if (workerRef.current !== worker) return;`
+5. In `stop()`: terminate, null ref, reset state to IDLE
+
+### Performance in hot loops
+
+- Avoid `bytesToHex()` / string allocation per iteration — check bytes directly, convert only for display or progress reporting
+- Use `performance.now()` for elapsed time, report progress every ~2000 iterations
+- Never run tight compute loops on the main thread — always use a worker
+
 ## Known Quirks
 
 - **pnpm + React 19**: `.npmrc` has `public-hoist-pattern` for `react` and `react-dom` to prevent duplicate React instances in tests.
