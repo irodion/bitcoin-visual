@@ -60,6 +60,8 @@ export function EllipticCurvesTab({ entropyHex }: EllipticCurvesTabProps) {
             exit="hidden"
           >
             <PointAdditionDemo
+              viewMode={state.viewMode}
+              setViewMode={state.setViewMode}
               pointP={state.pointP}
               pointQ={state.pointQ}
               setPointP={state.setPointP}
@@ -68,6 +70,7 @@ export function EllipticCurvesTab({ entropyHex }: EllipticCurvesTabProps) {
               setDoublingMode={state.setDoublingMode}
               additionResult={state.additionResult}
               additionDetail={state.additionDetail}
+              realCurve={state.realCurve}
             />
           </motion.div>
         )}

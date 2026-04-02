@@ -37,11 +37,19 @@ describe("EllipticCurvesTab", () => {
     expect(additionTab).toHaveAttribute("aria-selected", "true");
   });
 
-  it("renders 72 curve points in the SVG grid", async () => {
+  it("renders 72 curve points in the finite field SVG grid", async () => {
+    const user = userEvent.setup();
     await act(async () => {
       renderTab();
     });
-    const svg = screen.getByRole("img");
+
+    // Default view is "Real Curve"; switch to "Finite Field"
+    await user.click(screen.getByRole("radio", { name: "Finite Field" }));
+
+    // Wait for AnimatePresence exit animation to complete and finite field grid to mount
+    const svg = await screen.findByRole("img", {
+      name: /Elliptic curve points over/,
+    });
     const circles = svg.querySelectorAll("circle");
     expect(circles.length).toBe(72);
   });
