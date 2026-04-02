@@ -64,12 +64,14 @@ export function useHashChallengeWorker(): UseHashChallengeReturn {
     });
 
     worker.onerror = () => {
+      if (workerRef.current !== worker) return;
       setState(IDLE);
       worker.terminate();
       workerRef.current = null;
     };
 
     worker.onmessage = (e: MessageEvent<HashChallengeOut>) => {
+      if (workerRef.current !== worker) return;
       const msg = e.data;
       if (msg.type === "progress") {
         setState((prev) => ({

@@ -56,6 +56,7 @@ export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
     benchWorkerRef.current = worker;
 
     worker.onmessage = (e: MessageEvent<HashChallengeOut>) => {
+      if (benchWorkerRef.current !== worker) return;
       if (e.data.type === "benchmark-result") {
         setBenchmarkResult(e.data.hashesPerSecond);
         setBenchmarking(false);
@@ -65,6 +66,7 @@ export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
     };
 
     worker.onerror = () => {
+      if (benchWorkerRef.current !== worker) return;
       setBenchmarking(false);
       worker.terminate();
       benchWorkerRef.current = null;
@@ -166,7 +168,9 @@ export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
               <p className="mt-1 text-text-secondary">
                 Bitcoin network: <strong className="text-text-primary">~600 EH/s</strong> — that is{" "}
                 <strong className="text-accent">
-                  {formatScale(BITCOIN_HASHRATE / benchmarkResult)}×
+                  {benchmarkResult > 0
+                    ? `${formatScale(BITCOIN_HASHRATE / benchmarkResult)}×`
+                    : "—"}
                 </strong>{" "}
                 faster
               </p>

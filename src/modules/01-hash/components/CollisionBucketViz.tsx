@@ -40,7 +40,7 @@ export function CollisionBucketViz({
   }, [autoRun, collision]);
 
   const totalSlots = 1 << hashBits;
-  const expected50 = Math.round(Math.sqrt((Math.PI / 2) * totalSlots));
+  const expected50 = Math.round(Math.sqrt(2 * Math.log(2) * totalSlots));
 
   const bucketCountsArray = useMemo(() => {
     if (hashBits !== 8) return null;
