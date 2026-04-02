@@ -13,38 +13,44 @@ describe("StoryRibbon", () => {
     useProgressStore.getState().reset();
   });
 
-  it("renders progress nav for core modules", async () => {
+  it("renders story progress nav for core modules", async () => {
     await act(async () => {
       renderWithRouter(<StoryRibbon currentModuleKey="utxo" />);
     });
     expect(screen.getByRole("navigation", { name: "Story progress" })).toBeInTheDocument();
   });
 
-  it("renders 6 chapter node links for a core module", async () => {
+  it("shows current chapter role", async () => {
+    await act(async () => {
+      renderWithRouter(<StoryRibbon currentModuleKey="keys" />);
+    });
+    expect(screen.getByText("Chapter 2 of 6")).toBeInTheDocument();
+  });
+
+  it("shows previous module link", async () => {
+    await act(async () => {
+      renderWithRouter(<StoryRibbon currentModuleKey="keys" />);
+    });
+    const prevLink = screen.getByText("← Hash");
+    expect(prevLink.closest("a")).toHaveAttribute("href", "/hash");
+  });
+
+  it("shows next module link", async () => {
+    await act(async () => {
+      renderWithRouter(<StoryRibbon currentModuleKey="keys" />);
+    });
+    const nextLink = screen.getByText("UTXO →");
+    expect(nextLink.closest("a")).toHaveAttribute("href", "/utxo");
+  });
+
+  it("shows Start instead of prev link for first module", async () => {
     await act(async () => {
       renderWithRouter(<StoryRibbon currentModuleKey="hash" />);
     });
-    const links = screen.getAllByRole("link");
-    expect(links.length).toBeGreaterThanOrEqual(6);
+    expect(screen.getByText("Start")).toBeInTheDocument();
   });
 
-  it("marks current module with aria-current step", async () => {
-    await act(async () => {
-      renderWithRouter(<StoryRibbon currentModuleKey="keys" />);
-    });
-    const current = screen.getByLabelText("Keys & Addresses (current)");
-    expect(current).toHaveAttribute("aria-current", "step");
-  });
-
-  it("shows completed checkmarks", async () => {
-    useProgressStore.getState().markCompleted("hash");
-    await act(async () => {
-      renderWithRouter(<StoryRibbon currentModuleKey="keys" />);
-    });
-    expect(screen.getByLabelText("Hash Playground, completed")).toBeInTheDocument();
-  });
-
-  it("shows Side Lab badge for attack lab", async () => {
+  it("shows Side Lab for attack lab", async () => {
     await act(async () => {
       renderWithRouter(<StoryRibbon currentModuleKey="attacks" />);
     });
@@ -52,22 +58,10 @@ describe("StoryRibbon", () => {
     expect(screen.queryByRole("navigation", { name: "Story progress" })).not.toBeInTheDocument();
   });
 
-  it("shows transition copy for current module on desktop", async () => {
-    await act(async () => {
-      renderWithRouter(<StoryRibbon currentModuleKey="utxo" />);
-    });
-    expect(
-      screen.getByText(
-        "Learn how Bitcoin represents coins as spendable outputs and builds transactions.",
-      ),
-    ).toBeInTheDocument();
-  });
-
-  it("renders mobile chapter role text", async () => {
-    await act(async () => {
-      renderWithRouter(<StoryRibbon currentModuleKey="blockchain" />);
-    });
-    const matches = screen.getAllByText("Chapter 4 of 6");
-    expect(matches.length).toBeGreaterThanOrEqual(1);
+  it("renders nothing for unknown module key", async () => {
+    const { container } = await act(async () =>
+      renderWithRouter(<StoryRibbon currentModuleKey="nonexistent" />),
+    );
+    expect(container.innerHTML).toBe("");
   });
 });

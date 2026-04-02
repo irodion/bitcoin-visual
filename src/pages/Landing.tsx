@@ -195,8 +195,7 @@ export default function Landing() {
 
         <ConceptChain className="mb-12 md:mb-14" />
 
-        {/* The Bitcoin Story */}
-        <div className="mb-6">
+        <div className="mb-6 text-center">
           <h2 className="text-lg font-bold text-text-primary">The Bitcoin Story</h2>
           <p className="mt-1 text-sm text-text-secondary">
             Follow the path from fingerprint to shared custody.
@@ -220,7 +219,7 @@ export default function Landing() {
         </motion.div>
 
         {/* Security Lab */}
-        <div className="mb-6 mt-10">
+        <div className="mb-6 mt-10 text-center">
           <h2 className="text-lg font-bold text-text-primary">Security Lab</h2>
           <p className="mt-1 text-sm text-text-secondary">
             See how the story breaks when core rules are violated.

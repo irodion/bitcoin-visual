@@ -168,12 +168,7 @@ function SidebarContent({
         );
       })}
 
-      {/* Lab separator */}
-      <div className="mx-2 my-1.5 flex flex-col items-center gap-0.5" aria-hidden="true">
-        <div className="h-0.5 w-0.5 rounded-full bg-border" />
-        <div className="h-0.5 w-0.5 rounded-full bg-border" />
-        <div className="h-0.5 w-0.5 rounded-full bg-border" />
-      </div>
+      <div className="mx-2 my-1 h-px w-6 bg-border" />
 
       {/* Security Lab */}
       {getLabModules().map((mod) => {
@@ -185,10 +180,8 @@ function SidebarContent({
           <div key={mod.key} className="group/nav relative">
             <Link
               to={mod.route}
-              className={`relative flex h-9 w-9 items-center justify-center rounded-full border border-dashed text-xs font-bold transition-all ${
-                isCurrent
-                  ? "border-danger/40 ring-2 ring-danger/30"
-                  : "border-danger/20 hover:scale-110"
+              className={`relative flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all ${
+                isCurrent ? "ring-2 ring-accent/40" : "hover:scale-110"
               }`}
               style={{
                 background: isCurrent ? `${mod.color}28` : `${mod.color}12`,

@@ -109,28 +109,31 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
     >
       {/* Desktop: single horizontal row */}
       <div className="hidden w-full max-w-3xl items-center justify-center md:flex">
-        {PATH_MODULES.map((mod, i) => (
-          <div key={mod.key} className="flex flex-1 items-center">
-            <motion.div variants={nodeVariants}>
-              <ChainNode
-                mod={mod}
-                isCompleted={completedModules.includes(mod.key)}
-                isRecommended={mod.key === recommendedKey}
-                size="md"
-              />
-            </motion.div>
+        {PATH_MODULES.map((mod, i) => {
+          const isLast = i === PATH_MODULES.length - 1;
+          return (
+            <div key={mod.key} className={`flex items-center ${isLast ? "" : "flex-1"}`}>
+              <motion.div variants={nodeVariants}>
+                <ChainNode
+                  mod={mod}
+                  isCompleted={completedModules.includes(mod.key)}
+                  isRecommended={mod.key === recommendedKey}
+                  size="md"
+                />
+              </motion.div>
 
-            {i < PATH_MODULES.length - 1 && (
-              <motion.div
-                variants={lineVariants}
-                className="mx-1 h-[2px] flex-1 origin-left"
-                style={{
-                  background: `linear-gradient(to right, ${mod.color}50, ${PATH_MODULES[i + 1].color}50)`,
-                }}
-              />
-            )}
-          </div>
-        ))}
+              {!isLast && (
+                <motion.div
+                  variants={lineVariants}
+                  className="mx-2 h-[2px] flex-1 origin-left"
+                  style={{
+                    background: `linear-gradient(to right, ${mod.color}50, ${PATH_MODULES[i + 1].color}50)`,
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Mobile: 2-row grid with arrows */}
