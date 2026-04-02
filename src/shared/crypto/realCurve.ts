@@ -89,7 +89,7 @@ export function sampleCurve(xMin: number, xMax: number, numSamples: number): Rea
  */
 export function snapToCurve(clickX: number, clickY: number, xMin: number, xMax: number): RealPoint {
   // Clamp x to valid curve range
-  const lo = Math.max(xMin, CURVE_X_MIN + 0.01);
+  const lo = Math.max(xMin, CURVE_X_MIN);
   const hi = xMax;
 
   const branch = clickY >= 0 ? 1 : -1;
