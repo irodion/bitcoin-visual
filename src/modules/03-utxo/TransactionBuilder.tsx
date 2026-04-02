@@ -1,5 +1,5 @@
 import { INPUT, LABEL } from "../../shared/components/styles.ts";
-import { satsToBtc, type UTXO } from "./constants.ts";
+import { RECIPIENT, RECIPIENT_ADDRESS, satsToBtc, type UTXO } from "./constants.ts";
 
 interface TransactionBuilderProps {
   selectedUtxos: UTXO[];
@@ -83,8 +83,15 @@ export function TransactionBuilder({
           <div className="space-y-2">
             {/* Recipient */}
             <div className="rounded-inner border border-border bg-surface p-3">
-              <div className="mb-1.5 text-[10px] font-medium uppercase tracking-widest text-text-muted">
-                Recipient
+              <div className="mb-1 flex items-baseline gap-1.5 text-[10px] font-medium uppercase tracking-widest text-text-muted">
+                Recipient —
+                <span className="normal-case tracking-normal text-accent">{RECIPIENT.name}</span>
+              </div>
+              <p className="mb-2 text-[10px] leading-relaxed text-text-secondary">
+                {RECIPIENT.story}
+              </p>
+              <div className="mb-2 truncate font-mono text-[10px] text-text-muted">
+                {RECIPIENT_ADDRESS}
               </div>
               <input
                 id="recipient-amount"

@@ -25,7 +25,7 @@ export function TxIDPanel({ txidIntermediate, txid, wtxid, isSegWit }: TxIDPanel
 
         <ValueFlowArrow
           label="SHA-256"
-          description="First round of SHA-256 hashing"
+          description="Compresses the raw serialized bytes into a fixed 32-byte fingerprint"
           animationKey={txidIntermediate.firstHash}
         />
 
@@ -33,7 +33,7 @@ export function TxIDPanel({ txidIntermediate, txid, wtxid, isSegWit }: TxIDPanel
 
         <ValueFlowArrow
           label="SHA-256"
-          description="Second round — double SHA-256 (SHA-256d)"
+          description="Second round (SHA-256d) — Bitcoin double-hashes to defend against length-extension attacks"
           animationKey={txidIntermediate.secondHash}
         />
 
@@ -41,7 +41,7 @@ export function TxIDPanel({ txidIntermediate, txid, wtxid, isSegWit }: TxIDPanel
 
         <ValueFlowArrow
           label="Reverse Bytes"
-          description="Bitcoin displays TXIDs in reverse byte order (big-endian) — a common gotcha"
+          description="Byte-reverse for display — internally little-endian, displayed big-endian. This trips up every developer"
           animationKey={txid}
         />
 

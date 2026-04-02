@@ -1,5 +1,10 @@
 import { hexToBytes } from "@noble/hashes/utils.js";
-import { hash160, privateKeyToPublicKey, reverseBytes } from "../../shared/crypto/index.ts";
+import {
+  hash160,
+  privateKeyToPublicKey,
+  publicKeyToP2PKHAddress,
+  reverseBytes,
+} from "../../shared/crypto/index.ts";
 
 export interface UTXO {
   id: string;
@@ -22,8 +27,15 @@ export const MOCK_PUBKEY_HASH = hash160(MOCK_PUBKEY);
 const RECIPIENT_PRIVKEY = hexToBytes(
   "0000000000000000000000000000000000000000000000000000000000000002",
 );
-const RECIPIENT_PUBKEY = privateKeyToPublicKey(RECIPIENT_PRIVKEY);
+export const RECIPIENT_PUBKEY = privateKeyToPublicKey(RECIPIENT_PRIVKEY);
 export const RECIPIENT_PUBKEY_HASH = hash160(RECIPIENT_PUBKEY);
+
+export const RECIPIENT = {
+  name: "Hal Finney",
+  story: "Received the first-ever Bitcoin transaction from Satoshi (Jan 12, 2009).",
+} as const;
+
+export const RECIPIENT_ADDRESS = publicKeyToP2PKHAddress(RECIPIENT_PUBKEY);
 
 // Mock DER signature (71 bytes) for realistic scriptSig display
 // This is NOT a real signature — purely for hex inspector visualization
@@ -54,7 +66,7 @@ export const MOCK_UTXOS: UTXO[] = [
     vout: 0,
     valueSats: 50_000_000n, // 0.5 BTC
     valueBTC: "0.5",
-    label: "Mining reward",
+    label: "Block 9 coinbase (Satoshi)",
     color: "#F7931A",
     pubKeyHash: MOCK_PUBKEY_HASH,
   },
@@ -67,7 +79,7 @@ export const MOCK_UTXOS: UTXO[] = [
     vout: 1,
     valueSats: 30_000_000n, // 0.3 BTC
     valueBTC: "0.3",
-    label: "Payment received",
+    label: "Received from peer",
     color: "#36CFC9",
     pubKeyHash: MOCK_PUBKEY_HASH,
   },
@@ -80,7 +92,7 @@ export const MOCK_UTXOS: UTXO[] = [
     vout: 0,
     valueSats: 10_000_000n, // 0.1 BTC
     valueBTC: "0.1",
-    label: "Change output",
+    label: "Change from prior tx",
     color: "#7DD3FC",
     pubKeyHash: MOCK_PUBKEY_HASH,
   },
@@ -93,7 +105,7 @@ export const MOCK_UTXOS: UTXO[] = [
     vout: 2,
     valueSats: 5_000_000n, // 0.05 BTC
     valueBTC: "0.05",
-    label: "Dust consolidation",
+    label: "Faucet dust",
     color: "#22C55E",
     pubKeyHash: MOCK_PUBKEY_HASH,
   },

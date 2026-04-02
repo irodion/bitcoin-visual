@@ -330,12 +330,143 @@ describe("mapTransactionSegments", () => {
 
     expect(labels).toContain("Marker");
     expect(labels).toContain("Flag");
-    expect(labels).toContain("Witness 0");
+    expect(labels.some((l) => l.startsWith("Witness 0"))).toBe(true);
 
     // Verify segments cover full witness serialization
     const serialized = serializeWitnessTransaction(tx);
     const lastSeg = segments[segments.length - 1];
     expect(lastSeg.endByte).toBe(serialized.length);
+  });
+
+  it("produces sub-field segments for each input", () => {
+    const tx: Transaction = {
+      version: 1,
+      inputs: [
+        {
+          txid: new Uint8Array(32),
+          vout: 0,
+          scriptSig: new Uint8Array([0x00]),
+          sequence: 0xffffffff,
+        },
+      ],
+      outputs: [{ value: 50000n, scriptPubKey: new Uint8Array([0x76, 0xa9]) }],
+      locktime: 0,
+    };
+
+    const segments = mapTransactionSegments(tx, false);
+    const labels = segments.map((s) => s.label);
+
+    expect(labels).toContain("Input 0 → Prev TxID");
+    expect(labels).toContain("Input 0 → Vout");
+    expect(labels).toContain("Input 0 → ScriptSig Length");
+    expect(labels).toContain("Input 0 → ScriptSig");
+    expect(labels).toContain("Input 0 → Sequence");
+
+    const prevTxid = segments.find((s) => s.label === "Input 0 → Prev TxID");
+    expect(prevTxid!.endByte - prevTxid!.startByte).toBe(32);
+
+    const vout = segments.find((s) => s.label === "Input 0 → Vout");
+    expect(vout!.endByte - vout!.startByte).toBe(4);
+
+    const seq = segments.find((s) => s.label === "Input 0 → Sequence");
+    expect(seq!.endByte - seq!.startByte).toBe(4);
+  });
+
+  it("produces sub-field segments for each output", () => {
+    const tx: Transaction = {
+      version: 1,
+      inputs: [
+        {
+          txid: new Uint8Array(32),
+          vout: 0,
+          scriptSig: new Uint8Array(0),
+          sequence: 0xffffffff,
+        },
+      ],
+      outputs: [{ value: 50_000_000n, scriptPubKey: new Uint8Array(25) }],
+      locktime: 0,
+    };
+
+    const segments = mapTransactionSegments(tx, false);
+    const labels = segments.map((s) => s.label);
+
+    expect(labels).toContain("Output 0 → Value");
+    expect(labels).toContain("Output 0 → ScriptPubKey Length");
+    expect(labels).toContain("Output 0 → ScriptPubKey");
+
+    const value = segments.find((s) => s.label === "Output 0 → Value");
+    expect(value!.endByte - value!.startByte).toBe(8);
+  });
+
+  it("includes decoded sats in output value description", () => {
+    const tx: Transaction = {
+      version: 1,
+      inputs: [
+        {
+          txid: new Uint8Array(32),
+          vout: 0,
+          scriptSig: new Uint8Array(0),
+          sequence: 0xffffffff,
+        },
+      ],
+      outputs: [{ value: 50_000_000n, scriptPubKey: new Uint8Array(2) }],
+      locktime: 0,
+    };
+
+    const segments = mapTransactionSegments(tx, false);
+    const value = segments.find((s) => s.label === "Output 0 → Value");
+    expect(value!.description).toContain("50,000,000");
+    expect(value!.description).toContain("0.5 BTC");
+  });
+
+  it("skips ScriptSig body when scriptSig is empty (SegWit)", () => {
+    const tx: Transaction = {
+      version: 2,
+      inputs: [
+        {
+          txid: new Uint8Array(32),
+          vout: 0,
+          scriptSig: new Uint8Array(0),
+          sequence: 0xffffffff,
+          witness: [new Uint8Array(72)],
+        },
+      ],
+      outputs: [{ value: 50000n, scriptPubKey: new Uint8Array(22) }],
+      locktime: 0,
+    };
+
+    const segments = mapTransactionSegments(tx, true);
+    const labels = segments.map((s) => s.label);
+
+    expect(labels).toContain("Input 0 → ScriptSig Length");
+    expect(labels).not.toContain("Input 0 → ScriptSig");
+
+    const ssLen = segments.find((s) => s.label === "Input 0 → ScriptSig Length");
+    expect(ssLen!.description).toMatch(/empty|SegWit/i);
+  });
+
+  it("produces witness sub-field segments", () => {
+    const tx: Transaction = {
+      version: 2,
+      inputs: [
+        {
+          txid: new Uint8Array(32),
+          vout: 0,
+          scriptSig: new Uint8Array(0),
+          sequence: 0xffffffff,
+          witness: [new Uint8Array(72), new Uint8Array(33)],
+        },
+      ],
+      outputs: [{ value: 50000n, scriptPubKey: new Uint8Array(22) }],
+      locktime: 0,
+    };
+
+    const segments = mapTransactionSegments(tx, true);
+    const labels = segments.map((s) => s.label);
+
+    expect(labels).toContain("Witness 0 → Item Count");
+    expect(labels).toContain("Witness 0 → Signature");
+    expect(labels).toContain("Witness 0 → PubKey");
   });
 });
 
