@@ -54,7 +54,7 @@ function ModuleTooltip({
   inactive?: boolean;
 }) {
   return (
-    <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-badge border border-border-strong bg-surface-raised px-2.5 py-1 text-[11px] shadow-lg group-hover/nav:md:block">
+    <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-badge border border-border-strong bg-surface-raised px-2.5 py-1 text-[11px] shadow-lg group-hover/nav:md:block group-focus-within/nav:md:block">
       <span className="font-medium text-text-primary">{title}</span>
       {inactive && <span className="ml-1.5 text-text-muted">(soon)</span>}
       <br />
@@ -71,6 +71,7 @@ function SidebarContent({
   onClose?: () => void;
 }) {
   const completedModules = useProgressStore((s) => s.completedModules);
+  const completedSet = new Set(completedModules);
 
   return (
     <nav
@@ -124,7 +125,7 @@ function SidebarContent({
       {/* Core Path */}
       {getCoreModules().map((mod, i, arr) => {
         const isCurrent = mod.key === currentModuleKey;
-        const isCompleted = completedModules.includes(mod.key);
+        const isCompleted = completedSet.has(mod.key);
         const ariaLabel = mod.active
           ? isCompleted
             ? `${mod.title}, completed`
@@ -173,7 +174,7 @@ function SidebarContent({
       {/* Security Lab */}
       {getLabModules().map((mod) => {
         const isCurrent = mod.key === currentModuleKey;
-        const isCompleted = completedModules.includes(mod.key);
+        const isCompleted = completedSet.has(mod.key);
         const ariaLabel = isCompleted ? `${mod.title}, completed` : mod.title;
 
         return (

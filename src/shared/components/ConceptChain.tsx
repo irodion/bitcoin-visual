@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, type Variants } from "framer-motion";
 import { LEARNING_PATH, type ModuleInfo } from "../constants/modules.ts";
@@ -19,7 +20,11 @@ const lineVariants: Variants = {
   visible: { scaleX: 1, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
-const PATH_MODULES = LEARNING_PATH.map((key) => getModuleByKey(key)!);
+const PATH_MODULES = LEARNING_PATH.map((key) => {
+  const mod = getModuleByKey(key);
+  if (!mod) throw new Error(`LEARNING_PATH key "${key}" not found in MODULES`);
+  return mod;
+});
 
 function CheckBadge({ size }: { size: number }) {
   return (
@@ -55,7 +60,13 @@ function ChainNode({
     <Link
       to={mod.route}
       className={`group/chain flex flex-col items-center gap-1.5 ${dimmed ? "opacity-50" : ""}`}
-      aria-label={isCompleted ? `${mod.title}, completed` : mod.title}
+      aria-label={
+        isCompleted
+          ? `${mod.title}, completed`
+          : isRecommended
+            ? `${mod.title}, recommended`
+            : mod.title
+      }
     >
       <div className="relative">
         <div
@@ -98,6 +109,7 @@ interface ConceptChainProps {
 
 export function ConceptChain({ className = "" }: ConceptChainProps) {
   const completedModules = useProgressStore((s) => s.completedModules);
+  const completedSet = useMemo(() => new Set(completedModules), [completedModules]);
   const recommendedKey = getRecommendedModule(completedModules)?.key ?? null;
 
   return (
@@ -116,7 +128,7 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
               <motion.div variants={nodeVariants}>
                 <ChainNode
                   mod={mod}
-                  isCompleted={completedModules.includes(mod.key)}
+                  isCompleted={completedSet.has(mod.key)}
                   isRecommended={mod.key === recommendedKey}
                   size="md"
                 />
@@ -142,7 +154,7 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
           <motion.div key={mod.key} variants={nodeVariants} className="flex items-center">
             <ChainNode
               mod={mod}
-              isCompleted={completedModules.includes(mod.key)}
+              isCompleted={completedSet.has(mod.key)}
               isRecommended={mod.key === recommendedKey}
               size="sm"
             />

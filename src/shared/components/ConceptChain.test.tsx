@@ -67,7 +67,7 @@ describe("ConceptChain", () => {
       renderWithRouter(<ConceptChain />);
     });
     // First uncompleted module (hash) should be recommended — renders in desktop + mobile
-    const hashLinks = screen.getAllByLabelText("Hash Playground");
+    const hashLinks = screen.getAllByLabelText("Hash Playground, recommended");
     const hasRing = hashLinks.some((link) => link.querySelector(".ring-2") !== null);
     expect(hasRing).toBe(true);
   });

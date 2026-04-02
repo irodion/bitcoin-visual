@@ -209,10 +209,7 @@ export function ModuleLayout({
 
             {headerNotice && <div className="px-5 pt-4 md:px-7">{headerNotice}</div>}
 
-            <div
-              className="flex flex-1 flex-col md:flex-row"
-              style={{ minHeight: "calc(100dvh - 140px)" }}
-            >
+            <div className="flex min-h-0 flex-1 flex-col md:flex-row">
               <TheoryPanel moduleKey={moduleKey}>{theoryContent}</TheoryPanel>
               <main
                 className="flex-1 overflow-y-auto p-5 md:p-8"
