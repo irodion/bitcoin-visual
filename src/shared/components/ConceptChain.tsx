@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion, type Variants } from "framer-motion";
-import { MODULES, LEARNING_PATH, type ModuleInfo } from "../constants/modules.ts";
+import { LEARNING_PATH, type ModuleInfo } from "../constants/modules.ts";
+import { getModuleByKey, getRecommendedModule } from "../constants/storyHelpers.ts";
 import { useProgressStore } from "../stores/index.ts";
 
 const containerVariants: Variants = {
@@ -18,7 +19,7 @@ const lineVariants: Variants = {
   visible: { scaleX: 1, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
-const PATH_MODULES = LEARNING_PATH.map((key) => MODULES.find((m) => m.key === key)!);
+const PATH_MODULES = LEARNING_PATH.map((key) => getModuleByKey(key)!);
 
 function CheckBadge({ size }: { size: number }) {
   return (
@@ -40,17 +41,20 @@ function CheckBadge({ size }: { size: number }) {
 function ChainNode({
   mod,
   isCompleted,
+  isRecommended,
   size,
 }: {
   mod: ModuleInfo;
   isCompleted: boolean;
+  isRecommended: boolean;
   size: "sm" | "md";
 }) {
   const isMd = size === "md";
+  const dimmed = !isCompleted && !isRecommended;
   return (
     <Link
       to={mod.route}
-      className="group/chain flex flex-col items-center gap-1.5"
+      className={`group/chain flex flex-col items-center gap-1.5 ${dimmed ? "opacity-50" : ""}`}
       aria-label={isCompleted ? `${mod.title}, completed` : mod.title}
     >
       <div className="relative">
@@ -59,7 +63,7 @@ function ChainNode({
             isMd
               ? "h-11 w-11 text-sm transition-transform group-hover/chain:scale-110"
               : "h-10 w-10 text-xs"
-          }`}
+          } ${isRecommended ? "ring-2 ring-accent/40" : ""}`}
           style={{ background: `${mod.color}20`, color: mod.color }}
         >
           {mod.number}
@@ -82,7 +86,7 @@ function ChainNode({
             : "text-center text-[10px] leading-tight"
         }`}
       >
-        {mod.title.split(" ")[0]}
+        {isMd ? mod.title : mod.sidebarLabelShort}
       </span>
     </Link>
   );
@@ -94,6 +98,7 @@ interface ConceptChainProps {
 
 export function ConceptChain({ className = "" }: ConceptChainProps) {
   const completedModules = useProgressStore((s) => s.completedModules);
+  const recommendedKey = getRecommendedModule(completedModules)?.key ?? null;
 
   return (
     <motion.div
@@ -107,7 +112,12 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
         {PATH_MODULES.map((mod, i) => (
           <div key={mod.key} className="flex flex-1 items-center">
             <motion.div variants={nodeVariants}>
-              <ChainNode mod={mod} isCompleted={completedModules.includes(mod.key)} size="md" />
+              <ChainNode
+                mod={mod}
+                isCompleted={completedModules.includes(mod.key)}
+                isRecommended={mod.key === recommendedKey}
+                size="md"
+              />
             </motion.div>
 
             {i < PATH_MODULES.length - 1 && (
@@ -123,11 +133,22 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
         ))}
       </div>
 
-      {/* Mobile: 2-row grid */}
-      <div className="grid w-full max-w-sm grid-cols-3 gap-4 md:hidden">
-        {PATH_MODULES.map((mod) => (
-          <motion.div key={mod.key} variants={nodeVariants}>
-            <ChainNode mod={mod} isCompleted={completedModules.includes(mod.key)} size="sm" />
+      {/* Mobile: 2-row grid with arrows */}
+      <div className="grid w-full max-w-sm grid-cols-3 gap-x-2 gap-y-4 md:hidden">
+        {PATH_MODULES.map((mod, i) => (
+          <motion.div key={mod.key} variants={nodeVariants} className="flex items-center">
+            <ChainNode
+              mod={mod}
+              isCompleted={completedModules.includes(mod.key)}
+              isRecommended={mod.key === recommendedKey}
+              size="sm"
+            />
+            {/* Arrow between columns (not after the 3rd or 6th item) */}
+            {i % 3 !== 2 && i < PATH_MODULES.length - 1 && (
+              <span className="ml-auto text-[10px] text-text-muted" aria-hidden="true">
+                →
+              </span>
+            )}
           </motion.div>
         ))}
       </div>

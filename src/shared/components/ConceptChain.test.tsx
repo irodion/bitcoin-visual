@@ -13,11 +13,11 @@ describe("ConceptChain", () => {
     useProgressStore.getState().reset();
   });
 
-  it("renders 6 learning path nodes", async () => {
+  it("renders 6 learning path nodes with labels", async () => {
     await act(async () => {
       renderWithRouter(<ConceptChain />);
     });
-    // Each node renders the first word of its title twice (desktop + mobile)
+    // Desktop uses full titles, mobile uses short labels — both render
     const hashNodes = screen.getAllByText("Hash");
     expect(hashNodes.length).toBeGreaterThanOrEqual(1);
 
@@ -27,21 +27,16 @@ describe("ConceptChain", () => {
     const utxoNodes = screen.getAllByText("UTXO");
     expect(utxoNodes.length).toBeGreaterThanOrEqual(1);
 
-    const blockchainNodes = screen.getAllByText("Blockchain");
-    expect(blockchainNodes.length).toBeGreaterThanOrEqual(1);
-
-    const hdNodes = screen.getAllByText("HD");
-    expect(hdNodes.length).toBeGreaterThanOrEqual(1);
-
-    const multisigNodes = screen.getAllByText("Multisig");
-    expect(multisigNodes.length).toBeGreaterThanOrEqual(1);
+    // Desktop renders full titles
+    const fullTitles = screen.getAllByText("Hash Playground");
+    expect(fullTitles.length).toBeGreaterThanOrEqual(1);
   });
 
   it("excludes Attack Lab from concept chain", async () => {
     await act(async () => {
       renderWithRouter(<ConceptChain />);
     });
-    expect(screen.queryByText("Attack")).toBeNull();
+    expect(screen.queryByText("Attack Lab")).toBeNull();
   });
 
   it("renders clickable links to module routes", async () => {
@@ -56,5 +51,34 @@ describe("ConceptChain", () => {
     expect(hrefs).toContain("/blockchain");
     expect(hrefs).toContain("/hd-wallet");
     expect(hrefs).toContain("/multisig");
+  });
+
+  it("renders mobile arrows between columns", async () => {
+    await act(async () => {
+      renderWithRouter(<ConceptChain />);
+    });
+    const arrows = screen.getAllByText("→");
+    // 2 rows × 2 arrows per row = 4 arrows
+    expect(arrows.length).toBe(4);
+  });
+
+  it("highlights recommended module with accent ring", async () => {
+    await act(async () => {
+      renderWithRouter(<ConceptChain />);
+    });
+    // First uncompleted module (hash) should be recommended — renders in desktop + mobile
+    const hashLinks = screen.getAllByLabelText("Hash Playground");
+    const hasRing = hashLinks.some((link) => link.querySelector(".ring-2") !== null);
+    expect(hasRing).toBe(true);
+  });
+
+  it("dims future non-recommended modules", async () => {
+    await act(async () => {
+      renderWithRouter(<ConceptChain />);
+    });
+    // Keys is not recommended (hash is), so its links should have opacity-50
+    const keysLinks = screen.getAllByLabelText("Keys & Addresses");
+    const allDimmed = keysLinks.every((link) => link.className.includes("opacity-50"));
+    expect(allDimmed).toBe(true);
   });
 });

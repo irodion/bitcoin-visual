@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { TheoryPanel } from "./TheoryPanel";
 import { PageBackground } from "./PageBackground";
 import { Sidebar } from "./Sidebar";
+import { JourneyFooter } from "./JourneyFooter";
+import { StoryRibbon } from "./StoryRibbon";
+import { getModuleByKey, getNextModule, getPreviousModule } from "../constants/storyHelpers";
 
 interface Tab {
   key: string;
@@ -107,6 +110,9 @@ export function ModuleLayout({
   headerNotice,
 }: ModuleLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const currentModule = getModuleByKey(moduleKey);
+  const nextMod = getNextModule(moduleKey);
+  const prevMod = getPreviousModule(moduleKey);
 
   return (
     <PageBackground>
@@ -162,10 +168,18 @@ export function ModuleLayout({
                   </Link>
 
                   <div>
-                    {moduleNumber != null && (
-                      <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-text-muted">
-                        Module {moduleNumber} / Bitcoin Visual
+                    {currentModule ? (
+                      <div className="hidden text-[11px] font-medium uppercase tracking-[0.18em] text-text-muted md:block">
+                        {currentModule.storyRole}
+                        {prevMod && <span> · Builds on: {prevMod.title}</span>}
+                        {nextMod && <span> · Next: {nextMod.title}</span>}
                       </div>
+                    ) : (
+                      moduleNumber != null && (
+                        <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-text-muted">
+                          Module {moduleNumber} / Bitcoin Visual
+                        </div>
+                      )
                     )}
                     <h1 className="text-lg font-bold text-text-primary md:text-xl">{title}</h1>
                   </div>
@@ -191,6 +205,8 @@ export function ModuleLayout({
               {subtitle && <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>}
             </header>
 
+            {currentModule && <StoryRibbon currentModuleKey={moduleKey} />}
+
             {headerNotice && <div className="px-5 pt-4 md:px-7">{headerNotice}</div>}
 
             <div
@@ -205,6 +221,9 @@ export function ModuleLayout({
                   : {})}
               >
                 {children}
+                {currentModule && (
+                  <JourneyFooter mod={currentModule} nextModule={nextMod} prevModule={prevMod} />
+                )}
               </main>
             </div>
           </div>

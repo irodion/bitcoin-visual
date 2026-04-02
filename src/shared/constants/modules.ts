@@ -8,6 +8,17 @@ export interface ModuleInfo {
   active: boolean;
   estimatedMinutes: number;
   prerequisites: string[];
+  storyGroup: "core" | "lab";
+  storyOrder: number;
+  storyRole: string;
+  storyBefore: string;
+  storyNow: string;
+  storyNext: string;
+  nextModuleKey: string | null;
+  previousModuleKey: string | null;
+  sidebarLabelShort: string;
+  landingCta: string;
+  storyRecap: string;
 }
 
 export const MODULES: ModuleInfo[] = [
@@ -21,6 +32,17 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 10,
     prerequisites: [],
+    storyGroup: "core",
+    storyOrder: 1,
+    storyRole: "Chapter 1 of 6",
+    storyBefore: "Start of the story.",
+    storyNow: "Learn how Bitcoin creates irreversible fingerprints from any input.",
+    storyNext: "Those fingerprints help build keys, addresses, and IDs.",
+    nextModuleKey: "keys",
+    previousModuleKey: null,
+    sidebarLabelShort: "Hash",
+    landingCta: "Start with fingerprints",
+    storyRecap: "You learned that SHA-256 creates a unique 256-bit fingerprint for any input.",
   },
   {
     key: "keys",
@@ -32,6 +54,17 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 15,
     prerequisites: ["hash"],
+    storyGroup: "core",
+    storyOrder: 2,
+    storyRole: "Chapter 2 of 6",
+    storyBefore: "Hashes create deterministic fingerprints.",
+    storyNow: "Turn entropy into private keys, public keys, and addresses.",
+    storyNext: "Those addresses will control spendable coins as UTXOs.",
+    nextModuleKey: "utxo",
+    previousModuleKey: "hash",
+    sidebarLabelShort: "Keys",
+    landingCta: "Turn entropy into keys",
+    storyRecap: "You turned random entropy into a private key, public key, and Bitcoin address.",
   },
   {
     key: "utxo",
@@ -43,6 +76,17 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 20,
     prerequisites: ["keys"],
+    storyGroup: "core",
+    storyOrder: 3,
+    storyRole: "Chapter 3 of 6",
+    storyBefore: "Keys define ownership.",
+    storyNow: "Learn how Bitcoin represents coins as spendable outputs and builds transactions.",
+    storyNext: "Those transactions are grouped into blocks and secured by mining.",
+    nextModuleKey: "blockchain",
+    previousModuleKey: "keys",
+    sidebarLabelShort: "UTXO",
+    landingCta: "Build a transaction",
+    storyRecap: "You built a transaction that consumes old outputs and creates new ones.",
   },
   {
     key: "blockchain",
@@ -54,6 +98,17 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 20,
     prerequisites: ["utxo"],
+    storyGroup: "core",
+    storyOrder: 4,
+    storyRole: "Chapter 4 of 6",
+    storyBefore: "Transactions move value between outputs.",
+    storyNow: "See how transactions become blocks linked by proof of work.",
+    storyNext: "Then zoom back out to wallet structure and derived key trees.",
+    nextModuleKey: "hd-wallet",
+    previousModuleKey: "utxo",
+    sidebarLabelShort: "Blockchain",
+    landingCta: "Mine the next block",
+    storyRecap: "You mined blocks and saw how proof of work secures the chain.",
   },
   {
     key: "hd-wallet",
@@ -65,6 +120,17 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 20,
     prerequisites: ["keys"],
+    storyGroup: "core",
+    storyOrder: 5,
+    storyRole: "Chapter 5 of 6",
+    storyBefore: "One key can control one address.",
+    storyNow: "Scale that idea into a full wallet tree from one seed phrase.",
+    storyNext: "Then use multiple keys together in a multisig policy.",
+    nextModuleKey: "multisig",
+    previousModuleKey: "blockchain",
+    sidebarLabelShort: "HD Wallet",
+    landingCta: "Grow one seed into a tree",
+    storyRecap: "You derived an entire key tree from a single seed phrase.",
   },
   {
     key: "multisig",
@@ -76,6 +142,17 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 25,
     prerequisites: ["keys", "utxo"],
+    storyGroup: "core",
+    storyOrder: 6,
+    storyRole: "Chapter 6 of 6",
+    storyBefore: "HD wallets organize many keys.",
+    storyNow: "Combine keys into a shared spending policy and coordinate signatures with PSBT.",
+    storyNext: "After the core path, explore how systems fail in the Security Lab.",
+    nextModuleKey: null,
+    previousModuleKey: "hd-wallet",
+    sidebarLabelShort: "Multisig",
+    landingCta: "Coordinate shared custody",
+    storyRecap: "You combined multiple keys into a shared spending policy with PSBT.",
   },
   {
     key: "attacks",
@@ -87,6 +164,18 @@ export const MODULES: ModuleInfo[] = [
     active: true,
     estimatedMinutes: 15,
     prerequisites: [],
+    storyGroup: "lab",
+    storyOrder: 1,
+    storyRole: "Side Lab",
+    storyBefore: "You've seen how Bitcoin is supposed to work.",
+    storyNow:
+      "This lab shows what breaks when entropy, derivation, signing, or transaction rules are misused.",
+    storyNext: "Return to any chapter to connect each attack to the normal flow.",
+    nextModuleKey: null,
+    previousModuleKey: null,
+    sidebarLabelShort: "Attacks",
+    landingCta: "Explore failure modes",
+    storyRecap: "You explored what happens when cryptographic best practices are violated.",
   },
 ];
 
