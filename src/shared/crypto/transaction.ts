@@ -268,6 +268,7 @@ const SEG_COLOR = {
 } as const;
 
 function byteRangeLabel(start: number, size: number): string {
+  if (size === 0) return `byte ${start} (0 bytes)`;
   if (size === 1) return `byte ${start}`;
   return `bytes ${start}–${start + size - 1}`;
 }
@@ -379,9 +380,11 @@ export function mapTransactionSegments(tx: Transaction, isSegWit: boolean): TxSe
       `Input ${i} → ScriptSig Length`,
       ssVarLen,
       SEG_COLOR.meta,
-      input.scriptSig.length === 0
+      input.scriptSig.length === 0 && isSegWit
         ? "0 bytes — empty for SegWit, unlocking data is in witness"
-        : `${input.scriptSig.length} bytes of unlocking script to follow`,
+        : input.scriptSig.length === 0
+          ? "0 bytes — no unlocking script"
+          : `${input.scriptSig.length} bytes of unlocking script to follow`,
     );
 
     if (input.scriptSig.length > 0) {

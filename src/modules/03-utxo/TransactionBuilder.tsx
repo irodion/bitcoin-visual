@@ -1,5 +1,11 @@
 import { INPUT, LABEL } from "../../shared/components/styles.ts";
-import { RECIPIENT, RECIPIENT_ADDRESS, satsToBtc, type UTXO } from "./constants.ts";
+import {
+  RECIPIENT,
+  RECIPIENT_ADDRESS_P2PKH,
+  RECIPIENT_ADDRESS_P2WPKH,
+  satsToBtc,
+  type UTXO,
+} from "./constants.ts";
 
 interface TransactionBuilderProps {
   selectedUtxos: UTXO[];
@@ -91,7 +97,7 @@ export function TransactionBuilder({
                 {RECIPIENT.story}
               </p>
               <div className="mb-2 truncate font-mono text-[10px] text-text-muted">
-                {RECIPIENT_ADDRESS}
+                {isSegWit ? RECIPIENT_ADDRESS_P2WPKH : RECIPIENT_ADDRESS_P2PKH}
               </div>
               <input
                 id="recipient-amount"

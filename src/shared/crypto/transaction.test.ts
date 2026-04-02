@@ -363,13 +363,16 @@ describe("mapTransactionSegments", () => {
     expect(labels).toContain("Input 0 → Sequence");
 
     const prevTxid = segments.find((s) => s.label === "Input 0 → Prev TxID");
-    expect(prevTxid!.endByte - prevTxid!.startByte).toBe(32);
+    if (!prevTxid) throw new Error('Missing segment "Input 0 → Prev TxID"');
+    expect(prevTxid.endByte - prevTxid.startByte).toBe(32);
 
     const vout = segments.find((s) => s.label === "Input 0 → Vout");
-    expect(vout!.endByte - vout!.startByte).toBe(4);
+    if (!vout) throw new Error('Missing segment "Input 0 → Vout"');
+    expect(vout.endByte - vout.startByte).toBe(4);
 
     const seq = segments.find((s) => s.label === "Input 0 → Sequence");
-    expect(seq!.endByte - seq!.startByte).toBe(4);
+    if (!seq) throw new Error('Missing segment "Input 0 → Sequence"');
+    expect(seq.endByte - seq.startByte).toBe(4);
   });
 
   it("produces sub-field segments for each output", () => {
@@ -395,7 +398,8 @@ describe("mapTransactionSegments", () => {
     expect(labels).toContain("Output 0 → ScriptPubKey");
 
     const value = segments.find((s) => s.label === "Output 0 → Value");
-    expect(value!.endByte - value!.startByte).toBe(8);
+    if (!value) throw new Error('Missing segment "Output 0 → Value"');
+    expect(value.endByte - value.startByte).toBe(8);
   });
 
   it("includes decoded sats in output value description", () => {
@@ -415,8 +419,9 @@ describe("mapTransactionSegments", () => {
 
     const segments = mapTransactionSegments(tx, false);
     const value = segments.find((s) => s.label === "Output 0 → Value");
-    expect(value!.description).toContain("50,000,000");
-    expect(value!.description).toContain("0.5 BTC");
+    if (!value) throw new Error('Missing segment "Output 0 → Value"');
+    expect(value.description).toContain("50,000,000");
+    expect(value.description).toContain("0.5 BTC");
   });
 
   it("skips ScriptSig body when scriptSig is empty (SegWit)", () => {
@@ -442,7 +447,8 @@ describe("mapTransactionSegments", () => {
     expect(labels).not.toContain("Input 0 → ScriptSig");
 
     const ssLen = segments.find((s) => s.label === "Input 0 → ScriptSig Length");
-    expect(ssLen!.description).toMatch(/empty|SegWit/i);
+    if (!ssLen) throw new Error('Missing segment "Input 0 → ScriptSig Length"');
+    expect(ssLen.description).toMatch(/empty|SegWit/i);
   });
 
   it("produces witness sub-field segments", () => {

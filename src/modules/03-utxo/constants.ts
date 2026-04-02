@@ -3,6 +3,7 @@ import {
   hash160,
   privateKeyToPublicKey,
   publicKeyToP2PKHAddress,
+  publicKeyToP2WPKHAddress,
   reverseBytes,
 } from "../../shared/crypto/index.ts";
 
@@ -35,7 +36,8 @@ export const RECIPIENT = {
   story: "Received the first-ever Bitcoin transaction from Satoshi (Jan 12, 2009).",
 } as const;
 
-export const RECIPIENT_ADDRESS = publicKeyToP2PKHAddress(RECIPIENT_PUBKEY);
+export const RECIPIENT_ADDRESS_P2PKH = publicKeyToP2PKHAddress(RECIPIENT_PUBKEY);
+export const RECIPIENT_ADDRESS_P2WPKH = publicKeyToP2WPKHAddress(RECIPIENT_PUBKEY);
 
 // Mock DER signature (71 bytes) for realistic scriptSig display
 // This is NOT a real signature — purely for hex inspector visualization
