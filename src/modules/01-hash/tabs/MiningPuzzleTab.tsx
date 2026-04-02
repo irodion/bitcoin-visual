@@ -12,10 +12,10 @@ import { BITCOIN_HASHRATE, formatScale } from "../miningUtils.ts";
 import type { HashChallengeOut } from "../../../workers/hashChallenge.worker.ts";
 
 const DIFFICULTIES = [
-  { value: 2, label: "2 zeros", tag: "easy" },
-  { value: 3, label: "3 zeros", tag: "medium" },
-  { value: 4, label: "4 zeros", tag: "hard" },
-  { value: 5, label: "5 zeros", tag: "extreme" },
+  { value: 3, label: "3 zeros", tag: "easy" },
+  { value: 4, label: "4 zeros", tag: "medium" },
+  { value: 5, label: "5 zeros", tag: "hard" },
+  { value: 6, label: "6 zeros", tag: "extreme" },
 ];
 
 interface MiningPuzzleTabProps {
@@ -24,7 +24,7 @@ interface MiningPuzzleTabProps {
 
 export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
   const [prefix, setPrefix] = useState("Hello, Bitcoin!");
-  const [difficulty, setDifficulty] = useState(2);
+  const [difficulty, setDifficulty] = useState(3);
   const [benchmarkResult, setBenchmarkResult] = useState<number | null>(null);
   const [benchmarking, setBenchmarking] = useState(false);
   const benchWorkerRef = useRef<Worker | null>(null);
