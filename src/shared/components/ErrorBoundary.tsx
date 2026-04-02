@@ -19,7 +19,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("[BitcoinVault] Uncaught error:", error, info.componentStack);
+    console.error("[BitcoinVisual] Uncaught error:", error, info.componentStack);
   }
 
   render() {

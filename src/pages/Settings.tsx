@@ -135,15 +135,15 @@ function InstallApp() {
           >
             <path d="M3 8.5 6.5 12 13 4" />
           </svg>
-          BitcoinVault is installed.
+          Bitcoin Visual is installed.
         </div>
       ) : canInstall ? (
         <>
           <p className={SECTION_DESC}>
-            Install BitcoinVault for offline access and a native app experience.
+            Install Bitcoin Visual for offline access and a native app experience.
           </p>
           <button type="button" className={BTN_PRIMARY} onClick={install}>
-            Install BitcoinVault
+            Install Bitcoin Visual
           </button>
         </>
       ) : (

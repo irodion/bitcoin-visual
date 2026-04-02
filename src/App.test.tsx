@@ -14,6 +14,6 @@ describe("App", () => {
         </MemoryRouter>,
       );
     });
-    expect(screen.getByText("BitcoinVault")).toBeInTheDocument();
+    expect(screen.getByText("Bitcoin Visual")).toBeInTheDocument();
   });
 });
