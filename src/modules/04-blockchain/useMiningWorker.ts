@@ -58,6 +58,7 @@ export function useMiningWorker(
       });
 
       worker.onerror = () => {
+        if (workerRef.current !== worker) return;
         worker.terminate();
         workerRef.current = null;
         blockIndexRef.current = null;
@@ -65,6 +66,7 @@ export function useMiningWorker(
       };
 
       worker.onmessage = (e: MessageEvent<WorkerOutMessage>) => {
+        if (workerRef.current !== worker) return;
         const msg = e.data;
         if (msg.type === "progress") {
           setState((prev) => ({
