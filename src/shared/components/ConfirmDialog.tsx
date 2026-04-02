@@ -22,6 +22,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const descId = useId();
   const closingRef = useRef(false);
 
   useEffect(() => {
@@ -48,11 +49,14 @@ export function ConfirmDialog({
       className="m-auto max-w-md rounded-card border border-border-strong bg-surface p-6 text-text-primary backdrop:bg-black/50"
       onClose={handleClose}
       aria-labelledby={titleId}
+      aria-describedby={descId}
     >
       <h2 id={titleId} className="mb-2 text-lg font-bold">
         {title}
       </h2>
-      <p className="mb-6 text-sm leading-relaxed text-text-secondary">{description}</p>
+      <p id={descId} className="mb-6 text-sm leading-relaxed text-text-secondary">
+        {description}
+      </p>
       <div className="flex justify-end gap-3">
         <button type="button" className={BTN_GHOST} onClick={onCancel}>
           Cancel
