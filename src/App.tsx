@@ -16,6 +16,7 @@ const BlockchainSimulator = lazy(() => import("./modules/04-blockchain/Blockchai
 const HDWalletExplorer = lazy(() => import("./modules/05-hd-wallet/HDWalletExplorer"));
 const MultisigVault = lazy(() => import("./modules/06-multisig/MultisigVault"));
 const AttackLab = lazy(() => import("./modules/07-attacks/AttackLab"));
+const Settings = lazy(() => import("./pages/Settings"));
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
               <Route path="/hd-wallet" element={<HDWalletExplorer />} />
               <Route path="/multisig" element={<MultisigVault />} />
               <Route path="/attacks" element={<AttackLab />} />
+              <Route path="/settings" element={<Settings />} />
               <Route
                 path="*"
                 element={

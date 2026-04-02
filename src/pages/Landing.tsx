@@ -4,7 +4,7 @@ import { PageBackground } from "../shared/components/index.ts";
 import { ConceptChain } from "../shared/components/ConceptChain.tsx";
 import type { ModuleInfo } from "../shared/constants/modules.ts";
 import { useProgressStore } from "../shared/stores/index.ts";
-import { BTN_PRIMARY } from "../shared/components/styles.ts";
+import { BTN_PRIMARY, GEAR_ICON_PATH } from "../shared/components/styles.ts";
 import {
   getCoreModules,
   getLabModules,
@@ -24,8 +24,6 @@ const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
 };
-
-const CARD_STYLE = { background: "linear-gradient(180deg, #121A28, #0C1320)" };
 
 const BADGE_STYLES: Record<string, string> = {
   Completed: "bg-success/10 text-success",
@@ -112,11 +110,11 @@ function ModuleCard({
   return (
     <motion.div variants={cardVariants}>
       {mod.active ? (
-        <Link to={mod.route} className={cardClasses} style={CARD_STYLE}>
+        <Link to={mod.route} className={`${cardClasses} panel-cool`}>
           {cardContent}
         </Link>
       ) : (
-        <div className={cardClasses} style={CARD_STYLE} aria-disabled="true">
+        <div className={`${cardClasses} panel-cool`} aria-disabled="true">
           {cardContent}
         </div>
       )}
@@ -152,6 +150,26 @@ export default function Landing() {
   return (
     <PageBackground glowSize={700} amberOpacity={0.22} tealOpacity={0.16}>
       <div className="relative z-10 mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-20">
+        <Link
+          to="/settings"
+          className="absolute right-5 top-12 flex h-10 w-10 items-center justify-center rounded-full border border-border text-text-secondary transition-colors hover:border-border-strong hover:text-accent md:right-8 md:top-20"
+          aria-label="Settings"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d={GEAR_ICON_PATH} />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </Link>
+
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

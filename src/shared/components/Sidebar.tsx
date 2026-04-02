@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useProgressStore } from "../stores/index.ts";
 import { getCoreModules, getLabModules } from "../constants/storyHelpers.ts";
+import { GEAR_ICON_PATH } from "./styles.ts";
 
 interface SidebarProps {
   currentModuleKey: string;
@@ -199,6 +200,28 @@ function SidebarContent({
           </div>
         );
       })}
+
+      <div className="mt-auto pb-2">
+        <Link
+          to="/settings"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-accent/10 hover:text-accent"
+          aria-label="Settings"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d={GEAR_ICON_PATH} />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </Link>
+      </div>
     </nav>
   );
 }
