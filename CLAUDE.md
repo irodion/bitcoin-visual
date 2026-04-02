@@ -59,6 +59,22 @@ Use `Set` or `Map` for lookups instead of `.some()`/`.find()` inside render loop
 
 Add `tabIndex={0}` and an `onKeyDown` handler for Enter and Space at the same time as adding click handlers. Ensure the element has an accessible name: visible text content is preferred; add `aria-label` only when the element has no visible label (e.g., icon-only buttons, single-character spans). Don't defer a11y to review.
 
+### Never use non-null assertions (`!`) in runtime code
+
+Use explicit validation with a descriptive error instead. `const mod = getModuleByKey(key)!` silently produces `undefined` on mismatch. Write `const mod = getModuleByKey(key); if (!mod) throw new Error(...)` so invalid state is caught immediately, not downstream.
+
+### Don't hardcode layout measurements in inline styles
+
+`style={{ minHeight: "calc(100dvh - 140px)" }}` breaks silently when components are added above or below. Use flex-driven sizing (`flex-1 min-h-0`) or CSS variables that are maintained alongside the components they measure. If a calc is unavoidable, add a comment naming every component whose height is baked into the number.
+
+### When implementing a UX spec, start with the minimal version
+
+Specs describe the ideal end state. Implement the simplest version that delivers the core value first — a breadcrumb line instead of a 6-node progress strip. Complexity can always be added; removing over-engineered UI after it's built wastes a full review cycle.
+
+### In flex rows with variable-count trailing elements, don't give the last item `flex-1`
+
+If items are `flex-1` and connected by `flex-1` lines, the last item (which has no trailing line) claims equal empty space, pushing the row off-center. Give only items with trailing content `flex-1`; the last item should be intrinsic width.
+
 ### Use literal Unicode characters in JSX strings, never escape sequences
 
 Write `→`, `—`, `′`, `✓`, `✗`, ` ` (non-breaking space) directly — not `\u2192`, `\u2014`, `\u2032`, `\u2713`, `\u2717`, `\u00A0`. Escape sequences are unreadable in source and harder to review.

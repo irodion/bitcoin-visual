@@ -14,3 +14,5 @@ export { UpdateBanner } from "./UpdateBanner";
 export { InstallPrompt } from "./InstallPrompt";
 export { LoadingFallback } from "./LoadingFallback";
 export { ErrorBoundary } from "./ErrorBoundary";
+export { JourneyFooter } from "./JourneyFooter";
+export { StoryRibbon } from "./StoryRibbon";

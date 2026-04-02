@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { MODULES } from "../constants/modules.ts";
 import { useProgressStore } from "../stores/index.ts";
+import { getCoreModules, getLabModules } from "../constants/storyHelpers.ts";
 
 interface SidebarProps {
   currentModuleKey: string;
@@ -22,6 +22,47 @@ const BACKDROP_VARIANTS: Variants = {
   exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
+function CompletionBadge() {
+  return (
+    <span
+      className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-success text-white"
+      aria-hidden="true"
+    >
+      <svg
+        width="7"
+        height="7"
+        viewBox="0 0 10 10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2 5.5 4 7.5 8 3" />
+      </svg>
+    </span>
+  );
+}
+
+function ModuleTooltip({
+  title,
+  storyRole,
+  inactive,
+}: {
+  title: string;
+  storyRole: string;
+  inactive?: boolean;
+}) {
+  return (
+    <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-badge border border-border-strong bg-surface-raised px-2.5 py-1 text-[11px] shadow-lg group-hover/nav:md:block group-focus-within/nav:md:block">
+      <span className="font-medium text-text-primary">{title}</span>
+      {inactive && <span className="ml-1.5 text-text-muted">(soon)</span>}
+      <br />
+      <span className="text-text-muted">{storyRole}</span>
+    </span>
+  );
+}
+
 function SidebarContent({
   currentModuleKey,
   onClose,
@@ -30,6 +71,7 @@ function SidebarContent({
   onClose?: () => void;
 }) {
   const completedModules = useProgressStore((s) => s.completedModules);
+  const completedSet = new Set(completedModules);
 
   return (
     <nav
@@ -80,9 +122,10 @@ function SidebarContent({
 
       <div className="mx-2 mb-1 h-px w-6 bg-border" />
 
-      {MODULES.map((mod) => {
+      {/* Core Path */}
+      {getCoreModules().map((mod, i, arr) => {
         const isCurrent = mod.key === currentModuleKey;
-        const isCompleted = completedModules.includes(mod.key);
+        const isCompleted = completedSet.has(mod.key);
         const ariaLabel = mod.active
           ? isCompleted
             ? `${mod.title}, completed`
@@ -90,7 +133,7 @@ function SidebarContent({
           : `${mod.title} (coming soon)`;
 
         return (
-          <div key={mod.key} className="group/nav relative">
+          <div key={mod.key} className="group/nav relative flex flex-col items-center">
             {mod.active ? (
               <Link
                 to={mod.route}
@@ -105,25 +148,7 @@ function SidebarContent({
                 aria-current={isCurrent ? "page" : undefined}
               >
                 {mod.number}
-                {isCompleted && (
-                  <span
-                    className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-success text-white"
-                    aria-hidden="true"
-                  >
-                    <svg
-                      width="7"
-                      height="7"
-                      viewBox="0 0 10 10"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M2 5.5 4 7.5 8 3" />
-                    </svg>
-                  </span>
-                )}
+                {isCompleted && <CompletionBadge />}
               </Link>
             ) : (
               <span
@@ -135,10 +160,42 @@ function SidebarContent({
               </span>
             )}
 
-            <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-badge border border-border-strong bg-surface-raised px-2.5 py-1 text-[11px] font-medium text-text-primary shadow-lg group-hover/nav:md:block">
-              {mod.title}
-              {!mod.active && <span className="ml-1.5 text-text-muted">(soon)</span>}
-            </span>
+            {i < arr.length - 1 && (
+              <div className="my-0.5 h-1.5 w-0.5 bg-border" aria-hidden="true" />
+            )}
+
+            <ModuleTooltip title={mod.title} storyRole={mod.storyRole} inactive={!mod.active} />
+          </div>
+        );
+      })}
+
+      <div className="mx-2 my-1 h-px w-6 bg-border" />
+
+      {/* Security Lab */}
+      {getLabModules().map((mod) => {
+        const isCurrent = mod.key === currentModuleKey;
+        const isCompleted = completedSet.has(mod.key);
+        const ariaLabel = isCompleted ? `${mod.title}, completed` : mod.title;
+
+        return (
+          <div key={mod.key} className="group/nav relative">
+            <Link
+              to={mod.route}
+              className={`relative flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all ${
+                isCurrent ? "ring-2 ring-accent/40" : "hover:scale-110"
+              }`}
+              style={{
+                background: isCurrent ? `${mod.color}28` : `${mod.color}12`,
+                color: mod.color,
+              }}
+              aria-label={ariaLabel}
+              aria-current={isCurrent ? "page" : undefined}
+            >
+              {mod.number}
+              {isCompleted && <CompletionBadge />}
+            </Link>
+
+            <ModuleTooltip title={mod.title} storyRole={mod.storyRole} />
           </div>
         );
       })}
