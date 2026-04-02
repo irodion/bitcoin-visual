@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { usePWAInstall } from "../hooks/usePWAInstall.ts";
 import { BTN_PRIMARY } from "./styles.ts";
 
-const DISMISSED_KEY = "bitcoinvault-install-dismissed";
+const DISMISSED_KEY = "bitcoinvisual-install-dismissed";
 
 export function InstallPrompt() {
   const { canInstall, install } = usePWAInstall();
@@ -77,7 +77,7 @@ export function InstallPrompt() {
             </svg>
           </div>
 
-          <h3 className="text-sm font-bold text-text-primary">Install BitcoinVault</h3>
+          <h3 className="text-sm font-bold text-text-primary">Install Bitcoin Visual</h3>
           <p className="mt-1 text-xs text-text-secondary">
             Add to your home screen for offline access and a native app experience.
           </p>

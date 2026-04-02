@@ -20,7 +20,7 @@ export const useProgressStore = create<ProgressState>()(
       reset: () => set({ completedModules: [] }),
     }),
     {
-      name: "bitcoinvault-progress",
+      name: "bitcoinvisual-progress",
       partialize: (state) => ({ completedModules: state.completedModules }),
     },
   ),

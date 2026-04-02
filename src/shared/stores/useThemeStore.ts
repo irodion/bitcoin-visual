@@ -18,7 +18,7 @@ export const useThemeStore = create<ThemeState>()(
       setTheme: (t) => set({ theme: t }),
     }),
     {
-      name: "bitcoinvault-theme",
+      name: "bitcoinvisual-theme",
       partialize: (state) => ({ theme: state.theme }),
     },
   ),

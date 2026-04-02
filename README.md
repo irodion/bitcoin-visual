@@ -1,4 +1,4 @@
-# BitcoinVault
+# Bitcoin Visual
 
 An interactive, self-contained PWA that lets you **feel** how Bitcoin works — from a raw private key all the way to a broadcast multisig transaction. Every screen is a live sandbox: change an input, watch all downstream values ripple and update in real time.
 

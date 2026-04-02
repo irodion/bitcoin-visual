@@ -1,6 +1,6 @@
 {
-  "name": "BitcoinVault - Visual Learning",
-  "short_name": "BitcoinVault",
+  "name": "Bitcoin Visual",
+  "short_name": "Bitcoin Visual",
   "description": "Interactive Bitcoin cryptography learning PWA",
   "start_url": "/",
   "display": "standalone",

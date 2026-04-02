@@ -180,9 +180,9 @@ export default function Landing() {
             Interactive Bitcoin Cryptography
           </div>
           <h1 className="mb-4 text-4xl font-bold text-text-primary md:text-6xl">
-            <span className="sr-only">BitcoinVault</span>
+            <span className="sr-only">Bitcoin Visual</span>
             <span aria-hidden="true">
-              Bitcoin<span className="text-accent">Vault</span>
+              Bitcoin <span className="text-accent">Visual</span>
             </span>
           </h1>
           <p className="mx-auto max-w-xl text-lg text-text-secondary">

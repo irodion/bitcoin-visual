@@ -1,4 +1,4 @@
-# BitcoinVault
+# Bitcoin Visual
 
 Interactive Bitcoin cryptography learning PWA. No backend — all crypto runs client-side using `@noble/*` libraries.
 
