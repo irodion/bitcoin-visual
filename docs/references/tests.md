@@ -44,14 +44,21 @@ if (!navigator.clipboard) {
 
 ## Responsive Duplicates
 
-Components that render different layouts for mobile and desktop (e.g., `ModuleLayout` renders `TheoryPanel` twice — one `hidden md:flex`, one `md:hidden`) will have duplicate text in the DOM. `screen.getByText()` throws when it finds multiple matches.
+Components that render different layouts for mobile and desktop (e.g., `hidden md:flex` + `md:hidden` patterns) will have duplicate elements in the DOM — duplicate text, duplicate `aria-label` values, duplicate roles. Any singular query (`getByText`, `getByLabelText`, `getByRole`) throws when it finds multiple matches.
 
-**Do**: Use `screen.getAllByText()` and assert on the array length:
+**Do**: Use the `*AllBy*` variant for any query that might match responsive duplicates:
 
 ```tsx
+// Text duplicates
 const matches = screen.getAllByText("Theory content");
 expect(matches.length).toBeGreaterThanOrEqual(1);
+
+// aria-label duplicates (e.g., ConceptChain renders each node in desktop + mobile)
+const links = screen.getAllByLabelText("Hash Playground, recommended");
+expect(links.some((el) => el.querySelector(".ring-2"))).toBe(true);
 ```
+
+This applies to `getByText`, `getByLabelText`, `getByRole`, and any other query where the same semantic element renders in both responsive variants.
 
 ## Router-Dependent Components
 
