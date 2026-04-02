@@ -65,14 +65,14 @@ export function CollisionBucketViz({
       {/* 8-bit bucket grid */}
       {hashBits === 8 && bucketCountsArray && (
         <div
-          className="grid grid-cols-[repeat(16,1fr)] gap-[2px]"
+          className="grid grid-cols-[repeat(64,1fr)] gap-[1px]"
           role="img"
           aria-label={`Birthday paradox bucket grid: ${entries.length} hashes generated, ${collision ? "collision found" : "no collision yet"}`}
         >
           {bucketCountsArray.map((count, i) => (
             <div
               key={i}
-              className={`aspect-square rounded-[3px] transition-colors duration-150 ${
+              className={`h-2 rounded-[2px] transition-colors duration-150 ${
                 count === 0
                   ? "bg-surface"
                   : count === 1
