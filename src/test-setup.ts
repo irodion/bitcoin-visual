@@ -16,9 +16,15 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// jsdom does not implement HTMLDialogElement methods
-HTMLDialogElement.prototype.showModal ??= vi.fn() as typeof HTMLDialogElement.prototype.showModal;
-HTMLDialogElement.prototype.close ??= vi.fn() as typeof HTMLDialogElement.prototype.close;
+// jsdom does not implement HTMLDialogElement methods — lightweight polyfills
+HTMLDialogElement.prototype.showModal ??= function showModal(this: HTMLDialogElement) {
+  this.setAttribute("open", "");
+} as typeof HTMLDialogElement.prototype.showModal;
+
+HTMLDialogElement.prototype.close ??= function close(this: HTMLDialogElement) {
+  this.removeAttribute("open");
+  this.dispatchEvent(new Event("close"));
+} as typeof HTMLDialogElement.prototype.close;
 
 vi.mock("virtual:pwa-register/react", () => ({
   useRegisterSW: () => ({

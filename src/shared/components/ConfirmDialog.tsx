@@ -22,6 +22,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const closingRef = useRef(false);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -30,15 +31,22 @@ export function ConfirmDialog({
     if (open && !dialog.open) {
       dialog.showModal();
     } else if (!open && dialog.open) {
+      closingRef.current = true;
       dialog.close();
+      closingRef.current = false;
     }
   }, [open]);
+
+  function handleClose() {
+    if (closingRef.current) return;
+    onCancel();
+  }
 
   return (
     <dialog
       ref={dialogRef}
       className="m-auto max-w-md rounded-card border border-border-strong bg-surface p-6 text-text-primary backdrop:bg-black/50"
-      onClose={onCancel}
+      onClose={handleClose}
       aria-labelledby={titleId}
     >
       <h2 id={titleId} className="mb-2 text-lg font-bold">

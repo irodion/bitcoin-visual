@@ -12,7 +12,10 @@ useThemeStore.subscribe((state, prev) => {
   if (state.theme !== prev.theme) syncThemeClass(state.theme);
 });
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root");
+if (!root) throw new Error("Root element with id 'root' not found");
+
+createRoot(root).render(
   <StrictMode>
     <App />
   </StrictMode>,

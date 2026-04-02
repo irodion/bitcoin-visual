@@ -3,6 +3,7 @@ import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { useProgressStore, useThemeStore } from "../shared/stores/index.ts";
+import { MODULES } from "../shared/constants/modules.ts";
 import Settings from "./Settings";
 
 function renderSettings() {
@@ -54,7 +55,7 @@ describe("Settings", () => {
     await act(async () => {
       renderSettings();
     });
-    expect(screen.getByText("0 of 7 modules completed.")).toBeInTheDocument();
+    expect(screen.getByText(`0 of ${MODULES.length} modules completed.`)).toBeInTheDocument();
   });
 
   it("renders progress count after marking modules", async () => {
@@ -63,7 +64,7 @@ describe("Settings", () => {
     await act(async () => {
       renderSettings();
     });
-    expect(screen.getByText("2 of 7 modules completed.")).toBeInTheDocument();
+    expect(screen.getByText(`2 of ${MODULES.length} modules completed.`)).toBeInTheDocument();
   });
 
   it("renders Clear Progress button", async () => {
