@@ -55,17 +55,17 @@ Treat each bug as a class — the same mistake likely exists in adjacent code wr
 
 Use `Set` or `Map` for lookups instead of `.some()`/`.find()` inside render loops. Wrap derived arrays in `useMemo` when they're passed as props.
 
-### Every element with `role="button"` must have keyboard support and an `aria-label`
+### Every element with `role="button"` must have keyboard support and an accessible name
 
-Add `tabIndex={0}`, an `onKeyDown` handler for Enter and Space, and a descriptive `aria-label` at the same time as adding click handlers. Don't defer a11y to review.
+Add `tabIndex={0}` and an `onKeyDown` handler for Enter and Space at the same time as adding click handlers. Ensure the element has an accessible name: visible text content is preferred; add `aria-label` only when the element has no visible label (e.g., icon-only buttons, single-character spans). Don't defer a11y to review.
 
 ### Use literal Unicode characters in JSX strings, never escape sequences
 
 Write `→`, `—`, `′`, `✓`, `✗`, ` ` (non-breaking space) directly — not `\u2192`, `\u2014`, `\u2032`, `\u2713`, `\u2717`, `\u00A0`. Escape sequences are unreadable in source and harder to review.
 
-### Never export non-component functions from `.tsx` files
+### Never export non-component runtime values from `.tsx` files
 
-Vite Fast Refresh requires that `.tsx` files export only React components. If a component file needs a shared utility (e.g., `countBitDifferences`), put the utility in a separate `.ts` file and import it. Mixing component and utility exports silently breaks HMR.
+Vite Fast Refresh requires that `.tsx` files export only React components. Type-only exports (`export type`, `export interface`) are safe. If a component file needs a shared runtime utility (e.g., `countBitDifferences`), put it in a separate `.ts` file and import it. Mixing component and runtime utility exports silently breaks HMR.
 
 ### When wrapping N callbacks with a pattern, audit all N — not N-1
 
