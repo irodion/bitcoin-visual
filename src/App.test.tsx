@@ -14,6 +14,6 @@ describe("App", () => {
         </MemoryRouter>,
       );
     });
-    expect(screen.getByText("Bitcoin Visual")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /Bitcoin Visual/i })).toBeInTheDocument();
   });
 });
