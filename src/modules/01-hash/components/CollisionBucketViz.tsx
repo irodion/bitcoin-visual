@@ -21,34 +21,36 @@ export function CollisionBucketViz({
 }: CollisionBucketVizProps) {
   const [autoRun, setAutoRun] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const addOneRef = useRef(addOne);
+  addOneRef.current = addOne;
 
   useEffect(() => {
     if (collision) {
       setAutoRun(false);
-      return;
     }
-    if (autoRun) {
-      intervalRef.current = setInterval(addOne, 80);
+  }, [collision]);
+
+  useEffect(() => {
+    if (autoRun && !collision) {
+      intervalRef.current = setInterval(() => addOneRef.current(), 80);
     }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [autoRun, collision, addOne]);
+  }, [autoRun, collision]);
 
   const totalSlots = 1 << hashBits;
   const expected50 = Math.round(Math.sqrt((Math.PI / 2) * totalSlots));
 
-  // For 8-bit mode, build a bucket count array
-  const bucketCounts = useMemo(() => {
+  const bucketCountsArray = useMemo(() => {
     if (hashBits !== 8) return null;
     const counts = new Uint16Array(256);
     for (const entry of entries) {
       counts[entry.hash]++;
     }
-    return counts;
+    return Array.from(counts);
   }, [entries, hashBits]);
 
-  // For 16-bit mode, count unique slots filled
   const slotsFilled = useMemo(() => {
     if (hashBits !== 16) return 0;
     const seen = new Set<number>();
@@ -61,13 +63,13 @@ export function CollisionBucketViz({
   return (
     <div className="space-y-4">
       {/* 8-bit bucket grid */}
-      {hashBits === 8 && bucketCounts && (
+      {hashBits === 8 && bucketCountsArray && (
         <div
           className="grid grid-cols-[repeat(16,1fr)] gap-[2px]"
           role="img"
           aria-label={`Birthday paradox bucket grid: ${entries.length} hashes generated, ${collision ? "collision found" : "no collision yet"}`}
         >
-          {Array.from(bucketCounts).map((count, i) => (
+          {bucketCountsArray.map((count, i) => (
             <div
               key={i}
               className={`aspect-square rounded-[3px] transition-colors duration-150 ${

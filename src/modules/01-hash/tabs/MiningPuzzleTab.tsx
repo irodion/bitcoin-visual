@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { sha256 } from "../../../shared/crypto/index.ts";
+import { useState, useRef, useEffect } from "react";
 import {
   BTN_PRIMARY,
   BTN_GHOST,
@@ -10,8 +9,7 @@ import {
 import { useHashChallengeWorker } from "../hooks/useHashChallengeWorker.ts";
 import { MiningDashboard } from "../components/MiningDashboard.tsx";
 import { BITCOIN_HASHRATE, formatScale } from "../miningUtils.ts";
-
-const encoder = new TextEncoder();
+import type { HashChallengeOut } from "../../../workers/hashChallenge.worker.ts";
 
 const DIFFICULTIES = [
   { value: 1, label: "1 zero", tag: "easy" },
@@ -29,6 +27,14 @@ export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
   const [difficulty, setDifficulty] = useState(1);
   const [benchmarkResult, setBenchmarkResult] = useState<number | null>(null);
   const [benchmarking, setBenchmarking] = useState(false);
+  const benchWorkerRef = useRef<Worker | null>(null);
+
+  useEffect(() => {
+    return () => {
+      benchWorkerRef.current?.terminate();
+      benchWorkerRef.current = null;
+    };
+  }, []);
 
   const challenge = useHashChallengeWorker();
 
@@ -42,17 +48,29 @@ export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
     setBenchmarking(true);
     setBenchmarkResult(null);
 
-    // Use requestAnimationFrame to let the UI update before blocking
-    requestAnimationFrame(() => {
-      const start = performance.now();
-      let count = 0;
-      while (performance.now() - start < 1000) {
-        sha256(encoder.encode(`bench-${count}`));
-        count++;
+    benchWorkerRef.current?.terminate();
+    const worker = new Worker(
+      new URL("../../../workers/hashChallenge.worker.ts", import.meta.url),
+      { type: "module" },
+    );
+    benchWorkerRef.current = worker;
+
+    worker.onmessage = (e: MessageEvent<HashChallengeOut>) => {
+      if (e.data.type === "benchmark-result") {
+        setBenchmarkResult(e.data.hashesPerSecond);
+        setBenchmarking(false);
+        worker.terminate();
+        benchWorkerRef.current = null;
       }
-      setBenchmarkResult(count);
+    };
+
+    worker.onerror = () => {
       setBenchmarking(false);
-    });
+      worker.terminate();
+      benchWorkerRef.current = null;
+    };
+
+    worker.postMessage({ type: "benchmark" });
   }
 
   return (

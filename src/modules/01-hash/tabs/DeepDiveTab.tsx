@@ -59,7 +59,10 @@ export function DeepDiveTab({ onInteract }: DeepDiveTabProps) {
               onInteract();
               birthday.addBatch(n);
             }}
-            reset={birthday.reset}
+            reset={() => {
+              onInteract();
+              birthday.reset();
+            }}
           />
         </div>
       </section>
