@@ -7,6 +7,10 @@ export interface HashChallengeRequest {
   difficulty: number;
 }
 
+export interface HashBenchmarkRequest {
+  type: "benchmark";
+}
+
 export interface HashChallengeProgress {
   type: "progress";
   nonce: number;
@@ -22,7 +26,12 @@ export interface HashChallengeFound {
   elapsedMs: number;
 }
 
-export type HashChallengeOut = HashChallengeProgress | HashChallengeFound;
+export interface HashBenchmarkResult {
+  type: "benchmark-result";
+  hashesPerSecond: number;
+}
+
+export type HashChallengeOut = HashChallengeProgress | HashChallengeFound | HashBenchmarkResult;
 
 const BATCH_SIZE = 2_000;
 const encoder = new TextEncoder();
@@ -37,8 +46,18 @@ function hasLeadingZeroNibbles(hash: Uint8Array, difficulty: number): boolean {
   return true;
 }
 
-self.onmessage = (e: MessageEvent<HashChallengeRequest>) => {
-  const { prefix, difficulty } = e.data;
+function runBenchmark() {
+  const start = performance.now();
+  let count = 0;
+  while (performance.now() - start < 1000) {
+    sha256(encoder.encode(`bench-${count}`));
+    count++;
+  }
+  const msg: HashBenchmarkResult = { type: "benchmark-result", hashesPerSecond: count };
+  self.postMessage(msg);
+}
+
+function runMiningChallenge(prefix: string, difficulty: number) {
   const startTime = performance.now();
 
   let nonce = 0;
@@ -79,5 +98,13 @@ self.onmessage = (e: MessageEvent<HashChallengeRequest>) => {
     }
 
     nonce++;
+  }
+}
+
+self.onmessage = (e: MessageEvent<HashChallengeRequest | HashBenchmarkRequest>) => {
+  if (e.data.type === "benchmark") {
+    runBenchmark();
+  } else if (e.data.type === "start") {
+    runMiningChallenge(e.data.prefix, e.data.difficulty);
   }
 };

@@ -1,17 +1,5 @@
 import { useMemo } from "react";
 
-export function countBitDifferences(a: Uint8Array, b: Uint8Array): number {
-  let count = 0;
-  for (let i = 0; i < a.length; i++) {
-    let xor = a[i] ^ b[i];
-    while (xor) {
-      count += xor & 1;
-      xor >>= 1;
-    }
-  }
-  return count;
-}
-
 export function BitDiffBar({ original, modified }: { original: Uint8Array; modified: Uint8Array }) {
   const { groups, changed } = useMemo(() => {
     const result: { differs: boolean; count: number }[] = [];

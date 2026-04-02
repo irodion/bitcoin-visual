@@ -36,6 +36,7 @@ export function useHashChallengeWorker(): UseHashChallengeReturn {
   useEffect(() => {
     return () => {
       workerRef.current?.terminate();
+      workerRef.current = null;
     };
   }, []);
 
@@ -61,6 +62,12 @@ export function useHashChallengeWorker(): UseHashChallengeReturn {
       currentHash: "",
       result: null,
     });
+
+    worker.onerror = () => {
+      setState(IDLE);
+      worker.terminate();
+      workerRef.current = null;
+    };
 
     worker.onmessage = (e: MessageEvent<HashChallengeOut>) => {
       const msg = e.data;

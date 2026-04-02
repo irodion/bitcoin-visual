@@ -1,8 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useRef } from "react";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { sha256 } from "../../../shared/crypto/index.ts";
 import { BTN_PRIMARY, BTN_GHOST, TEXTAREA, LABEL } from "../../../shared/components/styles.ts";
-import { BitDiffBar, countBitDifferences } from "../components/BitDiffBar.tsx";
+import { BitDiffBar } from "../components/BitDiffBar.tsx";
+import { countBitDifferences } from "../utils/bitUtils.ts";
 import { DiffHex } from "../components/DiffHex.tsx";
 import { BitGrid } from "../components/BitGrid.tsx";
 
@@ -17,16 +18,20 @@ interface AvalancheTabProps {
 export function AvalancheTab({ input, setInput, onInteract }: AvalancheTabProps) {
   const [flipIndex, setFlipIndex] = useState<number | null>(null);
   const [editing, setEditing] = useState(false);
+  const prevInputRef = useRef(input);
 
-  // Reset flip index when input changes from parent
-  useEffect(() => {
-    setFlipIndex(null);
-  }, [input]);
+  // Clear flip index when input text changes (without an extra render via useEffect)
+  if (prevInputRef.current !== input) {
+    prevInputRef.current = input;
+    if (flipIndex !== null) setFlipIndex(null);
+  }
 
   const inputBytes = useMemo(() => encoder.encode(input), [input]);
   const sha256Hash = useMemo(() => sha256(inputBytes), [inputBytes]);
 
-  const targetIndex = flipIndex ?? Math.max(0, input.length - 1);
+  // Derive effective index — treat out-of-range flipIndex as null
+  const validFlip = flipIndex !== null && flipIndex < input.length ? flipIndex : null;
+  const targetIndex = validFlip ?? Math.max(0, input.length - 1);
 
   const modifiedInput = useMemo(() => {
     if (input.length === 0) return "";
@@ -187,7 +192,7 @@ export function AvalancheTab({ input, setInput, onInteract }: AvalancheTabProps)
         <button type="button" onClick={handleRandomInput} className={BTN_PRIMARY}>
           Random Input
         </button>
-        {flipIndex !== null && (
+        {validFlip !== null && (
           <button type="button" onClick={() => setFlipIndex(null)} className={BTN_GHOST}>
             Reset Flip Point
           </button>
