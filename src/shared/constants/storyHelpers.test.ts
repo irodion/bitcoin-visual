@@ -31,7 +31,7 @@ describe("getNextModule", () => {
   });
 
   it("returns null for the last core module", () => {
-    expect(getNextModule("multisig")).toBeNull();
+    expect(getNextModule("descriptors")).toBeNull();
   });
 
   it("returns null for attacks (lab module)", () => {
@@ -58,9 +58,9 @@ describe("getPreviousModule", () => {
 });
 
 describe("getCoreModules", () => {
-  it("returns 6 core modules", () => {
+  it("returns 7 core modules", () => {
     const core = getCoreModules();
-    expect(core).toHaveLength(6);
+    expect(core).toHaveLength(7);
     expect(core.every((m) => m.storyGroup === "core")).toBe(true);
   });
 
@@ -93,7 +93,15 @@ describe("getRecommendedModule", () => {
 
   it("returns null when all core modules are completed", () => {
     expect(
-      getRecommendedModule(["hash", "keys", "utxo", "blockchain", "hd-wallet", "multisig"]),
+      getRecommendedModule([
+        "hash",
+        "keys",
+        "utxo",
+        "blockchain",
+        "hd-wallet",
+        "multisig",
+        "descriptors",
+      ]),
     ).toBeNull();
   });
 

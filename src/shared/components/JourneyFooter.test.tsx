@@ -79,7 +79,7 @@ describe("JourneyFooter", () => {
 
   it("shows Continue to Security Lab for last core module", async () => {
     await act(async () => {
-      renderFooter("multisig");
+      renderFooter("descriptors");
     });
     expect(screen.getByText(/Continue to Security Lab/)).toBeInTheDocument();
   });

@@ -24,7 +24,7 @@ describe("Landing", () => {
     await act(async () => {
       renderWithRouter(<Landing />);
     });
-    expect(screen.getByText("6 guided chapters + 1 security lab")).toBeInTheDocument();
+    expect(screen.getByText("7 guided chapters + 1 security lab")).toBeInTheDocument();
   });
 
   it("renders The Bitcoin Story section heading", async () => {
@@ -77,7 +77,7 @@ describe("Landing", () => {
       renderWithRouter(<Landing />);
     });
     expect(screen.getByText("Chapter 1")).toBeInTheDocument();
-    expect(screen.getByText("Chapter 6")).toBeInTheDocument();
+    expect(screen.getByText("Chapter 7")).toBeInTheDocument();
   });
 
   it("shows Resume Your Story after progress", async () => {
@@ -95,11 +95,19 @@ describe("Landing", () => {
     await act(async () => {
       renderWithRouter(<Landing />);
     });
-    expect(screen.getByText("2 of 6 chapters completed")).toBeInTheDocument();
+    expect(screen.getByText("2 of 7 chapters completed")).toBeInTheDocument();
   });
 
   it("shows Explore the Security Lab when all core complete", async () => {
-    for (const key of ["hash", "keys", "utxo", "blockchain", "hd-wallet", "multisig"]) {
+    for (const key of [
+      "hash",
+      "keys",
+      "utxo",
+      "blockchain",
+      "hd-wallet",
+      "multisig",
+      "descriptors",
+    ]) {
       useProgressStore.getState().markCompleted(key);
     }
     await act(async () => {
@@ -110,7 +118,16 @@ describe("Landing", () => {
   });
 
   it("shows Review the Story when everything is complete", async () => {
-    for (const key of ["hash", "keys", "utxo", "blockchain", "hd-wallet", "multisig", "attacks"]) {
+    for (const key of [
+      "hash",
+      "keys",
+      "utxo",
+      "blockchain",
+      "hd-wallet",
+      "multisig",
+      "descriptors",
+      "attacks",
+    ]) {
       useProgressStore.getState().markCompleted(key);
     }
     await act(async () => {
