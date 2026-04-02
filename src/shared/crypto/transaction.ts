@@ -1,3 +1,4 @@
+import { bytesToHex } from "@noble/hashes/utils.js";
 import { sha256d } from "./hash";
 
 export interface TxInput {
@@ -249,140 +250,241 @@ export interface TxSegment {
   description: string;
 }
 
+// ── Segment Description Helpers (not exported) ──
+
+const SEG_COLOR = {
+  version: "text-yellow-400",
+  segwit: "text-purple-400",
+  count: "text-blue-400",
+  prevTxid: "text-indigo-400",
+  vout: "text-sky-300",
+  meta: "text-slate-400",
+  unlock: "text-emerald-400",
+  outputCount: "text-green-400",
+  value: "text-amber-400",
+  lock: "text-orange-400",
+  witnessPubkey: "text-teal-400",
+  locktime: "text-gray-400",
+} as const;
+
+function byteRangeLabel(start: number, size: number): string {
+  if (size === 0) return `byte ${start} (0 bytes)`;
+  if (size === 1) return `byte ${start}`;
+  return `bytes ${start}–${start + size - 1}`;
+}
+
+function formatSatsDescription(value: bigint): string {
+  const sats = value.toLocaleString("en-US");
+  const whole = value / 100_000_000n;
+  const frac = value % 100_000_000n;
+  const fracStr = frac.toString().padStart(8, "0").replace(/0+$/, "") || "0";
+  return `${sats} sats (${whole}.${fracStr} BTC)`;
+}
+
+function formatDisplayTxid(leBytes: Uint8Array): string {
+  const hex = bytesToHex(reverseBytes(leBytes));
+  if (hex.length > 16) return `${hex.slice(0, 8)}…${hex.slice(-8)}`;
+  return hex;
+}
+
+function describeSequence(seq: number): string {
+  const hex = (seq >>> 0).toString(16).padStart(8, "0");
+  if (seq === 0xffffffff) return `0x${hex} — final, no replacement`;
+  if (seq === 0xfffffffe) return `0x${hex} — enables locktime but not opt-in RBF`;
+  return `0x${hex} — enables opt-in RBF and may affect relative timelocks (BIP68)`;
+}
+
+function describeScriptPubKey(script: Uint8Array): string {
+  if (script.length === 25 && script[0] === 0x76 && script[1] === 0xa9 && script[2] === 0x14) {
+    return "OP_DUP OP_HASH160 <20-byte hash> OP_EQUALVERIFY OP_CHECKSIG (P2PKH)";
+  }
+  if (script.length === 22 && script[0] === 0x00 && script[1] === 0x14) {
+    return "OP_0 <20-byte hash> (P2WPKH — native SegWit)";
+  }
+  if (script.length === 23 && script[0] === 0xa9 && script[1] === 0x14 && script[22] === 0x87) {
+    return "OP_HASH160 <20-byte script hash> OP_EQUAL (P2SH)";
+  }
+  if (script.length === 34 && script[0] === 0x00 && script[1] === 0x20) {
+    return "OP_0 <32-byte script hash> (P2WSH)";
+  }
+  return `Script (${script.length} bytes)`;
+}
+
+function describeScriptSig(script: Uint8Array): string {
+  if (script.length === 0) return "Empty — SegWit moves unlocking data to witness";
+  if (script.length > 2) {
+    const sigLen = script[0];
+    const remaining = script.length - 1 - sigLen;
+    if (remaining > 1) {
+      const pkLen = script[1 + sigLen];
+      if (1 + sigLen + 1 + pkLen === script.length) {
+        const pkType =
+          pkLen === 33 ? "compressed" : pkLen === 65 ? "uncompressed" : `${pkLen}-byte`;
+        return `<${sigLen}-byte DER signature> <${pkType} pubkey> — proves ownership`;
+      }
+    }
+  }
+  return `Unlocking script (${script.length} bytes)`;
+}
+
 export function mapTransactionSegments(tx: Transaction, isSegWit: boolean): TxSegment[] {
   const segments: TxSegment[] = [];
   let offset = 0;
 
-  // Version
-  segments.push({
-    label: "Version",
-    byteRange: `bytes ${offset}–${offset + 3}`,
-    startByte: offset,
-    endByte: offset + 4,
-    color: "text-yellow-400",
-    description: `Transaction version (${tx.version})`,
-  });
-  offset += 4;
+  function push(label: string, size: number, color: string, description: string): void {
+    segments.push({
+      label,
+      byteRange: byteRangeLabel(offset, size),
+      startByte: offset,
+      endByte: offset + size,
+      color,
+      description,
+    });
+    offset += size;
+  }
+
+  push(
+    "Version",
+    4,
+    SEG_COLOR.version,
+    `Transaction version ${tx.version} — determines which validation rules apply (little-endian uint32)`,
+  );
 
   if (isSegWit) {
-    // Marker
-    segments.push({
-      label: "Marker",
-      byteRange: `byte ${offset}`,
-      startByte: offset,
-      endByte: offset + 1,
-      color: "text-purple-400",
-      description: "SegWit marker byte (0x00) — signals witness data follows",
-    });
-    offset += 1;
-
-    // Flag
-    segments.push({
-      label: "Flag",
-      byteRange: `byte ${offset}`,
-      startByte: offset,
-      endByte: offset + 1,
-      color: "text-purple-400",
-      description: "SegWit flag byte (0x01)",
-    });
-    offset += 1;
+    push("Marker", 1, SEG_COLOR.segwit, "SegWit marker byte (0x00) — signals witness data follows");
+    push("Flag", 1, SEG_COLOR.segwit, "SegWit flag byte (0x01)");
   }
 
-  // Input count
-  const vinCountSize = varintSize(tx.inputs.length);
-  segments.push({
-    label: "Input Count",
-    byteRange: `byte${vinCountSize > 1 ? "s" : ""} ${offset}${vinCountSize > 1 ? `–${offset + vinCountSize - 1}` : ""}`,
-    startByte: offset,
-    endByte: offset + vinCountSize,
-    color: "text-blue-400",
-    description: `Number of inputs: ${tx.inputs.length}`,
-  });
-  offset += vinCountSize;
+  push(
+    "Input Count",
+    varintSize(tx.inputs.length),
+    SEG_COLOR.count,
+    `${tx.inputs.length} input(s) — each references a prior UTXO to spend (CompactSize uint)`,
+  );
 
-  // Each input
   for (let i = 0; i < tx.inputs.length; i++) {
     const input = tx.inputs[i];
-    const inputStart = offset;
 
-    // txid (32) + vout (4) + scriptSig varint + scriptSig + sequence (4)
-    const scriptSigVarintSize = varintSize(input.scriptSig.length);
-    const inputSize = 32 + 4 + scriptSigVarintSize + input.scriptSig.length + 4;
+    push(
+      `Input ${i} → Prev TxID`,
+      32,
+      SEG_COLOR.prevTxid,
+      `${formatDisplayTxid(input.txid)} — which prior transaction's output is being spent`,
+    );
+    push(
+      `Input ${i} → Vout`,
+      4,
+      SEG_COLOR.vout,
+      `Output index: ${input.vout} — which output within that transaction (little-endian uint32)`,
+    );
 
-    segments.push({
-      label: `Input ${i}`,
-      byteRange: `bytes ${inputStart}–${inputStart + inputSize - 1}`,
-      startByte: inputStart,
-      endByte: inputStart + inputSize,
-      color: "text-blue-400",
-      description: `Input ${i}: prev txid (32B) + vout (4B) + scriptSig (${input.scriptSig.length}B) + sequence (4B)`,
-    });
-    offset += inputSize;
+    const ssVarLen = varintSize(input.scriptSig.length);
+    push(
+      `Input ${i} → ScriptSig Length`,
+      ssVarLen,
+      SEG_COLOR.meta,
+      input.scriptSig.length === 0 && isSegWit
+        ? "0 bytes — empty for SegWit, unlocking data is in witness"
+        : input.scriptSig.length === 0
+          ? "0 bytes — no unlocking script"
+          : `${input.scriptSig.length} bytes of unlocking script to follow`,
+    );
+
+    if (input.scriptSig.length > 0) {
+      push(
+        `Input ${i} → ScriptSig`,
+        input.scriptSig.length,
+        SEG_COLOR.unlock,
+        describeScriptSig(input.scriptSig),
+      );
+    }
+
+    push(`Input ${i} → Sequence`, 4, SEG_COLOR.meta, describeSequence(input.sequence));
   }
 
-  // Output count
-  const voutCountSize = varintSize(tx.outputs.length);
-  segments.push({
-    label: "Output Count",
-    byteRange: `byte${voutCountSize > 1 ? "s" : ""} ${offset}${voutCountSize > 1 ? `–${offset + voutCountSize - 1}` : ""}`,
-    startByte: offset,
-    endByte: offset + voutCountSize,
-    color: "text-green-400",
-    description: `Number of outputs: ${tx.outputs.length}`,
-  });
-  offset += voutCountSize;
+  push(
+    "Output Count",
+    varintSize(tx.outputs.length),
+    SEG_COLOR.outputCount,
+    `${tx.outputs.length} output(s) — each creates a new spendable UTXO (CompactSize uint)`,
+  );
 
-  // Each output
   for (let i = 0; i < tx.outputs.length; i++) {
     const output = tx.outputs[i];
-    const outputStart = offset;
 
-    const scriptVarintSize = varintSize(output.scriptPubKey.length);
-    const outputSize = 8 + scriptVarintSize + output.scriptPubKey.length;
+    push(
+      `Output ${i} → Value`,
+      8,
+      SEG_COLOR.value,
+      `${formatSatsDescription(output.value)} — amount locked in this output (little-endian uint64)`,
+    );
 
-    segments.push({
-      label: `Output ${i}`,
-      byteRange: `bytes ${outputStart}–${outputStart + outputSize - 1}`,
-      startByte: outputStart,
-      endByte: outputStart + outputSize,
-      color: "text-green-400",
-      description: `Output ${i}: value (8B) + scriptPubKey (${output.scriptPubKey.length}B)`,
-    });
-    offset += outputSize;
+    push(
+      `Output ${i} → ScriptPubKey Length`,
+      varintSize(output.scriptPubKey.length),
+      SEG_COLOR.meta,
+      `${output.scriptPubKey.length} bytes of locking script to follow`,
+    );
+
+    push(
+      `Output ${i} → ScriptPubKey`,
+      output.scriptPubKey.length,
+      SEG_COLOR.lock,
+      `${describeScriptPubKey(output.scriptPubKey)} — locking script: who can spend this output?`,
+    );
   }
 
-  // Witness data (SegWit only)
   if (isSegWit) {
     for (let i = 0; i < tx.inputs.length; i++) {
       const items = tx.inputs[i].witness ?? [];
-      const witnessStart = offset;
 
-      let witnessSize = varintSize(items.length);
-      for (const item of items) {
-        witnessSize += varintSize(item.length) + item.length;
+      push(
+        `Witness ${i} → Item Count`,
+        varintSize(items.length),
+        SEG_COLOR.meta,
+        `${items.length} stack item(s) for input ${i}`,
+      );
+
+      for (let j = 0; j < items.length; j++) {
+        const item = items[j];
+
+        push(
+          `Witness ${i} → Item ${j} Length`,
+          varintSize(item.length),
+          SEG_COLOR.meta,
+          `${item.length} bytes`,
+        );
+
+        const itemLabel = j === 0 ? "Signature" : j === 1 ? "PubKey" : `Item ${j}`;
+        const itemDesc =
+          j === 0
+            ? `DER-encoded ECDSA signature (${item.length}B) — proves private key ownership`
+            : j === 1
+              ? `Compressed public key (${item.length}B) — matches the pubkey hash in the UTXO being spent`
+              : `Witness stack item (${item.length} bytes)`;
+
+        push(
+          `Witness ${i} → ${itemLabel}`,
+          item.length,
+          j === 1 ? SEG_COLOR.witnessPubkey : SEG_COLOR.unlock,
+          itemDesc,
+        );
       }
-
-      segments.push({
-        label: `Witness ${i}`,
-        byteRange: `bytes ${witnessStart}–${witnessStart + witnessSize - 1}`,
-        startByte: witnessStart,
-        endByte: witnessStart + witnessSize,
-        color: "text-purple-300",
-        description: `Witness for input ${i}: ${items.length} stack item(s)`,
-      });
-      offset += witnessSize;
     }
   }
 
-  // Locktime
-  segments.push({
-    label: "Locktime",
-    byteRange: `bytes ${offset}–${offset + 3}`,
-    startByte: offset,
-    endByte: offset + 4,
-    color: "text-gray-400",
-    description: `Lock time: ${tx.locktime}`,
-  });
+  const locktimeSuffix =
+    tx.locktime === 0
+      ? " — no time lock, spendable immediately"
+      : tx.locktime < 500_000_000
+        ? " — block height lock"
+        : " — Unix timestamp lock";
+  push(
+    "Locktime",
+    4,
+    SEG_COLOR.locktime,
+    `Lock time: ${tx.locktime}${locktimeSuffix} (little-endian uint32)`,
+  );
 
   return segments;
 }

@@ -151,6 +151,15 @@ describe("UTXOBuilder", () => {
     expect(screen.queryByText("Raw Transaction Hex")).not.toBeInTheDocument();
   });
 
+  it("displays recipient name and story", async () => {
+    await act(async () => {
+      renderWithRouter(<UTXOBuilder />);
+    });
+
+    expect(screen.getByText(/Hal Finney/)).toBeInTheDocument();
+    expect(screen.getByText(/first-ever Bitcoin transaction/)).toBeInTheDocument();
+  });
+
   it("AC: balance shows checkmark when valid", async () => {
     const user = userEvent.setup();
     await act(async () => {
