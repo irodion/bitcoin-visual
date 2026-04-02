@@ -11,15 +11,24 @@ import {
   type ScalarStep,
   type AdditionDetail,
 } from "../../shared/crypto/toyEC.ts";
+import { useRealCurveState, type RealCurveState } from "./useRealCurveState.ts";
 
 export type ECSection = "addition" | "scalar" | "scaleup";
+export type CurveViewMode = "real" | "finite";
 
 export interface EllipticCurveState {
   // Section navigation
   activeSection: ECSection;
   setActiveSection: (s: ECSection) => void;
 
-  // Point addition
+  // View mode toggle (real curve vs finite field)
+  viewMode: CurveViewMode;
+  setViewMode: (v: CurveViewMode) => void;
+
+  // Real curve state
+  realCurve: RealCurveState;
+
+  // Point addition (finite field)
   pointP: AffinePoint | null;
   pointQ: AffinePoint | null;
   setPointP: (p: AffinePoint | null) => void;
@@ -44,6 +53,8 @@ export interface EllipticCurveState {
 
 export function useEllipticCurveState(): EllipticCurveState {
   const [activeSection, setActiveSection] = useState<ECSection>("addition");
+  const [viewMode, setViewMode] = useState<CurveViewMode>("real");
+  const realCurve = useRealCurveState();
 
   // Point addition
   const [pointP, setPointP] = useState<AffinePoint | null>(null);
@@ -89,6 +100,9 @@ export function useEllipticCurveState(): EllipticCurveState {
   return {
     activeSection,
     setActiveSection,
+    viewMode,
+    setViewMode,
+    realCurve,
     pointP,
     pointQ,
     setPointP,
