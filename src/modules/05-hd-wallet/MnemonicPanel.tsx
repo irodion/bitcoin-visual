@@ -1,4 +1,5 @@
 import { BTN_PRIMARY, BTN_GHOST, TEXTAREA, INPUT, LABEL } from "../../shared/components/styles.ts";
+import { WordPillGrid } from "./WordPillGrid.tsx";
 
 interface MnemonicPanelProps {
   mnemonicText: string;
@@ -68,19 +69,7 @@ export function MnemonicPanel({
 
       {words.length > 0 && (
         <>
-          <div className="mb-3 grid grid-cols-3 gap-2 md:grid-cols-4">
-            {words.map((w, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-1.5 rounded-pill border border-border bg-surface-raised px-3 py-1.5"
-              >
-                <span className="font-mono text-[10px] text-text-muted">
-                  #{w.index >= 0 ? w.index : "?"}
-                </span>
-                <span className="text-xs font-medium text-text-primary">{w.word}</span>
-              </div>
-            ))}
-          </div>
+          <WordPillGrid words={words} showWordlistIndex className="mb-3" />
 
           <div className="flex items-center gap-2">
             {isValidMnemonic ? (

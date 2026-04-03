@@ -40,7 +40,9 @@ describe("HDWalletExplorer", () => {
 
     await user.click(screen.getByText("Generate"));
 
-    const pills = document.querySelectorAll('[class*="rounded-pill"][class*="bg-surface-raised"]');
+    const pills = document.querySelectorAll(
+      '[class*="rounded-pill"][class*="bg-surface-raised"][class*="gap-1"]',
+    );
     expect(pills.length).toBe(12);
   });
 
@@ -215,5 +217,108 @@ describe("HDWalletExplorer", () => {
     const secondValue = textarea.value;
 
     expect(firstValue).not.toBe(secondValue);
+  });
+
+  it("renders Explorer and Backup & Recovery tabs", async () => {
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    const explorerTab = screen.getByRole("tab", { name: /explorer/i });
+    const backupTab = screen.getByRole("tab", { name: /backup/i });
+    expect(explorerTab).toBeInTheDocument();
+    expect(backupTab).toBeInTheDocument();
+  });
+
+  it("Explorer tab is active by default", async () => {
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    const explorerTab = screen.getByRole("tab", { name: /explorer/i });
+    expect(explorerTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Generate")).toBeInTheDocument();
+  });
+
+  it("switching to Backup tab shows Start Demo", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    const backupTab = screen.getByRole("tab", { name: /backup/i });
+    await user.click(backupTab);
+
+    expect(await screen.findByText("Start Demo")).toBeInTheDocument();
+  });
+
+  it("Backup demo: full create → destroy → restore cycle", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    // Switch to backup tab
+    await user.click(screen.getByRole("tab", { name: /backup/i }));
+    const startBtn = await screen.findByText("Start Demo");
+    await user.click(startBtn);
+
+    // Wait for addresses to appear (PBKDF2 derivation)
+    await waitFor(
+      () => {
+        expect(screen.getAllByText(/^bc1q/).length).toBeGreaterThanOrEqual(3);
+      },
+      { timeout: 10000 },
+    );
+
+    // Confirm save
+    await user.click(screen.getByText("I've saved my seed phrase"));
+
+    // Destroy
+    await user.click(await screen.findByText("Simulate Device Loss"));
+
+    // Should show destroyed state
+    expect(await screen.findByText(/your device is gone/i)).toBeInTheDocument();
+
+    // Recover
+    await user.click(await screen.findByText("Recover Wallet"));
+
+    // Should reach success
+    await waitFor(
+      () => {
+        expect(screen.getByText("Wallet Restored")).toBeInTheDocument();
+      },
+      { timeout: 10000 },
+    );
+
+    // All 3 address pairs should match
+    const matchBadges = screen.getAllByText("Match");
+    expect(matchBadges.length).toBe(3);
+
+    // Reset back to idle
+    await user.click(screen.getByText("Try Again"));
+    expect(await screen.findByText("Start Demo")).toBeInTheDocument();
+  });
+
+  it("Backup demo: Simulate Device Loss disabled before confirming save", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: /backup/i }));
+    await user.click(await screen.findByText("Start Demo"));
+
+    // Wait for addresses
+    await waitFor(
+      () => {
+        expect(screen.getAllByText(/^bc1q/).length).toBeGreaterThanOrEqual(3);
+      },
+      { timeout: 10000 },
+    );
+
+    // Destroy button should not be visible yet (user hasn't confirmed save)
+    expect(screen.queryByText("Simulate Device Loss")).not.toBeInTheDocument();
+    expect(screen.getByText("I've saved my seed phrase")).toBeInTheDocument();
   });
 });
