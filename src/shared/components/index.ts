@@ -18,3 +18,5 @@ export { JourneyFooter } from "./JourneyFooter";
 export { StoryRibbon } from "./StoryRibbon";
 export { ConfirmDialog } from "./ConfirmDialog";
 export { PillToggle } from "./PillToggle";
+export { CodeReviewChallenge } from "./CodeReviewChallenge";
+export type { CodeReviewChallengeData } from "./CodeReviewChallenge";

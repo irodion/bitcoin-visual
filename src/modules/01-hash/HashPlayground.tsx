@@ -1,20 +1,27 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
+import {
+  ModuleLayout,
+  TheoryConceptCard,
+  TheoryCallout,
+  CodeReviewChallenge,
+} from "../../shared/components/index.ts";
 import { STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 import { PlaygroundTab } from "./tabs/PlaygroundTab.tsx";
 import { AvalancheTab } from "./tabs/AvalancheTab.tsx";
 import { MiningPuzzleTab } from "./tabs/MiningPuzzleTab.tsx";
 import { DeepDiveTab } from "./tabs/DeepDiveTab.tsx";
+import { HASH_CODE_REVIEW } from "./data/codeReviewData.ts";
 
-type HashTabKey = "playground" | "avalanche" | "mining" | "deep-dive";
+type HashTabKey = "playground" | "avalanche" | "mining" | "deep-dive" | "code-review";
 
 const TABS = [
   { key: "playground", label: "Playground" },
   { key: "avalanche", label: "Avalanche" },
   { key: "mining", label: "Mining Puzzle" },
   { key: "deep-dive", label: "Deep Dive" },
+  { key: "code-review", label: "Code Review" },
 ];
 
 /* ── Theory per tab ── */
@@ -185,11 +192,49 @@ function DeepDiveTheory() {
   );
 }
 
+function CodeReviewTheory() {
+  return (
+    <>
+      <h3>Why Code Review Matters</h3>
+      <p>
+        Bitcoin's security depends on exact implementation of cryptographic primitives. A subtle
+        dataflow mistake — like hashing the wrong input — can produce a valid-looking but
+        semantically wrong result that passes naive tests.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="Dataflow over Syntax"
+          description="The bug class here is not about typos or wrong types — it is about which value flows into the next operation."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="Silent Failures"
+          description="Both wrong versions produce stable 32-byte outputs. Length checks and determinism tests pass. Only semantic understanding catches the error."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="SHA-256d Semantics"
+          description="Bitcoin's double-hash means: hash the message, then hash that digest. The second input is always the first output."
+        />
+      </div>
+
+      <TheoryCallout
+        label="BITCOIN CORE"
+        title="Review culture"
+        description="Every change to Bitcoin Core requires peer review. Cryptographic code gets particular scrutiny because bugs like these are invisible to most automated testing."
+      />
+    </>
+  );
+}
+
 const THEORY_CONTENT: Record<HashTabKey, () => React.JSX.Element> = {
   playground: PlaygroundTheory,
   avalanche: AvalancheTheory,
   mining: MiningTheory,
   "deep-dive": DeepDiveTheory,
+  "code-review": CodeReviewTheory,
 };
 
 /* ── Main component ── */
@@ -265,6 +310,17 @@ export default function HashPlayground() {
             exit="hidden"
           >
             <DeepDiveTab onInteract={handleInteract} />
+          </motion.div>
+        )}
+        {activeTab === "code-review" && (
+          <motion.div
+            key="code-review"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <CodeReviewChallenge challenge={HASH_CODE_REVIEW} />
           </motion.div>
         )}
       </AnimatePresence>

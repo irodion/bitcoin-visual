@@ -35,7 +35,7 @@ describe("HashPlayground", () => {
     expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders all four tabs", async () => {
+  it("renders all five tabs", async () => {
     await act(async () => {
       renderWithRouter(<HashPlayground />);
     });
@@ -43,6 +43,7 @@ describe("HashPlayground", () => {
     expect(screen.getByRole("tab", { name: "Avalanche" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Mining Puzzle" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Deep Dive" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Code Review" })).toBeInTheDocument();
   });
 
   it("defaults to Playground tab", async () => {
@@ -213,6 +214,31 @@ describe("HashPlayground", () => {
     await user.click(screen.getByRole("tab", { name: "Deep Dive" }));
     expect(await screen.findByText(/Birthday Paradox/)).toBeInTheDocument();
   });
+
+  // ── Code Review tab ──
+
+  it("switches to Code Review tab and shows challenge prompt", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HashPlayground />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Code Review" }));
+    expect(await screen.findByText("Review: txid helper")).toBeInTheDocument();
+    expect(await screen.findByText(/teammate wrote a helper/)).toBeInTheDocument();
+  });
+
+  it("shows Code Review theory content when tab is active", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HashPlayground />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Code Review" }));
+    expect(await screen.findByText("Why Code Review Matters")).toBeInTheDocument();
+  });
+
+  // ── Theory switching ──
 
   it("switches theory content when changing tabs", async () => {
     const user = userEvent.setup();
