@@ -94,6 +94,30 @@ const REFERENCES: Credit[] = [
     description:
       "Historical documentation of Bitcoin's peer discovery evolution, including the original IRC bootstrap method.",
   },
+  {
+    name: "BIP-380 — Output Script Descriptors (Pieter Wuille, Ava Chow)",
+    url: "https://github.com/bitcoin/bips/blob/master/bip-0380.mediawiki",
+    description:
+      "Core specification for the descriptor grammar, key expressions, and BCH checksum algorithm. The checksum implementation in Module 7 is a direct port of BIP-380's reference code.",
+  },
+  {
+    name: "Bitcoin Core — Output Descriptors Documentation",
+    url: "https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md",
+    description:
+      "Practical reference for descriptor syntax, supported functions, and usage examples in Bitcoin Core's descriptor wallet.",
+  },
+  {
+    name: "Bitcoin Optech — Output Script Descriptors",
+    url: "https://bitcoinops.org/en/topics/output-script-descriptors/",
+    description:
+      "Technical summary of descriptor adoption, related BIPs (381–386, 389), and miniscript integration.",
+  },
+  {
+    name: "Pieter Wuille — Miniscript Reference",
+    url: "https://bitcoin.sipa.be/miniscript/",
+    description:
+      "Reference implementation and documentation for Miniscript, the policy language that composes with descriptors inside wsh() and tr() expressions.",
+  },
 ];
 
 function CreditList({ items }: { items: Credit[] }) {
