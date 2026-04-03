@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
+import { NetworkTab } from "./network/NetworkTab.tsx";
 import {
   BTN_PRIMARY,
   BTN_GHOST,
@@ -15,7 +16,14 @@ import { MerkleTreePanel } from "./MerkleTreePanel.tsx";
 import { BlockChainConnectors } from "./ChainLink.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
-function TheoryContent() {
+type BlockchainTabKey = "blockchain" | "network";
+
+const TABS = [
+  { key: "blockchain", label: "Blockchain" },
+  { key: "network", label: "Network" },
+];
+
+function BlockchainTheory() {
   return (
     <>
       <h3>Block Structure</h3>
@@ -76,7 +84,65 @@ function TheoryContent() {
   );
 }
 
+function NetworkTheory() {
+  return (
+    <>
+      <h3>P2P Network</h3>
+      <p>
+        Bitcoin has no central server. Nodes discover each other, share transactions via gossip, and
+        converge on the same chain using proof-of-work — not by voting.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="P2P Topology"
+          description="Each node makes 8 outbound connections (chosen by itself) and accepts up to 125 inbound. Only the 8 outbound matter for security — even 125 malicious inbound peers can't fool the node."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="Gossip Protocol"
+          description="Transactions spread via an inv/getdata dance: 'I have TX X' → 'Send it' → full TX. This avoids sending data to peers who already have it."
+        />
+        <TheoryConceptCard
+          dot="info"
+          title="Compact Blocks"
+          description="BIP 152: since every node already has most transactions in its mempool, blocks are sent as 6-byte short hashes instead of full TXIDs — shrinking a ~1 MB block to ~15 KB."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="Eclipse Attacks"
+          description="An attacker who controls all 8 outbound connections can isolate a node and feed it a fake chain. Defenses include feeler connections, address bucketing, and anchor connections."
+        />
+        <TheoryConceptCard
+          dot="success"
+          title="Node Bootstrap"
+          description="A new node finds peers via: saved addresses (11-second race) → DNS seeds → hardcoded IPs. Satoshi's original method decoded IRC nicknames as IP addresses."
+        />
+      </div>
+
+      <TheoryCallout
+        label="SYBIL RESISTANCE"
+        title="Energy, Not Identity"
+        description="Bitcoin counts proof-of-work, not nodes. An attacker can spin up 10,000 fake nodes and it changes nothing about which chain is valid. Identity is meaningless — only energy expenditure (hashrate) matters."
+      />
+
+      <h3>Try It</h3>
+      <p>
+        Click a node to broadcast a message and watch gossip propagation. Step through an eclipse
+        attack, then see how compact blocks compress bandwidth.
+      </p>
+    </>
+  );
+}
+
+const THEORY_CONTENT: Record<BlockchainTabKey, () => React.JSX.Element> = {
+  blockchain: BlockchainTheory,
+  network: NetworkTheory,
+};
+
 export default function BlockchainSimulator() {
+  const [activeTab, setActiveTab] = useState<BlockchainTabKey>("blockchain");
   const state = useBlockchainState();
   const pendingTx = useMempoolStore((s) => s.pendingTx);
   const consumePendingTx = useMempoolStore((s) => s.consumePendingTx);
@@ -121,99 +187,130 @@ export default function BlockchainSimulator() {
       moduleKey="blockchain"
       title="Blockchain & Mining"
       moduleNumber={4}
-      subtitle="Mine blocks, adjust difficulty, and explore Merkle trees — all simulated in your browser."
-      theoryContent={<TheoryContent />}
+      subtitle={
+        activeTab === "blockchain"
+          ? "Mine blocks, adjust difficulty, and explore Merkle trees — all simulated in your browser."
+          : "Explore how Bitcoin nodes discover peers, propagate blocks, and defend against network attacks."
+      }
+      theoryContent={(() => {
+        const Theory = THEORY_CONTENT[activeTab];
+        return <Theory />;
+      })()}
       statusText="LIVE SIMULATION"
+      tabConfig={{
+        tabs: TABS,
+        activeTab,
+        onTabChange: (key) => setActiveTab(key as BlockchainTabKey),
+      }}
     >
-      <motion.div
-        variants={CONTAINER_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        className="mx-auto max-w-5xl space-y-6"
-      >
-        {/* Difficulty / Mining controls */}
-        <motion.div variants={STEP_VARIANTS}>
-          <MiningControls
-            difficulty={state.difficulty}
-            onDifficultyChange={state.setDifficulty}
-            estimatedHashes={state.estimatedHashes}
-            isMining={state.isMining}
-            hashRate={state.hashRate}
-            currentNonce={state.currentNonce}
-            miningBlockIndex={state.miningBlockIndex}
-          />
-        </motion.div>
-
-        {/* Pending transaction from Multisig */}
-        {pendingTx && (
-          <motion.div variants={STEP_VARIANTS}>
-            <div className="flex items-center justify-between gap-4 rounded-card border border-accent/30 bg-surface-raised p-4">
-              <div className="min-w-0 space-y-1">
-                <p className="text-sm font-semibold text-accent">
-                  Pending Transaction from Multisig
-                </p>
-                <p className="truncate font-mono text-xs text-text-secondary">
-                  TXID: {pendingTx.txidHex.slice(0, 24)}&hellip;
-                </p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <button type="button" onClick={() => consumePendingTx()} className={BTN_GHOST}>
-                  Dismiss
-                </button>
-                <button type="button" onClick={handleIncludeTx} className={BTN_PRIMARY}>
-                  Include in New Block
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Horizontal block chain */}
-        <motion.div variants={STEP_VARIANTS}>
-          <div
-            ref={chainContainerRef}
-            className="relative flex items-start gap-6 overflow-x-auto pb-4"
+      <AnimatePresence mode="wait">
+        {activeTab === "blockchain" && (
+          <motion.div
+            key="blockchain"
+            variants={CONTAINER_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="mx-auto max-w-5xl space-y-6"
           >
-            {state.blocks.map((block, i) => (
-              <div key={block.index} className="shrink-0">
-                <Block
-                  block={block}
-                  validity={state.validity[i]}
-                  isSelected={state.selectedBlockIndex === i}
-                  isMining={state.isMining && state.miningBlockIndex === i}
-                  miningNonce={state.currentNonce}
-                  miningHashRate={state.hashRate}
-                  onEditTransactionData={(txIdx, data) => state.editTransactionData(i, txIdx, data)}
-                  onEditNonce={(nonce) => state.editBlockNonce(i, nonce)}
-                  onAddTransaction={() => state.addTransaction(i)}
-                  onRemoveTransaction={(txIdx) => state.removeTransaction(i, txIdx)}
-                  onMine={() => state.startMining(i)}
-                  onStopMine={state.stopMining}
-                  onSelect={() => state.selectBlock(i)}
+            {/* Difficulty / Mining controls */}
+            <motion.div variants={STEP_VARIANTS}>
+              <MiningControls
+                difficulty={state.difficulty}
+                onDifficultyChange={state.setDifficulty}
+                estimatedHashes={state.estimatedHashes}
+                isMining={state.isMining}
+                hashRate={state.hashRate}
+                currentNonce={state.currentNonce}
+                miningBlockIndex={state.miningBlockIndex}
+              />
+            </motion.div>
+
+            {/* Pending transaction from Multisig */}
+            {pendingTx && (
+              <motion.div variants={STEP_VARIANTS}>
+                <div className="flex items-center justify-between gap-4 rounded-card border border-accent/30 bg-surface-raised p-4">
+                  <div className="min-w-0 space-y-1">
+                    <p className="text-sm font-semibold text-accent">
+                      Pending Transaction from Multisig
+                    </p>
+                    <p className="truncate font-mono text-xs text-text-secondary">
+                      TXID: {pendingTx.txidHex.slice(0, 24)}…
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button type="button" onClick={() => consumePendingTx()} className={BTN_GHOST}>
+                      Dismiss
+                    </button>
+                    <button type="button" onClick={handleIncludeTx} className={BTN_PRIMARY}>
+                      Include in New Block
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Horizontal block chain */}
+            <motion.div variants={STEP_VARIANTS}>
+              <div
+                ref={chainContainerRef}
+                className="relative flex items-start gap-6 overflow-x-auto pb-4"
+              >
+                {state.blocks.map((block, i) => (
+                  <div key={block.index} className="shrink-0">
+                    <Block
+                      block={block}
+                      validity={state.validity[i]}
+                      isSelected={state.selectedBlockIndex === i}
+                      isMining={state.isMining && state.miningBlockIndex === i}
+                      miningNonce={state.currentNonce}
+                      miningHashRate={state.hashRate}
+                      onEditTransactionData={(txIdx, data) =>
+                        state.editTransactionData(i, txIdx, data)
+                      }
+                      onEditNonce={(nonce) => state.editBlockNonce(i, nonce)}
+                      onAddTransaction={() => state.addTransaction(i)}
+                      onRemoveTransaction={(txIdx) => state.removeTransaction(i, txIdx)}
+                      onMine={() => state.startMining(i)}
+                      onStopMine={state.stopMining}
+                      onSelect={() => state.selectBlock(i)}
+                    />
+                  </div>
+                ))}
+                <BlockChainConnectors
+                  containerRef={chainContainerRef}
+                  blockCount={state.blocks.length}
+                  chainValidity={chainValidity}
                 />
               </div>
-            ))}
-            <BlockChainConnectors
-              containerRef={chainContainerRef}
-              blockCount={state.blocks.length}
-              chainValidity={chainValidity}
-            />
-          </div>
-        </motion.div>
+            </motion.div>
 
-        {/* Merkle tree panel (expanded when a block is selected) */}
-        {selectedBlock && state.merkleTree && (
-          <motion.div ref={merklePanelRef} variants={STEP_VARIANTS}>
-            <MerkleTreePanel
-              block={selectedBlock}
-              merkleTree={state.merkleTree}
-              selectedTxIndex={state.selectedTxIndex}
-              merkleProof={state.merkleProof}
-              onSelectTransaction={state.selectTransaction}
-            />
+            {/* Merkle tree panel (expanded when a block is selected) */}
+            {selectedBlock && state.merkleTree && (
+              <motion.div ref={merklePanelRef} variants={STEP_VARIANTS}>
+                <MerkleTreePanel
+                  block={selectedBlock}
+                  merkleTree={state.merkleTree}
+                  selectedTxIndex={state.selectedTxIndex}
+                  merkleProof={state.merkleProof}
+                  onSelectTransaction={state.selectTransaction}
+                />
+              </motion.div>
+            )}
           </motion.div>
         )}
-      </motion.div>
+        {activeTab === "network" && (
+          <motion.div
+            key="network"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <NetworkTab />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ModuleLayout>
   );
 }
