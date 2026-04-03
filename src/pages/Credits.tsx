@@ -64,6 +64,36 @@ const REFERENCES: Credit[] = [
     url: "https://learnmeabitcoin.com/",
     description: "Clear technical explanations of Bitcoin internals.",
   },
+  {
+    name: "Heilman et al. — Eclipse Attacks on Bitcoin's Peer-to-Peer Network (USENIX 2015)",
+    url: "https://www.usenix.org/conference/usenixsecurity15/technical-sessions/presentation/heilman",
+    description:
+      "Foundational research on eclipse attacks and the AddrMan defenses. Informed the Eclipse Attack demo.",
+  },
+  {
+    name: "BIP 152 — Compact Block Relay",
+    url: "https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki",
+    description:
+      "Protocol for transmitting blocks as short transaction IDs. Informed the Compact Block Relay demo.",
+  },
+  {
+    name: "Bitcoin Optech — Topics",
+    url: "https://bitcoinops.org/en/topics/",
+    description:
+      "Authoritative technical summaries of compact block relay, eclipse attacks, Erlay, and Dandelion.",
+  },
+  {
+    name: "Bitcoin Core — DNS Seed Policy",
+    url: "https://github.com/bitcoin/bitcoin/blob/master/doc/dnsseed-policy.md",
+    description:
+      "Documents the DNS seed bootstrap mechanism and its trust model. Informed the Bootstrap Waterfall demo.",
+  },
+  {
+    name: "Bitcoin Wiki — Satoshi Client Node Discovery",
+    url: "https://en.bitcoin.it/wiki/Satoshi_Client_Node_Discovery",
+    description:
+      "Historical documentation of Bitcoin's peer discovery evolution, including the original IRC bootstrap method.",
+  },
 ];
 
 function CreditList({ items }: { items: Credit[] }) {
