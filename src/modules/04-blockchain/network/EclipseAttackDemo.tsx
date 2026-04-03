@@ -272,6 +272,25 @@ export function EclipseAttackDemo({
         </motion.p>
       </AnimatePresence>
 
+      {phase === "defense" && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-inner border border-teal/30 bg-teal/5 px-4 py-3"
+        >
+          <p className="text-sm font-semibold text-teal">What are anchor connections?</p>
+          <p className="mt-1 text-sm text-text-secondary">
+            Before shutting down, a Bitcoin node saves 2 outbound peers to disk. On restart, it
+            reconnects to these <strong className="text-teal">anchor peers</strong> before accepting
+            any new connections. The eclipse attack works by exploiting restarts — flooding the node
+            with attacker addresses so it only connects to them. Anchors defeat this because the
+            node already has 2 trusted connections locked in, and an attacker cannot control which
+            peers were saved. The dashed teal lines above show the 2 anchor connections that
+            survived.
+          </p>
+        </motion.div>
+      )}
+
       <ChainComparisonView phase={phase} />
 
       <div className="flex flex-wrap items-center gap-3">
