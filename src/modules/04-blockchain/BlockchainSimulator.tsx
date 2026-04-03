@@ -97,7 +97,7 @@ function NetworkTheory() {
         <TheoryConceptCard
           dot="accent"
           title="P2P Topology"
-          description="Each node makes 8 outbound connections (chosen by itself) and accepts up to 125 inbound. Outbound peers are the primary security anchor because the node chose them — but inbound peers still matter: addrman poisoning, eclipse setup, and timing attacks can all exploit inbound connections."
+          description="Each node makes 8 outbound connections (chosen by itself) and the default total connection limit is 125, so inbound slots are the remainder (commonly ~117). Outbound peers are the primary security anchor because the node chose them — but inbound peers still matter: addrman poisoning, eclipse setup, and timing attacks can all exploit inbound connections."
         />
         <TheoryConceptCard
           dot="teal"

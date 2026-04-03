@@ -57,7 +57,7 @@ function PlaygroundTheory() {
       <TheoryCallout
         label="WHY DOUBLE HASH?"
         title="Bitcoin often uses SHA-256d"
-        description="Hashing twice is a conservative defense: it neutralizes length-extension properties of the Merkle-Damgård construction. Whether that was Satoshi's primary motivation or simply a safety margin is debated — but the result is a strictly harder-to-attack construction."
+        description="Hashing twice is a conservative defense: it neutralizes length-extension properties of the Merkle-Damgård construction. Whether that was Satoshi's primary motivation or simply a safety margin is debated."
       />
 
       <button
