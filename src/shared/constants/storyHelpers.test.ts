@@ -30,6 +30,10 @@ describe("getNextModule", () => {
     expect(getNextModule("utxo")?.key).toBe("blockchain");
   });
 
+  it("returns descriptors after multisig", () => {
+    expect(getNextModule("multisig")?.key).toBe("descriptors");
+  });
+
   it("returns null for the last core module", () => {
     expect(getNextModule("descriptors")).toBeNull();
   });

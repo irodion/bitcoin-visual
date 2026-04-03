@@ -165,7 +165,7 @@ export const MODULES: ModuleInfo[] = [
     color: "#60A5FA",
     active: true,
     estimatedMinutes: 20,
-    prerequisites: ["hd-wallet"],
+    prerequisites: ["hd-wallet", "multisig"],
     storyGroup: "core",
     storyOrder: 7,
     storyRole: "Chapter 7 of 7",

@@ -104,7 +104,10 @@ export function BuilderPanel({
             min={1}
             max={builderKeys.length}
             value={builderThreshold}
-            onChange={(e) => setBuilderThreshold(parseInt(e.target.value, 10) || 1)}
+            onChange={(e) => {
+              const val = parseInt(e.target.value, 10) || 1;
+              setBuilderThreshold(Math.max(1, Math.min(val, builderKeys.length)));
+            }}
             className="w-24 rounded-lg border border-border bg-surface-raised px-3 py-2 font-mono text-sm text-text-primary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/50"
           />
         </div>

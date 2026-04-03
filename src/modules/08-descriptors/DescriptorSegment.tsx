@@ -50,8 +50,9 @@ export function DescriptorSegment({ segment, isSelected, onClick }: DescriptorSe
           onClick();
         }
       }}
+      aria-pressed={isSelected}
       aria-label={`${label}: ${segment.text}`}
-      className={`${colorClass} cursor-pointer font-mono transition-all duration-150 hover:brightness-125 ${
+      className={`${colorClass} cursor-pointer font-mono transition-all duration-150 hover:brightness-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 ${
         isSelected ? "rounded bg-surface-raised ring-1 ring-accent/50 px-0.5" : "hover:underline"
       }`}
     >

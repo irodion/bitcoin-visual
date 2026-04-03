@@ -9,6 +9,11 @@ import { DescriptorSegment } from "./DescriptorSegment.tsx";
 import { getPresets } from "./presets.ts";
 
 const SEGMENT_EXPLANATIONS: Partial<Record<SegmentKind, { title: string; description: string }>> = {
+  origin: {
+    title: "Key Origin Bracket",
+    description:
+      "The square brackets delimit the key origin info block — [fingerprint/derivation/path]. This metadata tells wallets which master seed the xpub descends from.",
+  },
   function: {
     title: "Script Type Function",
     description:

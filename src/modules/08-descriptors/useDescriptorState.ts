@@ -132,7 +132,9 @@ export function useDescriptorState(): DescriptorState {
     const first = findFirstKey(parsed.root);
     if (!first || !first.key.startsWith("xpub")) return null;
 
-    const suffixPart = first.derivationSuffix ?? "/0/*";
+    // Only compare if the key has a derivation suffix — suffix-less keys can't expand
+    if (!first.derivationSuffix) return null;
+
     const types = [
       { scriptType: "pkh" as const, label: "P2PKH (1…)" },
       { scriptType: "wpkh" as const, label: "P2WPKH (bc1q…)" },
@@ -143,7 +145,7 @@ export function useDescriptorState(): DescriptorState {
       return types.map(({ scriptType, label }) => {
         const config: DescriptorConfig = {
           scriptType,
-          keys: [{ origin: null, key: first.key, derivationSuffix: suffixPart }],
+          keys: [{ origin: null, key: first.key, derivationSuffix: first.derivationSuffix ?? "" }],
           threshold: null,
           chain: 0,
         };

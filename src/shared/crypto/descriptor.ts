@@ -228,8 +228,15 @@ function parseKeyExpression(state: ParserState): KeyExpression {
         hardened = true;
         state.pos++;
       }
+      if (numStr.length === 0) {
+        throw new Error(`Empty index in key origin path at position ${segStart}`);
+      }
+      const idx = parseInt(numStr, 10);
+      if (!Number.isFinite(idx) || idx < 0) {
+        throw new Error(`Invalid index '${numStr}' in key origin path at position ${segStart}`);
+      }
       addSegment(state, segStart, state.pos, "originPath");
-      path.push(parseInt(numStr, 10));
+      path.push(idx);
       hardenedFlags.push(hardened);
     }
 
@@ -252,6 +259,9 @@ function parseKeyExpression(state: ParserState): KeyExpression {
     state.pos++;
   }
   const key = state.input.slice(keyStart, state.pos);
+  if (key.length === 0) {
+    throw new Error(`Empty key expression at position ${keyStart}`);
+  }
   addSegment(state, keyStart, state.pos, "key");
 
   // Optional derivation suffix: /0/* or /*
@@ -301,8 +311,16 @@ function parseExpression(state: ParserState): DescriptorNode {
       threshStr += state.input[state.pos];
       state.pos++;
     }
-    addSegment(state, threshStart, state.pos, "threshold");
+    if (threshStr.length === 0) {
+      throw new Error(`Missing threshold in ${funcName}() at position ${threshStart}`);
+    }
     const threshold = parseInt(threshStr, 10);
+    if (!Number.isFinite(threshold) || threshold < 1) {
+      throw new Error(
+        `Invalid threshold '${threshStr}' in ${funcName}() at position ${threshStart}`,
+      );
+    }
+    addSegment(state, threshStart, state.pos, "threshold");
 
     const keys: KeyExpression[] = [];
     while (peek(state) === ",") {
@@ -434,6 +452,20 @@ function parseSuffix(suffix: string | null): { chain: number | null; hasWildcard
   return { chain: null, hasWildcard };
 }
 
+const COMPRESSED_HEX_RE = /^0[23][0-9a-fA-F]{64}$/;
+
+function isCompressedHexPubkey(key: string): boolean {
+  return COMPRESSED_HEX_RE.test(key);
+}
+
+function hexToUint8Array(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+  }
+  return bytes;
+}
+
 function resolveHDKey(keyExpr: KeyExpression, cache: Map<string, HDKey>): HDKey {
   let hdkey = cache.get(keyExpr.key);
   if (!hdkey) {
@@ -448,6 +480,13 @@ function deriveKeyAtIndex(
   index: number,
   cache: Map<string, HDKey>,
 ): Uint8Array {
+  if (isCompressedHexPubkey(keyExpr.key)) {
+    if (keyExpr.isRange) {
+      throw new Error("Cannot derive child keys from a raw hex public key — use an xpub instead");
+    }
+    return hexToUint8Array(keyExpr.key);
+  }
+
   const hdkey = resolveHDKey(keyExpr, cache);
   const { chain, hasWildcard } = parseSuffix(keyExpr.derivationSuffix);
 
@@ -554,6 +593,13 @@ export function expandDescriptor(
 }
 
 function deriveFromKey(keyExpr: KeyExpression, cache: Map<string, HDKey>): Uint8Array {
+  if (isCompressedHexPubkey(keyExpr.key)) {
+    if (keyExpr.isRange) {
+      throw new Error("Cannot derive child keys from a raw hex public key — use an xpub instead");
+    }
+    return hexToUint8Array(keyExpr.key);
+  }
+
   const hdkey = resolveHDKey(keyExpr, cache);
   const pubKey = hdkey.publicKey;
   if (!pubKey) throw new Error("Key has no public key");

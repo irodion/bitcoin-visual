@@ -4,6 +4,16 @@ import { MemoryRouter } from "react-router-dom";
 import { useProgressStore } from "../shared/stores/index.ts";
 import Landing from "./Landing";
 
+const CORE_MODULE_KEYS = [
+  "hash",
+  "keys",
+  "utxo",
+  "blockchain",
+  "hd-wallet",
+  "multisig",
+  "descriptors",
+];
+
 function renderWithRouter(ui: React.ReactElement) {
   return render(<MemoryRouter>{ui}</MemoryRouter>);
 }
@@ -99,15 +109,7 @@ describe("Landing", () => {
   });
 
   it("shows Explore the Security Lab when all core complete", async () => {
-    for (const key of [
-      "hash",
-      "keys",
-      "utxo",
-      "blockchain",
-      "hd-wallet",
-      "multisig",
-      "descriptors",
-    ]) {
+    for (const key of CORE_MODULE_KEYS) {
       useProgressStore.getState().markCompleted(key);
     }
     await act(async () => {
@@ -118,16 +120,7 @@ describe("Landing", () => {
   });
 
   it("shows Review the Story when everything is complete", async () => {
-    for (const key of [
-      "hash",
-      "keys",
-      "utxo",
-      "blockchain",
-      "hd-wallet",
-      "multisig",
-      "descriptors",
-      "attacks",
-    ]) {
+    for (const key of [...CORE_MODULE_KEYS, "attacks"]) {
       useProgressStore.getState().markCompleted(key);
     }
     await act(async () => {
