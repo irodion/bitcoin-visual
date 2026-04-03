@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import {
   sha256,
+  hash160,
   generatePrivateKey,
   privateKeyToPublicKey,
   createMultisigRedeemScript,
@@ -45,6 +46,8 @@ export interface MultisigState {
 
   redeemScript: Uint8Array | null;
   redeemScriptHex: string | null;
+  p2shScriptHashHex: string | null;
+  p2wshScriptHashHex: string | null;
   p2shAddress: string | null;
   p2wshAddress: string | null;
 
@@ -139,6 +142,16 @@ export function useMultisigState(): MultisigState {
 
   const redeemScriptHex = useMemo(
     () => (redeemScript ? bytesToHex(redeemScript) : null),
+    [redeemScript],
+  );
+
+  const p2shScriptHashHex = useMemo(
+    () => (redeemScript ? bytesToHex(hash160(redeemScript)) : null),
+    [redeemScript],
+  );
+
+  const p2wshScriptHashHex = useMemo(
+    () => (redeemScript ? bytesToHex(sha256(redeemScript)) : null),
     [redeemScript],
   );
 
@@ -298,6 +311,8 @@ export function useMultisigState(): MultisigState {
     allKeysGenerated,
     redeemScript,
     redeemScriptHex,
+    p2shScriptHashHex,
+    p2wshScriptHashHex,
     p2shAddress,
     p2wshAddress,
     mockUtxo,

@@ -17,3 +17,4 @@ export { ErrorBoundary } from "./ErrorBoundary";
 export { JourneyFooter } from "./JourneyFooter";
 export { StoryRibbon } from "./StoryRibbon";
 export { ConfirmDialog } from "./ConfirmDialog";
+export { PillToggle } from "./PillToggle";

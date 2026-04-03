@@ -302,10 +302,10 @@ function describeScriptPubKey(script: Uint8Array): string {
     return "OP_0 <20-byte hash> (P2WPKH — native SegWit)";
   }
   if (script.length === 23 && script[0] === 0xa9 && script[1] === 0x14 && script[22] === 0x87) {
-    return "OP_HASH160 <20-byte script hash> OP_EQUAL (P2SH)";
+    return "OP_HASH160 <20-byte script hash> OP_EQUAL (P2SH) — spending conditions hidden until spent";
   }
   if (script.length === 34 && script[0] === 0x00 && script[1] === 0x20) {
-    return "OP_0 <32-byte script hash> (P2WSH)";
+    return "OP_0 <32-byte script hash> (P2WSH) — witness script revealed only at spending time";
   }
   return `Script (${script.length} bytes)`;
 }
