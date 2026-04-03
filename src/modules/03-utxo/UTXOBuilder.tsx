@@ -56,8 +56,9 @@ function TheoryContent() {
       <h3>SegWit</h3>
       <p>
         SegWit (BIP141) moves signature data to a separate <strong>witness</strong> field. The TXID
-        is computed from the legacy serialization (without witness), which fixes transaction
-        malleability. The <code>wtxid</code> includes witness data.
+        is computed from the legacy serialization (without witness), which eliminates third-party
+        malleability of the TxID for witness programs. The <code>wtxid</code> includes witness data
+        and can still change if the witness is modified.
       </p>
     </>
   );

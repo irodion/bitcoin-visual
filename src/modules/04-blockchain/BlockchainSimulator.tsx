@@ -41,7 +41,7 @@ function BlockchainTheory() {
         <TheoryConceptCard
           dot="teal"
           title="Proof of Work"
-          description="Miners must find a nonce that makes the block header hash start with a certain number of zeros. This is computationally expensive to find but trivial to verify."
+          description="Miners must find a nonce that makes the double-SHA256 of the 80-byte block header fall below a numeric target. In this demo we simplify to leading-zero counting, but the real protocol compares the full 256-bit hash against a target value."
         />
         <TheoryConceptCard
           dot="info"
@@ -97,7 +97,7 @@ function NetworkTheory() {
         <TheoryConceptCard
           dot="accent"
           title="P2P Topology"
-          description="Each node makes 8 outbound connections (chosen by itself) and accepts up to 125 inbound. Only the 8 outbound matter for security — even 125 malicious inbound peers can't fool the node."
+          description="Each node makes 8 outbound connections (chosen by itself) and accepts up to 125 inbound. Outbound peers are the primary security anchor because the node chose them — but inbound peers still matter: addrman poisoning, eclipse setup, and timing attacks can all exploit inbound connections."
         />
         <TheoryConceptCard
           dot="teal"
