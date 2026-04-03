@@ -85,7 +85,7 @@ export function useBackupDemoState(hdState: HDState): BackupDemoState {
 
   const addressesMatch =
     savedAddresses.length > 0 &&
-    restoredAddresses.length > 0 &&
+    savedAddresses.length === restoredAddresses.length &&
     savedAddresses.every((addr, i) => addr === restoredAddresses[i]);
 
   return {

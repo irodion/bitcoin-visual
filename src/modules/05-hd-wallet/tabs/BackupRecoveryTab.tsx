@@ -327,8 +327,8 @@ function SuccessPhase({ demo }: { demo: BackupDemoState }) {
 
           <div className="space-y-3">
             {demo.savedAddresses.map((original, i) => {
-              const restored = demo.restoredAddresses[i];
-              const match = original === restored;
+              const restored = demo.restoredAddresses[i] as string | undefined;
+              const match = restored !== undefined && original === restored;
               return (
                 <div
                   key={original}
@@ -369,7 +369,7 @@ function SuccessPhase({ demo }: { demo: BackupDemoState }) {
                     </div>
                     <div>
                       <span className="text-[10px] text-text-muted">Restored</span>
-                      <p className="break-all font-mono text-xs text-success">{restored}</p>
+                      <p className="break-all font-mono text-xs text-success">{restored ?? "—"}</p>
                     </div>
                   </div>
                 </div>
