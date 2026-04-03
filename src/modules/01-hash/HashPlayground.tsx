@@ -57,7 +57,7 @@ function PlaygroundTheory() {
       <TheoryCallout
         label="WHY DOUBLE HASH?"
         title="Bitcoin often uses SHA-256d"
-        description="Second round hardens the result against length-extension quirks."
+        description="Hashing twice is a conservative defense: it neutralizes length-extension properties of the Merkle-Damgård construction. Whether that was Satoshi's primary motivation or simply a safety margin is debated."
       />
 
       <button
@@ -69,10 +69,12 @@ function PlaygroundTheory() {
       </button>
       {expanded && (
         <p className="mt-2">
-          Double-hashing guards against <strong>length-extension attacks</strong>. With a single
-          SHA-256, an attacker who knows <code>H(m)</code> can compute{" "}
-          <code>H(m || padding || extra)</code> without knowing <code>m</code>. Applying SHA-256 a
-          second time breaks this.
+          One property double-hashing removes is <strong>length-extension</strong>: with a single
+          SHA-256, anyone who knows <code>H(m)</code> can compute{" "}
+          <code>H(m || padding || extra)</code> without knowing <code>m</code>. A second SHA-256
+          round breaks that property. Whether this was the main reason Satoshi chose SHA-256d or
+          simply a general precaution is unclear — Bitcoin's use cases (TXIDs, block hashing) don't
+          directly resemble the MAC scenarios where length-extension is typically exploited.
         </p>
       )}
     </>
@@ -114,8 +116,10 @@ function MiningTheory() {
     <>
       <h3>Proof of Work</h3>
       <p>
-        Mining means finding a nonce such that SHA-256(message + nonce) starts with a required
-        number of zeros. Finding is hard; verifying is instant.
+        In Bitcoin, mining means finding a nonce in an 80-byte block header such that
+        SHA-256d(header) is below a numeric target. The demo below simplifies this to a prefix-zero
+        rule on a short message — the real protocol uses double-SHA256 over a structured header and
+        compares the full 256-bit hash against the target.
       </p>
 
       <div className="space-y-3">
@@ -139,7 +143,7 @@ function MiningTheory() {
       <TheoryCallout
         label="FUN FACT"
         title="Double Hash"
-        description="Bitcoin uses SHA-256d (hash twice) for mining. Satoshi took this from Ferguson & Schneier's 'Practical Cryptography' (2003) as defense against length-extension attacks."
+        description="Bitcoin uses SHA-256d (hash twice) for mining and TXIDs. The technique appears in Ferguson & Schneier's 'Practical Cryptography' (2003) as a conservative defense against length-extension properties of Merkle-Damgård hashes. Whether that was Satoshi's specific rationale or a general safety margin is unknown."
       />
     </>
   );
@@ -168,7 +172,7 @@ function DeepDiveTheory() {
         <TheoryConceptCard
           dot="info"
           title="Merkle-Damgård"
-          description="SHA-256 processes input in 512-bit blocks using chaining. This construction is vulnerable to length-extension attacks — which is why Bitcoin double-hashes."
+          description="SHA-256 processes input in 512-bit blocks using chaining. This construction allows length-extension attacks — a known weakness that double-hashing neutralizes, though Bitcoin's specific use cases (TXIDs, block headers) don't involve the MAC-like scenarios where length-extension is typically exploited."
         />
       </div>
 

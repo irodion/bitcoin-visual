@@ -28,7 +28,8 @@ function ExplorerTheory() {
       <h3>HD Wallets</h3>
       <p>
         Hierarchical Deterministic (HD) wallets derive an entire tree of keys from a single{" "}
-        <strong>mnemonic phrase</strong>. One backup protects all your addresses — past and future.
+        <strong>mnemonic phrase</strong> (plus an optional passphrase). Back up both to protect all
+        your addresses — past and future.
       </p>
 
       <div className="space-y-3">
@@ -40,7 +41,7 @@ function ExplorerTheory() {
         <TheoryConceptCard
           dot="teal"
           title="PBKDF2 — Seed Derivation"
-          description="2048 rounds of HMAC-SHA-512 stretch the mnemonic into a 512-bit seed. An optional passphrase adds a second factor."
+          description="2048 rounds of HMAC-SHA-512 stretch the mnemonic into a 512-bit seed. An optional passphrase is mixed into the salt — a different passphrase produces a completely different seed and key tree. If used, the passphrase is part of the secret and must be backed up alongside the mnemonic."
         />
         <TheoryConceptCard
           dot="info"
@@ -75,8 +76,9 @@ function BackupRecoveryTheory() {
     <>
       <h3>Backup & Recovery</h3>
       <p>
-        Your seed phrase <strong>is</strong> your wallet. The app on your phone is just a viewer
-        that derives keys from it and signs transactions.
+        Your seed phrase (and passphrase, if one was set) is your master secret. The app on your
+        phone is just a viewer that derives keys from it and signs transactions. Lose the mnemonic —
+        or the passphrase — and no one can recover your funds.
       </p>
 
       <div className="space-y-3">
@@ -87,8 +89,8 @@ function BackupRecoveryTheory() {
         />
         <TheoryConceptCard
           dot="teal"
-          title="Seed = Wallet"
-          description="Coins don't live in your app. They live on the blockchain, locked to public keys. Your seed phrase is the master key that unlocks them."
+          title="Seed = Master Key"
+          description="Coins don't live in your app. They live on the blockchain, locked to public keys. Your seed phrase (plus passphrase, if set) is the master secret that derives the keys to unlock them."
         />
         <TheoryConceptCard
           dot="danger"

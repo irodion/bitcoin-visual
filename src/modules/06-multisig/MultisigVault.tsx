@@ -62,7 +62,7 @@ function TheoryContent() {
         <TheoryConceptCard
           dot="teal"
           title="Privacy Until Spend"
-          description="All P2SH addresses start with '3' and look identical on-chain. A 15-of-15 corporate vault is indistinguishable from a Lightning HTLC or a simple hash-lock — until someone spends. Then the full script is revealed forever. Taproot later fixes this: only the used branch is disclosed."
+          description="All P2SH addresses start with '3' and look identical on-chain. A 15-of-15 corporate vault is indistinguishable from a Lightning HTLC or a simple hash-lock — until someone spends. Then the full script is revealed forever. Taproot improves on this: in the common case (key-path spend), no script is revealed at all. If a script-path is used, only the single branch taken is disclosed — the rest of the Merkle tree stays hidden."
         />
       </div>
 

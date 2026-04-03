@@ -204,7 +204,7 @@ function TxMalleabilityTheory() {
         <TheoryConceptCard
           dot="success"
           title="The Fix (SegWit)"
-          description="BIP-141 Segregated Witness moves signature data to the witness, which is excluded from the TxID hash. The TxID becomes immutable once inputs and outputs are set."
+          description="BIP-141 Segregated Witness moves signature data to the witness, which is excluded from the TxID hash. This eliminates third-party malleability of the TxID for witness programs. The wtxid (which includes witness data) can still change if the witness is modified."
         />
       </div>
 

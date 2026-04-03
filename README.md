@@ -14,7 +14,8 @@ No backend. No registration. Runs offline after first load.
 | 4   | **Blockchain & Mining** | Block structure, proof-of-work, Merkle trees, chain invalidation              |
 | 5   | **HD Wallet Tree**      | BIP39 mnemonic → BIP32 derivation paths → child keys                          |
 | 6   | **Multisig Vault**      | 2-of-3 multisig script, P2WSH addresses, PSBT signing flow                    |
-| 7   | **Attack Lab**          | Nonce reuse key extraction, xpub+child-key leak, weak entropy, rainbow tables |
+| 7   | **Output Descriptors**  | Parse, expand, and build wallet descriptors — the portable wallet language    |
+| 8   | **Attack Lab**          | Nonce reuse key extraction, xpub+child-key leak, weak entropy, rainbow tables |
 
 All cryptographic operations run client-side using audited libraries (`@noble/hashes`, `@noble/curves`, `@scure/bip32`, `@scure/bip39`). Every intermediate value is inspectable — nothing is simulated or faked.
 

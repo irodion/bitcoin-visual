@@ -19,10 +19,11 @@ function TheoryContent() {
     <>
       <h3>Output Descriptors</h3>
       <p>
-        A wallet descriptor is a single compact string that fully encodes a wallet's{" "}
-        <strong>script type</strong>, <strong>key material</strong>, and{" "}
-        <strong>derivation strategy</strong>. One string → infinite addresses, zero ambiguity. The
-        string <em>is</em> the wallet.
+        A wallet descriptor is a compact string that encodes a wallet's <strong>script type</strong>
+        , <strong>key material</strong>, and <strong>derivation strategy</strong>. One string →
+        infinite addresses, zero ambiguity. Note: a descriptor may contain only public keys
+        (watch-only) and does not capture all wallet metadata (labels, UTXO state, passphrase). A
+        full backup may require more than the descriptor alone.
       </p>
 
       <div className="space-y-3">
