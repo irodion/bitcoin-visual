@@ -272,6 +272,10 @@ export function useNetworkState(): NetworkState {
     } else if (eclipsePhase === "eclipsed") {
       setEclipsePhase("fake-chain");
     } else if (eclipsePhase === "fake-chain") {
+      // Anchor peers reconnect — flip them back to honest
+      setEclipseConnections((conns) =>
+        conns.map((c) => (c.isAnchor ? { ...c, isAttacker: false } : c)),
+      );
       setEclipsePhase("defense");
     }
   }, [eclipsePhase]);

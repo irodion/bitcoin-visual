@@ -219,13 +219,13 @@ export function EclipseAttackDemo({
           {phase === "defense" && (
             <>
               {connections
-                .filter((c) => c.isAnchor)
-                .map((conn, i) => {
+                .filter((c) => c.isAnchor && !c.isAttacker)
+                .map((conn) => {
                   const cx = VICTIM_CX + Math.cos(conn.angle) * PEER_RADIUS;
                   const cy = VICTIM_CY + Math.sin(conn.angle) * PEER_RADIUS;
                   return (
                     <motion.line
-                      key={`anchor-${i}`}
+                      key={`anchor-${conn.peerId}`}
                       x1={VICTIM_CX}
                       y1={VICTIM_CY}
                       x2={cx}
