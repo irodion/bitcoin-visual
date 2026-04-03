@@ -14,6 +14,7 @@
   --color-surface: #121a28;
   --color-surface-raised: #101827;
   --color-surface-warm: #16110c;
+  --color-surface-inset: #0b1320;
 
   /* Primary accent — Bitcoin orange */
   --color-accent: #f7931a;
@@ -62,6 +63,18 @@
   /* Glows */
   --color-glow-accent: rgba(247, 147, 26, 0.06);
   --color-glow-teal: rgba(54, 207, 201, 0.06);
+  --color-glow-accent-raw: 247, 147, 26; /* must match --color-accent */
+  --color-glow-teal-raw: 54, 207, 201; /* must match --color-teal */
+
+  /* Shadow glows */
+  --shadow-glow-accent: 0 0 16px rgba(247, 147, 26, 0.2);
+  --shadow-glow-danger: 0 0 24px rgba(255, 107, 107, 0.12);
+  --shadow-glow-success: 0 0 24px rgba(34, 197, 94, 0.1);
+  --shadow-glow-accent-inset: inset 0 0 24px rgba(247, 147, 26, 0.08);
+  --shadow-glow-danger-inset: inset 0 0 24px rgba(255, 107, 107, 0.1);
+  --shadow-glow-info-inset: inset 0 0 24px rgba(125, 211, 252, 0.08);
+  --shadow-glow-success-inset: inset 0 0 24px rgba(34, 197, 94, 0.08);
+  --shadow-glow-warm-inset: inset 0 0 24px rgba(247, 147, 26, 0.1);
 
   /* Fonts */
   --font-sans: "Geist Sans", ui-sans-serif, system-ui, sans-serif;
@@ -87,6 +100,7 @@
   --color-surface: #ffffff;
   --color-surface-raised: #f9f7f4;
   --color-surface-warm: #fdf6ee;
+  --color-surface-inset: #f0eeea;
 
   --color-accent: #d97706;
   --color-accent-muted: rgba(217, 119, 6, 0.12);
@@ -126,6 +140,17 @@
 
   --color-glow-accent: rgba(217, 119, 6, 0.04);
   --color-glow-teal: rgba(13, 148, 136, 0.04);
+  --color-glow-accent-raw: 217, 119, 6; /* must match --color-accent */
+  --color-glow-teal-raw: 13, 148, 136; /* must match --color-teal */
+
+  --shadow-glow-accent: 0 0 16px rgba(217, 119, 6, 0.15);
+  --shadow-glow-danger: 0 0 24px rgba(220, 38, 38, 0.08);
+  --shadow-glow-success: 0 0 24px rgba(22, 163, 74, 0.08);
+  --shadow-glow-accent-inset: inset 0 0 24px rgba(217, 119, 6, 0.06);
+  --shadow-glow-danger-inset: inset 0 0 24px rgba(220, 38, 38, 0.06);
+  --shadow-glow-info-inset: inset 0 0 24px rgba(2, 132, 199, 0.06);
+  --shadow-glow-success-inset: inset 0 0 24px rgba(22, 163, 74, 0.06);
+  --shadow-glow-warm-inset: inset 0 0 24px rgba(217, 119, 6, 0.08);
 }
 
 html.light {

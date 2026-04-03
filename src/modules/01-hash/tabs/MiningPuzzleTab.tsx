@@ -158,7 +158,7 @@ export function MiningPuzzleTab({ onInteract }: MiningPuzzleTabProps) {
           </button>
 
           {benchmarkResult !== null && (
-            <div className="mt-4 rounded-inner border border-border bg-[#0E1521] p-4 text-sm">
+            <div className="mt-4 rounded-inner border border-border bg-surface-inset p-4 text-sm">
               <p className="text-text-primary">
                 Your browser:{" "}
                 <strong className="font-mono text-accent">

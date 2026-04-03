@@ -21,7 +21,7 @@ export function BitDiffBar({ original, modified }: { original: Uint8Array; modif
 
   return (
     <div
-      className="flex h-2.5 w-full overflow-hidden rounded-full bg-[#131C2A]"
+      className="flex h-2.5 w-full overflow-hidden rounded-full bg-surface-inset"
       role="img"
       aria-label={`Bit difference visualization: ${changed} of 256 bits differ`}
     >

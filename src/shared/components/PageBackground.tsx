@@ -20,7 +20,7 @@ export function PageBackground({
         style={{
           width: glowSize,
           height: glowSize,
-          background: `radial-gradient(circle, rgba(247,147,26,${amberOpacity}) 0%, transparent 70%)`,
+          background: `radial-gradient(circle, rgba(var(--color-glow-accent-raw),${amberOpacity}) 0%, transparent 70%)`,
         }}
         aria-hidden="true"
       />
@@ -29,7 +29,7 @@ export function PageBackground({
         style={{
           width: glowSize,
           height: glowSize,
-          background: `radial-gradient(circle, rgba(54,207,201,${tealOpacity}) 0%, transparent 70%)`,
+          background: `radial-gradient(circle, rgba(var(--color-glow-teal-raw),${tealOpacity}) 0%, transparent 70%)`,
         }}
         aria-hidden="true"
       />

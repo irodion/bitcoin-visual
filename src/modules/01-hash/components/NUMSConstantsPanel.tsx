@@ -29,7 +29,7 @@ export function NUMSConstantsPanel({ onInteract }: NUMSConstantsPanelProps) {
   }
 
   return (
-    <section className="rounded-section border border-border bg-[#0C1219]">
+    <section className="rounded-section border border-border bg-surface-inset">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

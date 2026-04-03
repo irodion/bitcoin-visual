@@ -33,8 +33,8 @@ export function Block({
   onStopMine,
   onSelect,
 }: BlockProps) {
-  const validBorder = "border-success/40 shadow-[0_0_24px_rgba(34,197,94,0.10)]";
-  const invalidBorder = "border-danger/60 shadow-[0_0_24px_rgba(255,107,107,0.12)]";
+  const validBorder = "border-success/40 shadow-(--shadow-glow-success)";
+  const invalidBorder = "border-danger/60 shadow-(--shadow-glow-danger)";
   const selectedRing = isSelected ? "ring-2 ring-accent/30" : "";
 
   return (
@@ -164,7 +164,7 @@ export function Block({
       {/* Invalidity reason */}
       {!validity.isValid && (
         <p role="alert" className="text-xs font-medium text-danger">
-          {!validity.hashValid && "Hash doesn\u2019t meet difficulty target"}
+          {!validity.hashValid && "Hash doesn't meet difficulty target"}
           {validity.hashValid && !validity.chainValid && "Previous hash mismatch"}
         </p>
       )}
@@ -194,7 +194,7 @@ export function Block({
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-xs text-text-secondary">
               <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-accent" />
-              Mining\u2026 Nonce: {miningNonce.toLocaleString()}
+              Mining… Nonce: {miningNonce.toLocaleString()}
               {miningHashRate > 0 && (
                 <span className="ml-auto font-mono">{miningHashRate.toLocaleString()} H/s</span>
               )}

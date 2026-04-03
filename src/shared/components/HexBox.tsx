@@ -21,11 +21,11 @@ const variantColors = {
 } as const;
 
 const variantGlow = {
-  default: "shadow-[inset_0_0_24px_rgba(247,147,26,0.08)]",
-  danger: "shadow-[inset_0_0_24px_rgba(255,107,107,0.10)]",
-  info: "shadow-[inset_0_0_24px_rgba(125,211,252,0.08)]",
-  success: "shadow-[inset_0_0_24px_rgba(34,197,94,0.08)]",
-  warm: "shadow-[inset_0_0_24px_rgba(247,147,26,0.10)]",
+  default: "shadow-(--shadow-glow-accent-inset)",
+  danger: "shadow-(--shadow-glow-danger-inset)",
+  info: "shadow-(--shadow-glow-info-inset)",
+  success: "shadow-(--shadow-glow-success-inset)",
+  warm: "shadow-(--shadow-glow-warm-inset)",
 } as const;
 
 const variantDot = {
@@ -53,7 +53,7 @@ export function HexBox({
 
   const hex = useMemo(() => (value instanceof Uint8Array ? bytesToHex(value) : value), [value]);
   const shouldTruncate = truncate && !expanded && hex.length > maxLength;
-  const displayHex = shouldTruncate ? hex.slice(0, maxLength) + "\u2026" : hex;
+  const displayHex = shouldTruncate ? hex.slice(0, maxLength) + "…" : hex;
 
   return (
     <div
