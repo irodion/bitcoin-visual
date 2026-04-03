@@ -11,7 +11,8 @@ src/
 │   ├── 04-blockchain/    # Blockchain & mining simulator
 │   ├── 05-hd-wallet/     # HD wallet tree (BIP32/39)
 │   ├── 06-multisig/      # Multisig vault (2-of-3 + PSBT)
-│   └── 07-attacks/       # Attack lab (nonce reuse, xpub leak, etc.)
+│   ├── 07-attacks/       # Attack lab (nonce reuse, xpub leak, etc.) — Module 8 in UI
+│   └── 08-descriptors/  # Output descriptors (parse, validate, expand) — Module 7 in UI
 ├── pages/                # Top-level pages (Landing)
 ├── shared/
 │   ├── crypto/           # Pure utility wrappers around @noble/*
@@ -24,16 +25,17 @@ src/
 
 ## Routes
 
-| Route         | Module              | Component             |
-| ------------- | ------------------- | --------------------- |
-| `/`           | Landing             | `Landing`             |
-| `/hash`       | Hash Playground     | `HashPlayground`      |
-| `/keys`       | Keys & Addresses    | `KeysExplorer`        |
-| `/utxo`       | UTXO & Transactions | `UTXOBuilder`         |
-| `/blockchain` | Blockchain & Mining | `BlockchainSimulator` |
-| `/hd-wallet`  | HD Wallet Tree      | `HDWalletExplorer`    |
-| `/multisig`   | Multisig Vault      | `MultisigVault`       |
-| `/attacks`    | Attack Lab          | `AttackLab`           |
+| Route          | Module              | Component             |
+| -------------- | ------------------- | --------------------- |
+| `/`            | Landing             | `Landing`             |
+| `/hash`        | Hash Playground     | `HashPlayground`      |
+| `/keys`        | Keys & Addresses    | `KeysExplorer`        |
+| `/utxo`        | UTXO & Transactions | `UTXOBuilder`         |
+| `/blockchain`  | Blockchain & Mining | `BlockchainSimulator` |
+| `/hd-wallet`   | HD Wallet Tree      | `HDWalletExplorer`    |
+| `/multisig`    | Multisig Vault      | `MultisigVault`       |
+| `/descriptors` | Output Descriptors  | `OutputDescriptors`   |
+| `/attacks`     | Attack Lab          | `AttackLab`           |
 
 All module routes use `React.lazy()` for code-splitting.
 
