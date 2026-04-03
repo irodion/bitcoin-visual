@@ -129,7 +129,7 @@ export function TheoryConceptCard({ dot, title, description }: TheoryConceptCard
         />
         <span className="text-[15px] font-bold text-text-primary">{title}</span>
       </div>
-      <p className="mt-1.5 pl-[22px] text-[13px] leading-relaxed text-text-secondary">
+      <p className="mt-1.5 pl-[22px] text-[13px] leading-relaxed text-text-secondary [overflow-wrap:anywhere]">
         {description}
       </p>
     </div>
@@ -148,8 +148,12 @@ export function TheoryCallout({ label, title, description }: TheoryCalloutProps)
       <div className="text-[12px] font-medium uppercase tracking-[0.16em] text-warning-text">
         {label}
       </div>
-      <div className="mt-1 text-[14px] font-bold text-warning-heading">{title}</div>
-      <p className="mt-1 text-[13px] leading-relaxed text-warning-body">{description}</p>
+      <div className="mt-1 text-[14px] font-bold text-warning-heading [overflow-wrap:anywhere]">
+        {title}
+      </div>
+      <p className="mt-1 text-[13px] leading-relaxed text-warning-body [overflow-wrap:anywhere]">
+        {description}
+      </p>
     </div>
   );
 }
