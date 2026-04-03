@@ -1,9 +1,22 @@
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { HexBox, ValueFlowArrow, SecurityCallout } from "../../shared/components/index.ts";
+import {
+  HexBox,
+  ValueFlowArrow,
+  SecurityCallout,
+  PillToggle,
+} from "../../shared/components/index.ts";
 import { BTN_GHOST, CONTAINER_VARIANTS, STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { CosignerRow } from "./CosignerRow.tsx";
 import { ScriptBreakdown } from "./ScriptBreakdown.tsx";
 import type { MultisigState } from "./useMultisigState.ts";
+
+const SCRIPT_VIEW_OPTIONS = [
+  { key: "revealed", label: "Spending (revealed)" },
+  { key: "locked", label: "On-chain (locked)" },
+] as const;
+
+type ScriptViewKey = (typeof SCRIPT_VIEW_OPTIONS)[number]["key"];
 
 type VaultSetupProps = Pick<
   MultisigState,
@@ -13,6 +26,8 @@ type VaultSetupProps = Pick<
   | "allKeysGenerated"
   | "redeemScript"
   | "redeemScriptHex"
+  | "p2shScriptHashHex"
+  | "p2wshScriptHashHex"
   | "p2shAddress"
   | "p2wshAddress"
 >;
@@ -24,9 +39,13 @@ export function VaultSetupPanel({
   allKeysGenerated,
   redeemScript,
   redeemScriptHex,
+  p2shScriptHashHex,
+  p2wshScriptHashHex,
   p2shAddress,
   p2wshAddress,
 }: VaultSetupProps) {
+  const [scriptView, setScriptView] = useState<ScriptViewKey>("revealed");
+
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex items-center justify-between">
@@ -65,11 +84,39 @@ export function VaultSetupPanel({
 
             <motion.div variants={STEP_VARIANTS}>
               <div className="panel-warm rounded-input border border-border-amber p-5">
-                <div className="mb-2 text-[11px] font-medium uppercase tracking-widest text-text-secondary">
-                  Redeem Script ({redeemScript.length} bytes)
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <span className="text-[11px] font-medium uppercase tracking-widest text-text-secondary">
+                    Redeem Script ({redeemScript.length} bytes)
+                  </span>
+                  <PillToggle
+                    options={SCRIPT_VIEW_OPTIONS}
+                    value={scriptView}
+                    onChange={setScriptView}
+                    label="Script view"
+                  />
                 </div>
-                <HexBox value={redeemScriptHex} variant="warm" truncate maxLength={80} />
-                <ScriptBreakdown redeemScript={redeemScript} />
+                {scriptView === "revealed" ? (
+                  <>
+                    <HexBox value={redeemScriptHex} variant="warm" truncate maxLength={80} />
+                    <ScriptBreakdown redeemScript={redeemScript} />
+                  </>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="text-xs text-text-secondary">
+                      The blockchain stores only a hash — the spending conditions are hidden:
+                    </div>
+                    <HexBox
+                      value={p2shScriptHashHex ?? ""}
+                      variant="default"
+                      label="HASH160 → 20 bytes (P2SH)"
+                    />
+                    <HexBox
+                      value={p2wshScriptHashHex ?? ""}
+                      variant="info"
+                      label="SHA-256 → 32 bytes (P2WSH)"
+                    />
+                  </div>
+                )}
               </div>
             </motion.div>
 

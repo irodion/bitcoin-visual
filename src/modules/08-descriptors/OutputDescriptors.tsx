@@ -37,6 +37,11 @@ function TheoryContent() {
           description="pkh(), wpkh(), sh(), wsh(), tr() — each wraps keys in a different Bitcoin script. Nesting like sh(wpkh(…)) mirrors actual script evaluation: read inside-out."
         />
         <TheoryConceptCard
+          dot="warning"
+          title="Script Evolution"
+          description="P2SH (2012): sealed envelope — open when spending. P2WSH (2017): same idea, bigger capacity, witness discount, fixes malleability. P2TR (2021): no envelope at all — looks like a normal payment. If there's a dispute, reveal one page from a sealed book without showing the rest. Each generation hides more."
+        />
+        <TheoryConceptCard
           dot="success"
           title="Taproot — tr()"
           description="The most private format. A key-path Taproot spend looks identical on-chain whether it's single-sig or aggregated multisig (MuSig2) — one 32-byte key, one 64-byte Schnorr signature. Alternative spending conditions (timelocks, fallback keys) hide in an unrevealed Merkle tree. Every bc1p… address looks the same regardless of internal complexity."

@@ -49,6 +49,21 @@ function TheoryContent() {
           title="Custody Models"
           description="The same M-of-N primitive supports radically different trust models depending on who holds the keys. The Security Models tab explores six real-world configurations."
         />
+        <TheoryConceptCard
+          dot="warning"
+          title="Commit-Reveal"
+          description="A redeem script is a sealed envelope. You commit the hash to the blockchain; the full spending conditions stay hidden until you spend. This is the same commit-reveal pattern used in sealed-bid auctions and zero-knowledge proofs — applied directly to Bitcoin's transaction system."
+        />
+        <TheoryConceptCard
+          dot="info"
+          title="Fee Shifting"
+          description="Before P2SH, senders paid fees for the receiver's complex script — a bare 2-of-3 multisig output costs ~253 bytes. P2SH shrinks every output to 23 bytes regardless of complexity. The person who chooses the spending policy pays for it at spend time, not the sender."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="Privacy Until Spend"
+          description="All P2SH addresses start with '3' and look identical on-chain. A 15-of-15 corporate vault is indistinguishable from a Lightning HTLC or a simple hash-lock — until someone spends. Then the full script is revealed forever. Taproot later fixes this: only the used branch is disclosed."
+        />
       </div>
 
       <TheoryCallout
@@ -98,6 +113,8 @@ export default function MultisigVault() {
               allKeysGenerated={state.allKeysGenerated}
               redeemScript={state.redeemScript}
               redeemScriptHex={state.redeemScriptHex}
+              p2shScriptHashHex={state.p2shScriptHashHex}
+              p2wshScriptHashHex={state.p2wshScriptHashHex}
               p2shAddress={state.p2shAddress}
               p2wshAddress={state.p2wshAddress}
             />
