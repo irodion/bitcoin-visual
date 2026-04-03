@@ -190,6 +190,13 @@ export default function Settings() {
             <ThemeToggle />
             <LearningProgress />
             <InstallApp />
+
+            <section className={SECTION}>
+              <h2 className={SECTION_TITLE}>About</h2>
+              <Link to="/credits" className="text-sm text-accent hover:underline">
+                Credits & Acknowledgments →
+              </Link>
+            </section>
           </div>
         </motion.div>
       </div>
