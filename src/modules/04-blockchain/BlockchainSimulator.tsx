@@ -187,7 +187,11 @@ export default function BlockchainSimulator() {
       moduleKey="blockchain"
       title="Blockchain & Mining"
       moduleNumber={4}
-      subtitle="Mine blocks, adjust difficulty, and explore Merkle trees — all simulated in your browser."
+      subtitle={
+        activeTab === "blockchain"
+          ? "Mine blocks, adjust difficulty, and explore Merkle trees — all simulated in your browser."
+          : "Explore how Bitcoin nodes discover peers, propagate blocks, and defend against network attacks."
+      }
       theoryContent={(() => {
         const Theory = THEORY_CONTENT[activeTab];
         return <Theory />;
