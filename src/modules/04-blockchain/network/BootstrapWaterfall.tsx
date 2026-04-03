@@ -166,7 +166,7 @@ export function BootstrapWaterfall({
 
       <div className="flex items-center gap-3">
         <button type="button" onClick={onStart} className={BTN_PRIMARY} disabled={running}>
-          {hasStarted && !running ? "Restart" : "Start Bootstrap"}
+          {running ? "Running…" : hasStarted ? "Restart" : "Start Bootstrap"}
         </button>
         {hasStarted && (
           <button type="button" onClick={onReset} className={BTN_GHOST}>

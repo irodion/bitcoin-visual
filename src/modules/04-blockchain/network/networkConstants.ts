@@ -53,6 +53,8 @@ export interface EclipseConnection {
   isAttacker: boolean;
   /** Angle in radians for semicircle positioning */
   angle: number;
+  /** Marks a peer as an anchor connection that survives restarts (defense demo) */
+  isAnchor?: boolean;
 }
 
 // ── Gossip Network Nodes ──
@@ -178,11 +180,11 @@ export const COMPACT_BLOCK_TXS: readonly CompactBlockTx[] = [
 const ECLIPSE_ANGLES = Array.from({ length: 8 }, (_, i) => Math.PI * (0.1 + (i * 0.8) / 7));
 
 export const ECLIPSE_INITIAL_CONNECTIONS: readonly EclipseConnection[] = [
-  { peerId: "p0", label: "Peer 1", isAttacker: false, angle: ECLIPSE_ANGLES[0] },
+  { peerId: "p0", label: "Peer 1", isAttacker: false, angle: ECLIPSE_ANGLES[0], isAnchor: true },
   { peerId: "p1", label: "Peer 2", isAttacker: false, angle: ECLIPSE_ANGLES[1] },
   { peerId: "p2", label: "Peer 3", isAttacker: true, angle: ECLIPSE_ANGLES[2] },
   { peerId: "p3", label: "Peer 4", isAttacker: false, angle: ECLIPSE_ANGLES[3] },
-  { peerId: "p4", label: "Peer 5", isAttacker: false, angle: ECLIPSE_ANGLES[4] },
+  { peerId: "p4", label: "Peer 5", isAttacker: false, angle: ECLIPSE_ANGLES[4], isAnchor: true },
   { peerId: "p5", label: "Peer 6", isAttacker: true, angle: ECLIPSE_ANGLES[5] },
   { peerId: "p6", label: "Peer 7", isAttacker: false, angle: ECLIPSE_ANGLES[6] },
   { peerId: "p7", label: "Peer 8", isAttacker: false, angle: ECLIPSE_ANGLES[7] },

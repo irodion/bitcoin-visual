@@ -177,6 +177,7 @@ export function GossipSimulator({
               onChange={(e) =>
                 onSpeedChange(MAX_GOSSIP_SPEED_MS + MIN_GOSSIP_SPEED_MS - Number(e.target.value))
               }
+              aria-valuetext={`${speed} milliseconds per hop`}
               className="w-24 accent-accent"
               disabled={running}
             />

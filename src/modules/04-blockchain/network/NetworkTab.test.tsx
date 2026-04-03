@@ -148,7 +148,7 @@ describe("NetworkTab", () => {
     // Advance one step
     await user.click(nextBtn);
     await waitFor(() => {
-      expect(screen.getByText(/Attacker peers: [3-8]\/8/)).toBeInTheDocument();
+      expect(screen.getByText("Attacker peers: 3/8")).toBeInTheDocument();
     });
   });
 

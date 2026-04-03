@@ -231,7 +231,7 @@ export default function BlockchainSimulator() {
                       Pending Transaction from Multisig
                     </p>
                     <p className="truncate font-mono text-xs text-text-secondary">
-                      TXID: {pendingTx.txidHex.slice(0, 24)}&hellip;
+                      TXID: {pendingTx.txidHex.slice(0, 24)}…
                     </p>
                   </div>
                   <div className="flex shrink-0 gap-2">

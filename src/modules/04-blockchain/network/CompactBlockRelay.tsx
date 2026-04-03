@@ -89,7 +89,8 @@ export function CompactBlockRelay({
           2 · Compact Block Relay
         </h3>
         <p className="mt-1 text-sm text-text-secondary">
-          A ~1 MB block transmitted in ~15 KB — because every node already has the transactions.
+          32-byte TXIDs replaced by 6-byte short IDs — ~81% smaller per transaction, because every
+          node already has the data in its mempool.
         </p>
       </div>
 
@@ -103,8 +104,8 @@ export function CompactBlockRelay({
             <div className="space-y-1">
               <p className="text-xs text-text-muted">
                 {phaseAtLeast(phase, "compress")
-                  ? "Short IDs (6 bytes each)"
-                  : "Full transactions (32 bytes each)"}
+                  ? "Short IDs (6 bytes per TXID)"
+                  : "Full TXIDs (32 bytes each)"}
               </p>
               {txs.map((tx) => (
                 <TxRow key={tx.fullTxid} tx={tx} phase={phase} side="sender" />
@@ -142,7 +143,8 @@ export function CompactBlockRelay({
             className="flex flex-wrap items-center justify-center gap-4 text-xs"
           >
             <span className="rounded-pill bg-accent/10 px-3 py-1 font-semibold text-accent">
-              {txs.length * 6} bytes sent (vs {txs.length * 32} bytes full)
+              {txs.length} TXIDs × 6 B = {txs.length * 6} B (vs {txs.length} × 32 B ={" "}
+              {txs.length * 32} B full)
             </span>
             {phaseAtLeast(phase, "request-missing") && missingCount > 0 && (
               <span className="rounded-pill bg-danger/10 px-3 py-1 text-danger">

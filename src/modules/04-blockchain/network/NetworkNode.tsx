@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { motion } from "framer-motion";
 import type { NodeState } from "./networkConstants.ts";
 
@@ -48,6 +48,7 @@ export const NetworkNode = memo(function NetworkNode({
   const color = colorOverride ?? STATE_COLORS[state];
   const opacity = opacityOverride ?? STATE_OPACITY[state];
   const showGlow = state === "informed" || state === "source" || state === "victim";
+  const [focused, setFocused] = useState(false);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if ((e.key === "Enter" || e.key === " ") && onClick) {
@@ -63,9 +64,23 @@ export const NetworkNode = memo(function NetworkNode({
       aria-label={onClick ? `Node ${label} — click to broadcast` : `Node ${label}`}
       onClick={onClick}
       onKeyDown={onClick ? handleKeyDown : undefined}
+      onFocus={onClick ? () => setFocused(true) : undefined}
+      onBlur={onClick ? () => setFocused(false) : undefined}
       style={{ cursor: onClick ? "pointer" : "default", outline: "none" }}
       data-testid={`network-node-${id}`}
     >
+      {/* Keyboard focus ring */}
+      {focused && onClick && (
+        <circle
+          cx={cx}
+          cy={cy}
+          r={size + 6}
+          fill="none"
+          stroke="var(--color-accent)"
+          strokeWidth={2}
+          strokeDasharray="4 2"
+        />
+      )}
       {showGlow && (
         <motion.circle
           cx={cx}

@@ -177,25 +177,27 @@ export function EclipseAttackDemo({
           {/* Anchor connections (defense phase) */}
           {phase === "defense" && (
             <>
-              {[connections[0], connections[4]].map((conn, i) => {
-                const cx = VICTIM_CX + Math.cos(conn.angle) * PEER_RADIUS;
-                const cy = VICTIM_CY + Math.sin(conn.angle) * PEER_RADIUS;
-                return (
-                  <motion.line
-                    key={`anchor-${i}`}
-                    x1={VICTIM_CX}
-                    y1={VICTIM_CY}
-                    x2={cx}
-                    y2={cy}
-                    stroke="var(--color-teal)"
-                    strokeWidth={2.5}
-                    strokeDasharray="6 4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.8 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                  />
-                );
-              })}
+              {connections
+                .filter((c) => c.isAnchor)
+                .map((conn, i) => {
+                  const cx = VICTIM_CX + Math.cos(conn.angle) * PEER_RADIUS;
+                  const cy = VICTIM_CY + Math.sin(conn.angle) * PEER_RADIUS;
+                  return (
+                    <motion.line
+                      key={`anchor-${i}`}
+                      x1={VICTIM_CX}
+                      y1={VICTIM_CY}
+                      x2={cx}
+                      y2={cy}
+                      stroke="var(--color-teal)"
+                      strokeWidth={2.5}
+                      strokeDasharray="6 4"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.8 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                    />
+                  );
+                })}
             </>
           )}
 
