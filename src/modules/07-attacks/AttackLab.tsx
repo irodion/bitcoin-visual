@@ -240,7 +240,7 @@ export default function AttackLab() {
     <ModuleLayout
       moduleKey="attacks"
       title="Attack Lab"
-      moduleNumber={7}
+      moduleNumber={8}
       subtitle="Demonstrate real cryptographic attacks in a safe sandbox."
       theoryContent={(() => {
         const Theory = THEORY_CONTENT[activeTab];

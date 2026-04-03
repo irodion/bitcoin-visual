@@ -15,6 +15,7 @@ const UTXOBuilder = lazy(() => import("./modules/03-utxo/UTXOBuilder"));
 const BlockchainSimulator = lazy(() => import("./modules/04-blockchain/BlockchainSimulator"));
 const HDWalletExplorer = lazy(() => import("./modules/05-hd-wallet/HDWalletExplorer"));
 const MultisigVault = lazy(() => import("./modules/06-multisig/MultisigVault"));
+const OutputDescriptors = lazy(() => import("./modules/08-descriptors/OutputDescriptors"));
 const AttackLab = lazy(() => import("./modules/07-attacks/AttackLab"));
 const Settings = lazy(() => import("./pages/Settings"));
 
@@ -35,6 +36,7 @@ export default function App() {
               <Route path="/blockchain" element={<BlockchainSimulator />} />
               <Route path="/hd-wallet" element={<HDWalletExplorer />} />
               <Route path="/multisig" element={<MultisigVault />} />
+              <Route path="/descriptors" element={<OutputDescriptors />} />
               <Route path="/attacks" element={<AttackLab />} />
               <Route path="/settings" element={<Settings />} />
               <Route

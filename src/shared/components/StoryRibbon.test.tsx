@@ -24,7 +24,7 @@ describe("StoryRibbon", () => {
     await act(async () => {
       renderWithRouter(<StoryRibbon currentModuleKey="keys" />);
     });
-    expect(screen.getByText("Chapter 2 of 6")).toBeInTheDocument();
+    expect(screen.getByText("Chapter 2 of 7")).toBeInTheDocument();
   });
 
   it("shows previous module link", async () => {

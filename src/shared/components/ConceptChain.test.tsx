@@ -58,8 +58,8 @@ describe("ConceptChain", () => {
       renderWithRouter(<ConceptChain />);
     });
     const arrows = screen.getAllByText("→");
-    // 2 rows × 2 arrows per row = 4 arrows
-    expect(arrows.length).toBe(4);
+    // 7 items in grid-cols-4: row 1 has 3 arrows, row 2 has 2 arrows = 5 total
+    expect(arrows.length).toBe(5);
   });
 
   it("highlights recommended module with accent ring", async () => {

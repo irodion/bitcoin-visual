@@ -51,4 +51,23 @@ export {
 export type { AttackSignature } from "./attacks";
 export { buildMerkleTree, computeMerkleRoot, getMerkleProof } from "./merkle";
 export type { MerkleProofStep } from "./merkle";
+export {
+  parseDescriptor,
+  expandDescriptor,
+  computeDescriptorChecksum,
+  validateDescriptorChecksum,
+  buildDescriptor,
+  findFirstKey,
+} from "./descriptor";
+export type {
+  ParsedDescriptor,
+  DescriptorNode,
+  DescriptorSegmentInfo,
+  KeyExpression,
+  KeyOrigin,
+  ExpandedAddress,
+  DescriptorConfig,
+  ScriptType,
+  SegmentKind,
+} from "./descriptor";
 export type { Network, XPub } from "./types";

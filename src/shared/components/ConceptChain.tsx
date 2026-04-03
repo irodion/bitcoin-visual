@@ -119,12 +119,12 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
       animate="visible"
       className={`flex flex-col items-center ${className}`}
     >
-      {/* Desktop: single horizontal row */}
-      <div className="hidden w-full max-w-3xl items-center justify-center md:flex">
+      {/* Desktop: single horizontal row — items-start keeps circles aligned when label text wraps */}
+      <div className="hidden w-full max-w-4xl items-start justify-center md:flex">
         {PATH_MODULES.map((mod, i) => {
           const isLast = i === PATH_MODULES.length - 1;
           return (
-            <div key={mod.key} className={`flex items-center ${isLast ? "" : "flex-1"}`}>
+            <div key={mod.key} className={`flex items-start ${isLast ? "" : "flex-1"}`}>
               <motion.div variants={nodeVariants}>
                 <ChainNode
                   mod={mod}
@@ -137,7 +137,7 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
               {!isLast && (
                 <motion.div
                   variants={lineVariants}
-                  className="mx-2 h-[2px] flex-1 origin-left"
+                  className="mx-1 mt-[21px] h-[2px] min-w-3 flex-1 origin-left"
                   style={{
                     background: `linear-gradient(to right, ${mod.color}50, ${PATH_MODULES[i + 1].color}50)`,
                   }}
@@ -148,8 +148,8 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
         })}
       </div>
 
-      {/* Mobile: 2-row grid with arrows */}
-      <div className="grid w-full max-w-sm grid-cols-3 gap-x-2 gap-y-4 md:hidden">
+      {/* Mobile: rows of 4 then 3 */}
+      <div className="grid w-full max-w-md grid-cols-4 gap-x-2 gap-y-4 md:hidden">
         {PATH_MODULES.map((mod, i) => (
           <motion.div key={mod.key} variants={nodeVariants} className="flex items-center">
             <ChainNode
@@ -158,8 +158,7 @@ export function ConceptChain({ className = "" }: ConceptChainProps) {
               isRecommended={mod.key === recommendedKey}
               size="sm"
             />
-            {/* Arrow between columns (not after the 3rd or 6th item) */}
-            {i % 3 !== 2 && i < PATH_MODULES.length - 1 && (
+            {i % 4 !== 3 && i < PATH_MODULES.length - 1 && (
               <span className="ml-auto text-[10px] text-text-muted" aria-hidden="true">
                 →
               </span>
