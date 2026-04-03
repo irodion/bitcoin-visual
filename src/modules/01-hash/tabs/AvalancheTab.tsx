@@ -159,13 +159,13 @@ export function AvalancheTab({ input, setInput, onInteract }: AvalancheTabProps)
       <DiffHex original={sha256Hash} modified={sha256Modified} />
 
       {/* ── Bit Grid ── */}
-      <div className="rounded-input border border-border bg-[#0E1521] p-5">
+      <div className="rounded-input border border-border bg-surface-inset p-5">
         <h3 className="mb-3 text-base font-bold text-text-primary">Bit Map</h3>
         <BitGrid original={sha256Hash} modified={sha256Modified} diffCount={bitDiff} />
       </div>
 
       {/* ── Bit Counter + Bar ── */}
-      <div className="rounded-input border border-border bg-[#0E1521] p-5">
+      <div className="rounded-input border border-border bg-surface-inset p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h3 className="text-base font-bold text-text-primary">Bit Difference</h3>

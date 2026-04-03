@@ -104,13 +104,13 @@ export function TheoryPanel({ moduleKey, children, className = "" }: TheoryPanel
 
 type DotColor = "accent" | "teal" | "danger" | "info" | "warning" | "success";
 
-const DOT_COLORS: Record<DotColor, string> = {
-  accent: "#F7931A",
-  teal: "#36CFC9",
-  danger: "#FF6B6B",
-  info: "#7DD3FC",
-  warning: "#FBBF24",
-  success: "#22C55E",
+const DOT_BG: Record<DotColor, string> = {
+  accent: "bg-accent",
+  teal: "bg-teal",
+  danger: "bg-danger",
+  info: "bg-info",
+  warning: "bg-warning-text",
+  success: "bg-success",
 };
 
 interface TheoryConceptCardProps {
@@ -123,10 +123,7 @@ export function TheoryConceptCard({ dot, title, description }: TheoryConceptCard
   return (
     <div className="rounded-callout border border-border bg-surface-raised p-4">
       <div className="flex items-center gap-2.5">
-        <span
-          className="inline-block h-3 w-3 shrink-0 rounded-full"
-          style={{ background: DOT_COLORS[dot] }}
-        />
+        <span className={`inline-block h-3 w-3 shrink-0 rounded-full ${DOT_BG[dot]}`} />
         <span className="text-[15px] font-bold text-text-primary">{title}</span>
       </div>
       <p className="mt-1.5 pl-[22px] text-[13px] leading-relaxed text-text-secondary [overflow-wrap:anywhere]">

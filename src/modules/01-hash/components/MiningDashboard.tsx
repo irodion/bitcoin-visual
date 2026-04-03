@@ -70,7 +70,7 @@ export function MiningDashboard({
   }
 
   return (
-    <div className="space-y-3 rounded-input border border-border bg-[#0E1521] p-5">
+    <div className="space-y-3 rounded-input border border-border bg-surface-inset p-5">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         <div>
           <div className="text-[11px] font-medium uppercase tracking-widest text-text-secondary">

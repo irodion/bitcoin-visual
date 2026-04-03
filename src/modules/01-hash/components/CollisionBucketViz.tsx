@@ -91,7 +91,7 @@ export function CollisionBucketViz({
           <div className="mb-1 text-xs text-text-secondary">
             Slots filled: {slotsFilled.toLocaleString()} of {totalSlots.toLocaleString()}
           </div>
-          <div className="h-3 w-full overflow-hidden rounded-full bg-[#131C2A]">
+          <div className="h-3 w-full overflow-hidden rounded-full bg-surface-inset">
             <div
               className={`h-full transition-all duration-150 ${collision ? "bg-danger" : "bg-teal"}`}
               style={{ width: `${(slotsFilled / totalSlots) * 100}%` }}

@@ -25,7 +25,7 @@ export function UTXOCoin({ utxo, isSelected, onToggle }: UTXOCoinProps) {
       transition={{ duration: 0.15 }}
       className={`cursor-pointer rounded-callout border p-4 text-left transition-all ${
         isSelected
-          ? "border-accent bg-accent-muted shadow-[0_0_16px_rgba(247,147,26,0.2)]"
+          ? "border-accent bg-accent-muted shadow-(--shadow-glow-accent)"
           : "border-border bg-surface-raised hover:border-border-strong"
       }`}
     >
@@ -35,7 +35,7 @@ export function UTXOCoin({ utxo, isSelected, onToggle }: UTXOCoinProps) {
           style={{ background: `${utxo.color}18`, color: utxo.color }}
           aria-hidden="true"
         >
-          {isSelected ? "\u2713" : "\u25CB"}
+          {isSelected ? "✓" : "○"}
         </span>
         <span className="font-mono text-lg font-bold text-text-primary">
           {utxo.valueBTC}
