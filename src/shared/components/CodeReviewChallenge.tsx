@@ -119,11 +119,11 @@ function highlightPseudo(code: string): ReactNode {
 function ResultBanner({ correct }: { correct: boolean }) {
   return (
     <div
-      className={`flex items-center gap-2.5 rounded-pill border px-4 py-2.5 text-sm font-semibold ${
+      className={
         correct
-          ? "border-success/30 bg-success/10 text-success"
-          : "border-danger/30 bg-danger/10 text-danger"
-      }`}
+          ? "flex items-center gap-2.5 rounded-pill border border-success/30 bg-success/10 px-4 py-2.5 text-sm font-semibold text-success"
+          : "flex items-center gap-2.5 rounded-pill border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm font-semibold text-danger"
+      }
       role="status"
     >
       <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -157,13 +157,14 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
   const isCorrect = submitted && selectedKey === challenge.correctKey;
 
   // Compute digests for reveal
-  const digests = useMemo(() => {
-    if (!submitted) return null;
-    return challenge.options.map((opt) => ({
+  const { digests, hasComputedDigests } = useMemo(() => {
+    if (!submitted) return { digests: null, hasComputedDigests: false };
+    const computed = challenge.options.map((opt) => ({
       key: opt.key,
       label: opt.label,
       hex: opt.computeDigest ? bytesToHex(opt.computeDigest(challenge.referenceInput)) : null,
     }));
+    return { digests: computed, hasComputedDigests: computed.some((d) => d.hex !== null) };
   }, [submitted, challenge]);
 
   const handleSubmit = useCallback(() => {
@@ -238,14 +239,23 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
           const isSelected = selectedKey === opt.key;
           const isCorrectOption = opt.key === challenge.correctKey;
 
-          let borderClass = "border-border hover:border-border-strong";
-          if (submitted && isCorrectOption) {
-            borderClass = "border-success/50";
-          } else if (submitted && isSelected && !isCorrectOption) {
-            borderClass = "border-danger/50";
-          } else if (isSelected) {
-            borderClass = "border-accent shadow-(--shadow-glow-accent-inset)";
-          }
+          const buttonClass =
+            submitted && isCorrectOption
+              ? "panel-cool w-full cursor-pointer rounded-card border border-success/50 p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default"
+              : submitted && isSelected && !isCorrectOption
+                ? "panel-cool w-full cursor-pointer rounded-card border border-danger/50 p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default"
+                : isSelected
+                  ? "panel-cool w-full cursor-pointer rounded-card border border-accent shadow-(--shadow-glow-accent-inset) p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default"
+                  : "panel-cool w-full cursor-pointer rounded-card border border-border hover:border-border-strong p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default";
+
+          const badgeClass =
+            submitted && isCorrectOption
+              ? "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold bg-success/15 text-success"
+              : submitted && isSelected && !isCorrectOption
+                ? "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold bg-danger/15 text-danger"
+                : isSelected
+                  ? "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold bg-accent/15 text-accent"
+                  : "flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold bg-accent/10 text-accent";
 
           return (
             <button
@@ -260,22 +270,10 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
               disabled={submitted}
               tabIndex={isSelected || (!selectedKey && idx === 0) ? 0 : -1}
               onClick={() => setSelectedKey(opt.key)}
-              className={`panel-cool w-full cursor-pointer rounded-card border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default ${borderClass}`}
+              className={buttonClass}
             >
               <div className="mb-3 flex items-center gap-2.5">
-                <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
-                    submitted && isCorrectOption
-                      ? "bg-success/15 text-success"
-                      : submitted && isSelected && !isCorrectOption
-                        ? "bg-danger/15 text-danger"
-                        : isSelected
-                          ? "bg-accent/15 text-accent"
-                          : "bg-accent/10 text-accent"
-                  }`}
-                >
-                  {opt.key}
-                </span>
+                <span className={badgeClass}>{opt.key}</span>
                 <span className="text-sm font-semibold text-text-primary">{opt.label}</span>
               </div>
               <pre className="overflow-x-auto rounded-callout bg-input-bg p-4 font-mono text-xs leading-relaxed text-text-primary md:text-sm">
@@ -325,7 +323,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
             </div>
 
             {/* Live digest comparison */}
-            {digests && digests.some((d) => d.hex !== null) && (
+            {hasComputedDigests && digests && (
               <div className="space-y-3">
                 <p className={SECTION_LABEL}>Computed digests for comparison</p>
                 {digests.map(

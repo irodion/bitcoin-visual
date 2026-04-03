@@ -173,7 +173,8 @@ describe("CodeReviewChallenge", () => {
     await user.click(screen.getByRole("button", { name: "Try again" }));
 
     // Back to initial state — submit button present and disabled; wait for exit animation
-    expect(screen.getByRole("button", { name: "Submit answer" })).toBeDisabled();
+    const submitBtn = await screen.findByRole("button", { name: "Submit answer" });
+    expect(submitBtn).toBeDisabled();
     await waitFor(() =>
       expect(screen.queryByText("Correct — nice catch!")).not.toBeInTheDocument(),
     );

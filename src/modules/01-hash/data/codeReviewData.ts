@@ -2,7 +2,7 @@ import { sha256, sha256d } from "../../../shared/crypto/index.ts";
 import type { CodeReviewChallengeData } from "../../../shared/components/CodeReviewChallenge.tsx";
 
 /**
- * Reference input: the hex-encoded bytes of a minimal serialized transaction.
+ * Reference input: UTF-8 bytes of a sample transaction string.
  * The exact value doesn't matter — it just needs to be consistent across all
  * three digest computations so users can compare outputs in the reveal.
  */
