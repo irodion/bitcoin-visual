@@ -72,32 +72,73 @@ function PeerNode({
   );
 }
 
-function FakeChainView({ phase }: { phase: EclipsePhase }) {
-  if (phase !== "fake-chain" && phase !== "defense") return null;
+function ChainComparisonView({ phase }: { phase: EclipsePhase }) {
+  if (phase !== "eclipsed" && phase !== "fake-chain" && phase !== "defense") return null;
 
-  const blockStyle = "h-6 w-10 rounded border text-center text-[9px] leading-6 font-mono";
+  const blockStyle = "h-6 rounded border text-center text-[9px] leading-6 font-mono";
+
+  // Progressive story: isolation → divergence → recovery
+  const victimBlocks =
+    phase === "eclipsed"
+      ? [100, 101, 102]
+      : phase === "fake-chain"
+        ? [100, 101, 102, "A1", "A2"]
+        : [100, 101, 102, 103, 104, 105, 106, 107];
+
+  const realBlocks =
+    phase === "eclipsed" ? [100, 101, 102] : [100, 101, 102, 103, 104, 105, 106, 107];
+
+  const victimLabel =
+    phase === "eclipsed"
+      ? "Victim — isolated, chain frozen"
+      : phase === "fake-chain"
+        ? "Victim — fed attacker blocks (shorter chain)"
+        : "Victim — reconnected, synced to longest chain";
+
+  const isRecovered = phase === "defense";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 grid gap-4 md:grid-cols-2"
+      className="mt-4 space-y-3"
     >
-      <div className="rounded-inner border border-danger/30 bg-danger/5 p-3">
-        <p className="mb-2 text-xs font-semibold text-danger">Victim sees (attacker chain)</p>
-        <div className="flex items-center gap-1">
-          {["#1", "#2", "#3"].map((b) => (
-            <div key={b} className={`${blockStyle} border-danger/40 text-danger`}>
-              {b}
-            </div>
-          ))}
+      <div
+        className={
+          isRecovered
+            ? "rounded-inner border border-success/30 bg-success/5 p-3"
+            : "rounded-inner border border-danger/30 bg-danger/5 p-3"
+        }
+      >
+        <p className={`mb-2 text-xs font-semibold ${isRecovered ? "text-success" : "text-danger"}`}>
+          {victimLabel}
+        </p>
+        <div className="flex items-center gap-1 overflow-x-auto">
+          {victimBlocks.map((b) => {
+            const isAttackerBlock = typeof b === "string";
+            const normalBlockClass = isRecovered
+              ? "w-10 border-success/40 text-success"
+              : "w-10 border-danger/40 text-danger";
+            return (
+              <div
+                key={b}
+                className={`${blockStyle} shrink-0 ${
+                  isAttackerBlock
+                    ? "w-10 border-danger/60 bg-danger/10 text-danger"
+                    : normalBlockClass
+                }`}
+              >
+                {b}
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="rounded-inner border border-success/30 bg-success/5 p-3">
-        <p className="mb-2 text-xs font-semibold text-success">Real network</p>
-        <div className="flex items-center gap-1">
-          {["#1", "#2", "#3", "#4", "#5", "#6"].map((b) => (
-            <div key={b} className={`${blockStyle} border-success/40 text-success`}>
+        <p className="mb-2 text-xs font-semibold text-success">Real network — keeps growing</p>
+        <div className="flex items-center gap-1 overflow-x-auto">
+          {realBlocks.map((b) => (
+            <div key={b} className={`${blockStyle} w-10 shrink-0 border-success/40 text-success`}>
               {b}
             </div>
           ))}
@@ -231,7 +272,7 @@ export function EclipseAttackDemo({
         </motion.p>
       </AnimatePresence>
 
-      <FakeChainView phase={phase} />
+      <ChainComparisonView phase={phase} />
 
       <div className="flex flex-wrap items-center gap-3">
         <button type="button" onClick={onAdvance} className={BTN_PRIMARY} disabled={isTerminal}>
