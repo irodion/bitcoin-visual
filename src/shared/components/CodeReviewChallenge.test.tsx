@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vite-plus/test";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vite-plus/test";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CodeReviewChallenge, type CodeReviewChallengeData } from "./CodeReviewChallenge";
@@ -37,8 +37,15 @@ const MOCK_CHALLENGE: CodeReviewChallengeData = {
   },
 };
 
+// Mock Math.random to produce identity shuffle (0.9 → Fisher-Yates picks
+// index 2 then 1, leaving [0,1,2] unchanged) so tests can rely on option order.
 beforeEach(() => {
+  vi.spyOn(Math, "random").mockReturnValue(0.9);
   useProgressStore.getState().reset();
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
 
 describe("CodeReviewChallenge", () => {
