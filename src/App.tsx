@@ -9,6 +9,7 @@ import {
 } from "./shared/components/index.ts";
 
 const Landing = lazy(() => import("./pages/Landing"));
+const WhyBitcoinExists = lazy(() => import("./modules/00-intro/WhyBitcoinExists"));
 const HashPlayground = lazy(() => import("./modules/01-hash/HashPlayground"));
 const KeysExplorer = lazy(() => import("./modules/02-keys/KeysExplorer"));
 const UTXOBuilder = lazy(() => import("./modules/03-utxo/UTXOBuilder"));
@@ -31,6 +32,7 @@ export default function App() {
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/intro" element={<WhyBitcoinExists />} />
               <Route path="/hash" element={<HashPlayground />} />
               <Route path="/keys" element={<KeysExplorer />} />
               <Route path="/utxo" element={<UTXOBuilder />} />

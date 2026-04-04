@@ -58,17 +58,17 @@ describe("ConceptChain", () => {
       renderWithRouter(<ConceptChain />);
     });
     const arrows = screen.getAllByText("→");
-    // 7 items in grid-cols-4: row 1 has 3 arrows, row 2 has 2 arrows = 5 total
-    expect(arrows.length).toBe(5);
+    // 8 items in grid-cols-4: row 1 has 3 arrows, row 2 has 3 arrows = 6 total
+    expect(arrows.length).toBe(6);
   });
 
   it("highlights recommended module with accent ring", async () => {
     await act(async () => {
       renderWithRouter(<ConceptChain />);
     });
-    // First uncompleted module (hash) should be recommended — renders in desktop + mobile
-    const hashLinks = screen.getAllByLabelText("Hash Playground, recommended");
-    const hasRing = hashLinks.some((link) => link.querySelector(".ring-2") !== null);
+    // First uncompleted module (intro) should be recommended — renders in desktop + mobile
+    const introLinks = screen.getAllByLabelText("Why Bitcoin Exists, recommended");
+    const hasRing = introLinks.some((link) => link.querySelector(".ring-2") !== null);
     expect(hasRing).toBe(true);
   });
 

@@ -23,6 +23,31 @@ export interface ModuleInfo {
 
 export const MODULES: ModuleInfo[] = [
   {
+    key: "intro",
+    number: 0,
+    title: "Why Bitcoin Exists",
+    description:
+      "The problems Bitcoin solves and how a peer-to-peer network replaces trusted intermediaries.",
+    route: "/intro",
+    color: "#F7931A",
+    active: true,
+    estimatedMinutes: 8,
+    prerequisites: [],
+    storyGroup: "core",
+    storyOrder: 0,
+    storyRole: "Introduction",
+    storyBefore: "Start of the story.",
+    storyNow:
+      "Understand why a new kind of money was needed and how Bitcoin's design addresses the double-spend problem.",
+    storyNext: "Learn the cryptographic fingerprints that make it all possible.",
+    nextModuleKey: "hash",
+    previousModuleKey: null,
+    sidebarLabelShort: "Intro",
+    landingCta: "Begin the journey",
+    storyRecap:
+      "You learned why trusted intermediaries fail and how Bitcoin's peer-to-peer network solves double-spending.",
+  },
+  {
     key: "hash",
     number: 1,
     title: "Hash Playground",
@@ -39,7 +64,7 @@ export const MODULES: ModuleInfo[] = [
     storyNow: "Learn how Bitcoin creates irreversible fingerprints from any input.",
     storyNext: "Those fingerprints help build keys, addresses, and IDs.",
     nextModuleKey: "keys",
-    previousModuleKey: null,
+    previousModuleKey: "intro",
     sidebarLabelShort: "Hash",
     landingCta: "Start with fingerprints",
     storyRecap: "You learned that SHA-256 creates a unique 256-bit fingerprint for any input.",
@@ -207,6 +232,7 @@ export const MODULES: ModuleInfo[] = [
 
 /** Modules in the concept chain (excludes Attack Lab which is a standalone lab) */
 export const LEARNING_PATH: string[] = [
+  "intro",
   "hash",
   "keys",
   "utxo",

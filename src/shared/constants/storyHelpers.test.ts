@@ -52,8 +52,12 @@ describe("getPreviousModule", () => {
     expect(getPreviousModule("keys")?.key).toBe("hash");
   });
 
+  it("returns intro before hash", () => {
+    expect(getPreviousModule("hash")?.key).toBe("intro");
+  });
+
   it("returns null for the first core module", () => {
-    expect(getPreviousModule("hash")).toBeNull();
+    expect(getPreviousModule("intro")).toBeNull();
   });
 
   it("returns null for attacks", () => {
@@ -62,9 +66,9 @@ describe("getPreviousModule", () => {
 });
 
 describe("getCoreModules", () => {
-  it("returns 7 core modules", () => {
+  it("returns 8 core modules", () => {
     const core = getCoreModules();
-    expect(core).toHaveLength(7);
+    expect(core).toHaveLength(8);
     expect(core.every((m) => m.storyGroup === "core")).toBe(true);
   });
 
@@ -83,21 +87,26 @@ describe("getLabModules", () => {
 });
 
 describe("getRecommendedModule", () => {
-  it("returns hash when nothing is completed", () => {
-    expect(getRecommendedModule([])?.key).toBe("hash");
+  it("returns intro when nothing is completed", () => {
+    expect(getRecommendedModule([])?.key).toBe("intro");
   });
 
-  it("returns keys when hash is completed", () => {
-    expect(getRecommendedModule(["hash"])?.key).toBe("keys");
+  it("returns hash when intro is completed", () => {
+    expect(getRecommendedModule(["intro"])?.key).toBe("hash");
   });
 
-  it("returns utxo when hash and keys are completed", () => {
-    expect(getRecommendedModule(["hash", "keys"])?.key).toBe("utxo");
+  it("returns keys when intro and hash are completed", () => {
+    expect(getRecommendedModule(["intro", "hash"])?.key).toBe("keys");
+  });
+
+  it("returns utxo when intro, hash, and keys are completed", () => {
+    expect(getRecommendedModule(["intro", "hash", "keys"])?.key).toBe("utxo");
   });
 
   it("returns null when all core modules are completed", () => {
     expect(
       getRecommendedModule([
+        "intro",
         "hash",
         "keys",
         "utxo",
@@ -110,11 +119,12 @@ describe("getRecommendedModule", () => {
   });
 
   it("ignores non-core completed modules", () => {
-    expect(getRecommendedModule(["attacks"])?.key).toBe("hash");
+    expect(getRecommendedModule(["attacks"])?.key).toBe("intro");
   });
 });
 
 describe("getModuleBadgeLabel", () => {
+  const intro = getModuleByKey("intro")!;
   const hash = getModuleByKey("hash")!;
   const keys = getModuleByKey("keys")!;
   const attacks = getModuleByKey("attacks")!;
@@ -133,15 +143,19 @@ describe("getModuleBadgeLabel", () => {
   });
 
   it("returns Recommended for the first uncompleted core module", () => {
-    expect(getModuleBadgeLabel(hash, [])).toBe("Recommended");
+    expect(getModuleBadgeLabel(intro, [])).toBe("Recommended");
   });
 
   it("returns Not started for a core module that is not recommended", () => {
     expect(getModuleBadgeLabel(utxo, [])).toBe("Not started");
   });
 
-  it("returns Recommended for keys when hash is completed", () => {
-    expect(getModuleBadgeLabel(keys, ["hash"])).toBe("Recommended");
+  it("returns Recommended for hash when intro is completed", () => {
+    expect(getModuleBadgeLabel(hash, ["intro"])).toBe("Recommended");
+  });
+
+  it("returns Recommended for keys when intro and hash are completed", () => {
+    expect(getModuleBadgeLabel(keys, ["intro", "hash"])).toBe("Recommended");
   });
 
   it("Current takes priority over Completed", () => {
