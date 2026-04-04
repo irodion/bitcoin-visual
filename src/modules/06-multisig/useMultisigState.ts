@@ -33,7 +33,7 @@ export interface Cosigner {
   publicKey: Uint8Array | null;
 }
 
-export type MultisigTabKey = "setup" | "sign" | "models";
+export type MultisigTabKey = "setup" | "sign" | "models" | "code-review";
 
 export interface MultisigState {
   activeTab: MultisigTabKey;

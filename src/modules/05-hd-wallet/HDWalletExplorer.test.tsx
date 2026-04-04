@@ -300,6 +300,47 @@ describe("HDWalletExplorer", () => {
     expect(await screen.findByText("Start Demo")).toBeInTheDocument();
   });
 
+  it("Code Review tab renders and is clickable", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    const codeReviewTab = screen.getByRole("tab", { name: /code review/i });
+    expect(codeReviewTab).toBeInTheDocument();
+
+    await user.click(codeReviewTab);
+
+    expect(await screen.findByText("Review: child key derivation")).toBeInTheDocument();
+  });
+
+  it("Code Review tab shows all three options", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: /code review/i }));
+
+    expect(await screen.findByText("Version A")).toBeInTheDocument();
+    expect(screen.getByText("Version B")).toBeInTheDocument();
+    expect(screen.getByText("Version C")).toBeInTheDocument();
+  });
+
+  it("Code Review tab updates theory panel", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<HDWalletExplorer />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: /code review/i }));
+
+    await waitFor(() => {
+      const headings = screen.getAllByText("Derivation Security");
+      expect(headings.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
   it("Backup demo: Simulate Device Loss disabled before confirming save", async () => {
     const user = userEvent.setup();
     await act(async () => {

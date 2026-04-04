@@ -5,6 +5,7 @@ import {
   ValueFlowArrow,
   TheoryConceptCard,
   TheoryCallout,
+  CodeReviewChallenge,
 } from "../../shared/components/index.ts";
 import { CONTAINER_VARIANTS, STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useHDState } from "./useHDState.ts";
@@ -14,12 +15,14 @@ import { PathBuilder } from "./PathBuilder.tsx";
 import { KeyTreeView } from "./KeyTreeView.tsx";
 import { BackupRecoveryTab } from "./tabs/BackupRecoveryTab.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
+import { HD_WALLET_CODE_REVIEW } from "./data/codeReviewData.ts";
 
-type TabKey = "explorer" | "backup";
+type TabKey = "explorer" | "backup" | "code-review";
 
 const TABS = [
   { key: "explorer", label: "Explorer" },
   { key: "backup", label: "Backup & Recovery" },
+  { key: "code-review", label: "Code Review" },
 ];
 
 function ExplorerTheory() {
@@ -108,9 +111,47 @@ function BackupRecoveryTheory() {
   );
 }
 
+function CodeReviewTheory() {
+  return (
+    <>
+      <h3>Derivation Security</h3>
+      <p>
+        Not all derivation steps are equal. <strong>Hardened derivation</strong> uses the parent
+        private key as HMAC input, so an xpub alone cannot reproduce the child. This is the boundary
+        that protects account isolation in BIP-84 paths.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="Hardened (′)"
+          description="HMAC input = 0x00 ∥ parent private key ∥ index. Requires the private key — xpub cannot derive this child."
+        />
+        <TheoryConceptCard
+          dot="info"
+          title="Non-Hardened"
+          description="HMAC input = parent public key ∥ index. An xpub can derive the child public key — enabling watch-only wallets."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="Chain Code"
+          description="Each derivation produces a fresh chain code from HMAC-SHA-512. Reusing the parent chain code breaks the derivation chain."
+        />
+      </div>
+
+      <TheoryCallout
+        label="SECURITY"
+        title="xpub + one child private key = all sibling private keys"
+        description="If an attacker obtains your account xpub and any single non-hardened child private key, they can compute every sibling. This is why account-level derivation is always hardened."
+      />
+    </>
+  );
+}
+
 const THEORY_CONTENT: Record<TabKey, () => React.JSX.Element> = {
   explorer: ExplorerTheory,
   backup: BackupRecoveryTheory,
+  "code-review": CodeReviewTheory,
 };
 
 export default function HDWalletExplorer() {
@@ -129,7 +170,11 @@ export default function HDWalletExplorer() {
       moduleKey="hd-wallet"
       title="HD Wallet Tree"
       moduleNumber={5}
-      subtitle="Generate a mnemonic, derive a master seed, and explore BIP-84 key derivation."
+      subtitle={
+        activeTab === "code-review"
+          ? "Review a teammate's child key derivation and spot the security flaw."
+          : "Generate a mnemonic, derive a master seed, and explore BIP-84 key derivation."
+      }
       theoryContent={<Theory />}
       tabConfig={{
         tabs: TABS,
@@ -233,6 +278,17 @@ export default function HDWalletExplorer() {
             exit="hidden"
           >
             <BackupRecoveryTab hdState={state} />
+          </motion.div>
+        )}
+        {activeTab === "code-review" && (
+          <motion.div
+            key="code-review"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <CodeReviewChallenge challenge={HD_WALLET_CODE_REVIEW} />
           </motion.div>
         )}
       </AnimatePresence>
