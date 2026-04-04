@@ -35,7 +35,7 @@ describe("Landing", () => {
     await act(async () => {
       renderWithRouter(<Landing />);
     });
-    expect(screen.getByText("8 guided chapters + 1 security lab")).toBeInTheDocument();
+    expect(screen.getByText("1 intro + 7 chapters + 1 security lab")).toBeInTheDocument();
   });
 
   it("renders The Bitcoin Story section heading", async () => {
@@ -106,7 +106,7 @@ describe("Landing", () => {
     await act(async () => {
       renderWithRouter(<Landing />);
     });
-    expect(screen.getByText("2 of 8 chapters completed")).toBeInTheDocument();
+    expect(screen.getByText("2 of 8 modules completed")).toBeInTheDocument();
   });
 
   it("shows Explore the Security Lab when all core complete", async () => {

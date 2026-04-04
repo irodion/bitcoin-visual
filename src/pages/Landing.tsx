@@ -191,8 +191,8 @@ export default function Landing() {
           </p>
           <div className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-text-muted">
             {hasProgress
-              ? `${coreCompleted} of ${coreModules.length} chapters completed`
-              : `${coreModules.length} guided chapters + ${labModules.length} security lab`}
+              ? `${coreCompleted} of ${coreModules.length} modules completed`
+              : `1 intro + ${coreModules.length - 1} chapters + ${labModules.length} security lab`}
           </div>
           <Link to={ctaRoute} className={`${BTN_PRIMARY} mt-5 inline-flex items-center gap-2`}>
             {ctaLabel}
