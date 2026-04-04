@@ -76,7 +76,7 @@ function TheoryContent() {
 export default function UTXOBuilder() {
   const state = useUTXOState();
   const { completed, complete } = useModuleCompletion("utxo");
-  const [activeTab, setActiveTab] = useState<UTXOTabKey>("legacy");
+  const [activeTab, setActiveTab] = useState<UTXOTabKey>(state.isSegWit ? "segwit" : "legacy");
 
   useEffect(() => {
     if (!completed && state.isValid && state.txid) complete();

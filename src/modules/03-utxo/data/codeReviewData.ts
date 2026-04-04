@@ -62,7 +62,7 @@ export const UTXO_CODE_REVIEW: CodeReviewChallengeData = {
     summary:
       "Bitcoin does not debit balances. It destroys old outputs and creates new ones. If you want leftover value back, you must create an explicit change output.",
     details:
-      'Version A passes an amount to addInput — but Bitcoin inputs consume the entire UTXO. There is no "partial spend." The 0.299 BTC left "inside" the UTXO is actually destroyed, making the true fee 0.3 BTC instead of 0.001. Version C creates outputs totaling exactly 0.8 BTC (0.5 + 0.3), leaving zero for the miner fee. A real node would reject this or the miner gets nothing. The correct change amount is 0.299 BTC (input minus recipient minus fee).',
+      'Version A passes an amount to addInput — but Bitcoin inputs consume the entire UTXO. There is no "partial spend." The 0.299 BTC left "inside" the UTXO is actually destroyed, making the true fee 0.3 BTC instead of 0.001. Version C creates outputs totaling exactly 0.8 BTC (0.5 + 0.3), leaving zero for the miner fee. A zero-fee transaction is consensus-valid but will be ignored by most relays and miners who have no incentive to include it. The correct change amount is 0.299 BTC (input minus recipient minus fee).',
     dangerNote:
       "Version A reflects account-balance thinking — the most common mental model error for developers coming from Ethereum or traditional banking. Version C looks almost right but forgets that fee = inputs − outputs, so every satoshi must be explicitly accounted for.",
   },
