@@ -45,7 +45,7 @@ describe("StoryRibbon", () => {
 
   it("shows Start instead of prev link for first module", async () => {
     await act(async () => {
-      renderWithRouter(<StoryRibbon currentModuleKey="hash" />);
+      renderWithRouter(<StoryRibbon currentModuleKey="intro" />);
     });
     expect(screen.getByText("Start")).toBeInTheDocument();
   });

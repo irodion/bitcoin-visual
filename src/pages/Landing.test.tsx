@@ -5,6 +5,7 @@ import { useProgressStore } from "../shared/stores/index.ts";
 import Landing from "./Landing";
 
 const CORE_MODULE_KEYS = [
+  "intro",
   "hash",
   "keys",
   "utxo",
@@ -34,7 +35,7 @@ describe("Landing", () => {
     await act(async () => {
       renderWithRouter(<Landing />);
     });
-    expect(screen.getByText("7 guided chapters + 1 security lab")).toBeInTheDocument();
+    expect(screen.getByText("1 intro + 7 chapters + 1 security lab")).toBeInTheDocument();
   });
 
   it("renders The Bitcoin Story section heading", async () => {
@@ -91,21 +92,21 @@ describe("Landing", () => {
   });
 
   it("shows Resume Your Story after progress", async () => {
-    useProgressStore.getState().markCompleted("hash");
+    useProgressStore.getState().markCompleted("intro");
     await act(async () => {
       renderWithRouter(<Landing />);
     });
     const ctaLink = screen.getByText("Resume Your Story").closest("a");
-    expect(ctaLink).toHaveAttribute("href", "/keys");
+    expect(ctaLink).toHaveAttribute("href", "/hash");
   });
 
   it("shows progress count after completing modules", async () => {
+    useProgressStore.getState().markCompleted("intro");
     useProgressStore.getState().markCompleted("hash");
-    useProgressStore.getState().markCompleted("keys");
     await act(async () => {
       renderWithRouter(<Landing />);
     });
-    expect(screen.getByText("2 of 7 chapters completed")).toBeInTheDocument();
+    expect(screen.getByText("2 of 8 modules completed")).toBeInTheDocument();
   });
 
   it("shows Explore the Security Lab when all core complete", async () => {
