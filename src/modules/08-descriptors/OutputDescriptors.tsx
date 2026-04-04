@@ -1,18 +1,67 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
+import {
+  CodeReviewChallenge,
+  ModuleLayout,
+  TheoryConceptCard,
+  TheoryCallout,
+} from "../../shared/components/index.ts";
 import { STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useDescriptorState, type DescriptorTabKey } from "./useDescriptorState.ts";
 import { AnatomyPanel } from "./AnatomyPanel.tsx";
 import { DerivePanel } from "./DerivePanel.tsx";
 import { BuilderPanel } from "./BuilderPanel.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
+import { DESCRIPTORS_CODE_REVIEW } from "./data/codeReviewData.ts";
 
 const TABS = [
   { key: "anatomy", label: "Anatomy" },
   { key: "derive", label: "Derive" },
   { key: "builder", label: "Builder" },
+  { key: "code-review", label: "Code Review" },
 ];
+
+function CodeReviewTheory() {
+  return (
+    <>
+      <h3>Descriptor Import</h3>
+      <p>
+        Importing a wallet from a descriptor means adopting its{" "}
+        <strong>exact spending policy</strong>. Every field in the string carries meaning that
+        affects which addresses are generated and how funds can be spent.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="Descriptor = Policy"
+          description="The script wrapper (wpkh, wsh, tr) defines the spending condition. It is not a default that can be assumed — it is the policy itself."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="Origin Matters"
+          description="[fingerprint/path] tells hardware wallets which master key derived this xpub. Without it, the signing device cannot locate its key."
+        />
+        <TheoryConceptCard
+          dot="success"
+          title="Wildcards Generate Addresses"
+          description="/0/* means 'derive a child at every index on the receive chain.' Remove the wildcard and the wallet cannot generate the address sequence."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="Checksum Protects"
+          description="The 8-character BCH checksum catches up to 4 transcription errors. Skipping it means silently accepting a corrupted descriptor."
+        />
+      </div>
+
+      <TheoryCallout
+        label="KEY INSIGHT"
+        title="Import the policy, not just the key"
+        description="A descriptor encodes script type, key origin, derivation strategy, and an error-detecting checksum. Drop any part and you are no longer describing the same wallet."
+      />
+    </>
+  );
+}
 
 function TheoryContent() {
   return (
@@ -93,8 +142,12 @@ export default function OutputDescriptors() {
       moduleKey="descriptors"
       title="Output Descriptors"
       moduleNumber={7}
-      subtitle="Parse, expand, and build wallet descriptors — the universal language for Bitcoin wallets."
-      theoryContent={<TheoryContent />}
+      subtitle={
+        state.activeTab === "code-review"
+          ? "Review a teammate's descriptor import code and spot the flaw."
+          : "Parse, expand, and build wallet descriptors — the universal language for Bitcoin wallets."
+      }
+      theoryContent={state.activeTab === "code-review" ? <CodeReviewTheory /> : <TheoryContent />}
       tabConfig={{
         tabs: TABS,
         activeTab: state.activeTab,
@@ -164,6 +217,17 @@ export default function OutputDescriptors() {
               builtDescriptor={state.builtDescriptor}
               builtDescriptorError={state.builtDescriptorError}
             />
+          </motion.div>
+        )}
+        {state.activeTab === "code-review" && (
+          <motion.div
+            key="code-review"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <CodeReviewChallenge challenge={DESCRIPTORS_CODE_REVIEW} />
           </motion.div>
         )}
       </AnimatePresence>

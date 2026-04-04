@@ -52,6 +52,9 @@ const ACCENT_FUNCTIONS = new Set([
   "writeLE32",
   "toUint256",
   "mine",
+  "parseDescriptor",
+  "validateChecksum",
+  "extractXpub",
 ]);
 
 function highlightPseudo(code: string): ReactNode {
