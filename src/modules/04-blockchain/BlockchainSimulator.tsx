@@ -1,7 +1,13 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ModuleLayout, TheoryConceptCard, TheoryCallout } from "../../shared/components/index.ts";
+import {
+  ModuleLayout,
+  TheoryConceptCard,
+  TheoryCallout,
+  CodeReviewChallenge,
+} from "../../shared/components/index.ts";
 import { NetworkTab } from "./network/NetworkTab.tsx";
+import { BLOCKCHAIN_CODE_REVIEW } from "./data/codeReviewData.ts";
 import {
   BTN_PRIMARY,
   BTN_GHOST,
@@ -16,11 +22,12 @@ import { MerkleTreePanel } from "./MerkleTreePanel.tsx";
 import { BlockChainConnectors } from "./ChainLink.tsx";
 import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 
-type BlockchainTabKey = "blockchain" | "network";
+type BlockchainTabKey = "blockchain" | "network" | "code-review";
 
 const TABS = [
   { key: "blockchain", label: "Blockchain" },
   { key: "network", label: "Network" },
+  { key: "code-review", label: "Code Review" },
 ];
 
 function BlockchainTheory() {
@@ -136,9 +143,47 @@ function NetworkTheory() {
   );
 }
 
+function CodeReviewTheory() {
+  return (
+    <>
+      <h3>What Gets Hashed?</h3>
+      <p>
+        Mining bugs are subtle because every version produces a hash. The difference between hashing
+        the header vs. hashing transactions, or single vs. double SHA-256, only shows up when you
+        compare actual outputs.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="Header vs Transactions"
+          description="Miners hash the 80-byte block header, not the transactions directly. Transactions are committed via the Merkle root inside the header."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="SHA-256d"
+          description="Bitcoin uses double SHA-256 for block hashing. Single SHA-256 produces a completely different digest — both are valid hashes, but only one is the Bitcoin block hash."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="Numeric Target"
+          description="Leading zeros are a human shorthand. The actual check is: is the 256-bit hash numerically less than a target value? This allows fine-grained difficulty between powers of 16."
+        />
+      </div>
+
+      <TheoryCallout
+        label="COMMON MISCONCEPTION"
+        title="Miners hash transactions"
+        description="A frequent simplification says miners 'hash the block.' Precisely, they hash the 80-byte header. The Merkle root inside the header is the only cryptographic link to the transaction list."
+      />
+    </>
+  );
+}
+
 const THEORY_CONTENT: Record<BlockchainTabKey, () => React.JSX.Element> = {
   blockchain: BlockchainTheory,
   network: NetworkTheory,
+  "code-review": CodeReviewTheory,
 };
 
 export default function BlockchainSimulator() {
@@ -190,7 +235,9 @@ export default function BlockchainSimulator() {
       subtitle={
         activeTab === "blockchain"
           ? "Mine blocks, adjust difficulty, and explore Merkle trees — all simulated in your browser."
-          : "Explore how Bitcoin nodes discover peers, propagate blocks, and defend against network attacks."
+          : activeTab === "network"
+            ? "Explore how Bitcoin nodes discover peers, propagate blocks, and defend against network attacks."
+            : "Review a teammate's mining implementation and spot the bug."
       }
       theoryContent={(() => {
         const Theory = THEORY_CONTENT[activeTab];
@@ -308,6 +355,17 @@ export default function BlockchainSimulator() {
             exit="hidden"
           >
             <NetworkTab />
+          </motion.div>
+        )}
+        {activeTab === "code-review" && (
+          <motion.div
+            key="code-review"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <CodeReviewChallenge challenge={BLOCKCHAIN_CODE_REVIEW} />
           </motion.div>
         )}
       </AnimatePresence>

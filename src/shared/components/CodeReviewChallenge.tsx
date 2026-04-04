@@ -40,7 +40,19 @@ export interface CodeReviewChallengeData {
 /* ── Minimal pseudocode highlighting ── */
 
 const TYPE_KEYWORDS = new Set(["byte[]", "int", "void", "bool", "string"]);
-const ACCENT_FUNCTIONS = new Set(["sha256", "txid", "ripemd160", "base58encode", "p2pkh"]);
+const ACCENT_FUNCTIONS = new Set([
+  "sha256",
+  "txid",
+  "ripemd160",
+  "base58encode",
+  "p2pkh",
+  "addInput",
+  "addOutput",
+  "buildSendTx",
+  "writeLE32",
+  "toUint256",
+  "mine",
+]);
 
 function highlightPseudo(code: string): ReactNode {
   const lines = code.split("\n");
