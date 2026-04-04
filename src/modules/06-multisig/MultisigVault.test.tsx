@@ -238,6 +238,47 @@ describe("MultisigVault", () => {
     });
   });
 
+  it("Code Review tab renders and is clickable", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    const codeReviewTab = screen.getByRole("tab", { name: /code review/i });
+    expect(codeReviewTab).toBeInTheDocument();
+
+    await user.click(codeReviewTab);
+
+    expect(await screen.findByText("Review: 2-of-3 spend validation")).toBeInTheDocument();
+  });
+
+  it("Code Review tab shows all three options", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: /code review/i }));
+
+    expect(await screen.findByText("Version A")).toBeInTheDocument();
+    expect(screen.getByText("Version B")).toBeInTheDocument();
+    expect(screen.getByText("Version C")).toBeInTheDocument();
+  });
+
+  it("Code Review tab updates theory panel", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<MultisigVault />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: /code review/i }));
+
+    await waitFor(() => {
+      const headings = screen.getAllByText("Script Enforcement");
+      expect(headings.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
   it("AC14: all 6 models render without crash", async () => {
     const user = userEvent.setup();
     await act(async () => {
