@@ -18,7 +18,7 @@ import type {
 } from "../../shared/crypto/index.ts";
 import { getPresets } from "./presets.ts";
 
-export type DescriptorTabKey = "anatomy" | "derive" | "builder";
+export type DescriptorTabKey = "anatomy" | "derive" | "builder" | "code-review";
 
 export interface DescriptorState {
   activeTab: DescriptorTabKey;
