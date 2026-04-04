@@ -117,32 +117,17 @@ function highlightPseudo(code: string): ReactNode {
 
 /* ── Option shuffling ── */
 
-const OPTION_KEYS: readonly ["A", "B", "C"] = ["A", "B", "C"];
-
-function shuffleOptions(challenge: CodeReviewChallengeData): {
-  options: readonly [CodeOption, CodeOption, CodeOption];
-  correctKey: "A" | "B" | "C";
-} {
-  const indices = [0, 1, 2];
-  for (let i = indices.length - 1; i > 0; i--) {
+/** Fisher-Yates shuffle of option display order. Keys and labels stay intact
+ *  so reveal text that references "Version B" etc. remains correct. */
+function shuffleOptions(
+  options: readonly [CodeOption, CodeOption, CodeOption],
+): readonly [CodeOption, CodeOption, CodeOption] {
+  const arr = [options[0], options[1], options[2]];
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-
-  const originalCorrectIdx = challenge.options.findIndex((o) => o.key === challenge.correctKey);
-
-  const shuffled = indices.map((origIdx, newIdx) => ({
-    ...challenge.options[origIdx],
-    key: OPTION_KEYS[newIdx],
-    label: `Version ${OPTION_KEYS[newIdx]}`,
-  }));
-
-  const newCorrectIdx = indices.indexOf(originalCorrectIdx);
-
-  return {
-    options: shuffled as unknown as readonly [CodeOption, CodeOption, CodeOption],
-    correctKey: OPTION_KEYS[newCorrectIdx],
-  };
+  return arr as [CodeOption, CodeOption, CodeOption];
 }
 
 /* ── Subcomponents ── */
@@ -176,7 +161,7 @@ interface CodeReviewChallengeProps {
 }
 
 export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
-  const [shuffled] = useState(() => shuffleOptions(challenge));
+  const [shuffledOptions] = useState(() => shuffleOptions(challenge.options));
   const [selectedKey, setSelectedKey] = useState<"A" | "B" | "C" | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -186,26 +171,26 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
     s.completedChallenges.includes(challenge.moduleKey),
   );
 
-  const isCorrect = submitted && selectedKey === shuffled.correctKey;
+  const isCorrect = submitted && selectedKey === challenge.correctKey;
 
   // Compute digests for reveal
   const { digests, hasComputedDigests } = useMemo(() => {
     if (!submitted) return { digests: null, hasComputedDigests: false };
-    const computed = shuffled.options.map((opt) => ({
+    const computed = shuffledOptions.map((opt) => ({
       key: opt.key,
       label: opt.label,
       hex: opt.computeDigest ? bytesToHex(opt.computeDigest(challenge.referenceInput)) : null,
     }));
     return { digests: computed, hasComputedDigests: computed.some((d) => d.hex !== null) };
-  }, [submitted, shuffled, challenge.referenceInput]);
+  }, [submitted, shuffledOptions, challenge.referenceInput]);
 
   const handleSubmit = useCallback(() => {
     if (selectedKey === null) return;
     setSubmitted(true);
-    if (selectedKey === shuffled.correctKey) {
+    if (selectedKey === challenge.correctKey) {
       markChallengeCompleted(challenge.moduleKey);
     }
-  }, [selectedKey, shuffled.correctKey, challenge.moduleKey, markChallengeCompleted]);
+  }, [selectedKey, challenge.correctKey, challenge.moduleKey, markChallengeCompleted]);
 
   const handleReset = useCallback(() => {
     setSelectedKey(null);
@@ -215,7 +200,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (submitted) return;
-      const keys = shuffled.options.map((o) => o.key);
+      const keys = shuffledOptions.map((o) => o.key);
       const currentIdx = selectedKey ? keys.indexOf(selectedKey) : -1;
       let nextIdx = -1;
 
@@ -232,7 +217,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
         optionRefs.current[nextIdx]?.focus();
       }
     },
-    [submitted, selectedKey, shuffled.options],
+    [submitted, selectedKey, shuffledOptions],
   );
 
   return (
@@ -267,9 +252,9 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
         onKeyDown={handleKeyDown}
         className="space-y-4"
       >
-        {shuffled.options.map((opt, idx) => {
+        {shuffledOptions.map((opt, idx) => {
           const isSelected = selectedKey === opt.key;
-          const isCorrectOption = opt.key === shuffled.correctKey;
+          const isCorrectOption = opt.key === challenge.correctKey;
 
           const buttonClass =
             submitted && isCorrectOption
@@ -365,7 +350,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
                         key={d.key}
                         label={d.label}
                         value={d.hex}
-                        variant={d.key === shuffled.correctKey ? "success" : "danger"}
+                        variant={d.key === challenge.correctKey ? "success" : "danger"}
                         truncate
                         maxLength={64}
                       />

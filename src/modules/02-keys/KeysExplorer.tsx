@@ -219,12 +219,12 @@ function CodeReviewTheory() {
         <TheoryConceptCard
           dot="accent"
           title="HASH160 = SHA-256 + RIPEMD-160"
-          description="Both hash rounds are required. RIPEMD-160 alone does not provide the same pre-image resistance."
+          description="The protocol chains both hashes to produce a fixed 20-byte payload for addresses — this is the HASH160 construction Bitcoin uses everywhere."
         />
         <TheoryConceptCard
           dot="danger"
           title="Public Keys Are Not Addresses"
-          description="Encoding a raw public key as Base58 does not make it an address. The hash step provides a layer of quantum resistance and a shorter representation."
+          description="Hashing decouples the raw public key from the address encoding — shorter representation, privacy until first spend, and flexibility for future script upgrades."
         />
         <TheoryConceptCard
           dot="teal"
