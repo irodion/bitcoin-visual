@@ -40,6 +40,7 @@ export interface CodeReviewChallengeData {
 /* ── Minimal pseudocode highlighting ── */
 
 const TYPE_KEYWORDS = new Set(["byte[]", "int", "void", "bool", "string"]);
+const ACCENT_FUNCTIONS = new Set(["sha256", "txid", "ripemd160", "base58encode", "p2pkh"]);
 
 function highlightPseudo(code: string): ReactNode {
   const lines = code.split("\n");
@@ -72,7 +73,7 @@ function highlightPseudo(code: string): ReactNode {
       if (nextIsFuncName && token.trim().length > 0 && !/[(){}[\],;=]/.test(token)) {
         nextIsFuncName = false;
         // Function names or variable names after a type — highlight known functions
-        if (token === "sha256" || token === "txid") {
+        if (ACCENT_FUNCTIONS.has(token)) {
           return (
             <span key={ti} className="text-accent">
               {token}
@@ -85,7 +86,7 @@ function highlightPseudo(code: string): ReactNode {
       if (/^\s*$/.test(token) || /^[(){}[\],;=]$/.test(token)) {
         return <span key={ti}>{token}</span>;
       }
-      if (token === "sha256" || token === "txid") {
+      if (ACCENT_FUNCTIONS.has(token)) {
         nextIsFuncName = false;
         return (
           <span key={ti} className="text-accent">
@@ -112,6 +113,21 @@ function highlightPseudo(code: string): ReactNode {
       </span>
     );
   });
+}
+
+/* ── Option shuffling ── */
+
+/** Fisher-Yates shuffle of option display order. Keys and labels stay intact
+ *  so reveal text that references "Version B" etc. remains correct. */
+function shuffleOptions(
+  options: readonly [CodeOption, CodeOption, CodeOption],
+): readonly [CodeOption, CodeOption, CodeOption] {
+  const arr = [options[0], options[1], options[2]];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr as [CodeOption, CodeOption, CodeOption];
 }
 
 /* ── Subcomponents ── */
@@ -145,6 +161,7 @@ interface CodeReviewChallengeProps {
 }
 
 export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
+  const [shuffledOptions] = useState(() => shuffleOptions(challenge.options));
   const [selectedKey, setSelectedKey] = useState<"A" | "B" | "C" | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -159,13 +176,13 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
   // Compute digests for reveal
   const { digests, hasComputedDigests } = useMemo(() => {
     if (!submitted) return { digests: null, hasComputedDigests: false };
-    const computed = challenge.options.map((opt) => ({
+    const computed = shuffledOptions.map((opt) => ({
       key: opt.key,
       label: opt.label,
       hex: opt.computeDigest ? bytesToHex(opt.computeDigest(challenge.referenceInput)) : null,
     }));
     return { digests: computed, hasComputedDigests: computed.some((d) => d.hex !== null) };
-  }, [submitted, challenge]);
+  }, [submitted, shuffledOptions, challenge.referenceInput]);
 
   const handleSubmit = useCallback(() => {
     if (selectedKey === null) return;
@@ -183,7 +200,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (submitted) return;
-      const keys = challenge.options.map((o) => o.key);
+      const keys = shuffledOptions.map((o) => o.key);
       const currentIdx = selectedKey ? keys.indexOf(selectedKey) : -1;
       let nextIdx = -1;
 
@@ -200,7 +217,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
         optionRefs.current[nextIdx]?.focus();
       }
     },
-    [submitted, selectedKey, challenge.options],
+    [submitted, selectedKey, shuffledOptions],
   );
 
   return (
@@ -235,7 +252,7 @@ export function CodeReviewChallenge({ challenge }: CodeReviewChallengeProps) {
         onKeyDown={handleKeyDown}
         className="space-y-4"
       >
-        {challenge.options.map((opt, idx) => {
+        {shuffledOptions.map((opt, idx) => {
           const isSelected = selectedKey === opt.key;
           const isCorrectOption = opt.key === challenge.correctKey;
 

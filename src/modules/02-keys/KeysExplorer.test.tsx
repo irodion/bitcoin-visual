@@ -188,4 +188,35 @@ describe("KeysExplorer", () => {
     const inputAfter = (await screen.findByLabelText(/custom entropy/i)) as HTMLInputElement;
     expect(inputAfter.value).toBe(entropy);
   });
+
+  // ── Code Review tab ──
+
+  it("renders Code Review tab in tab bar", async () => {
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+    expect(screen.getByRole("tab", { name: "Code Review" })).toBeInTheDocument();
+  });
+
+  it("switches to Code Review tab and shows challenge prompt", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Code Review" }));
+
+    expect(await screen.findByText("Review: P2PKH address derivation")).toBeInTheDocument();
+    expect(await screen.findByText(/teammate added legacy address/)).toBeInTheDocument();
+  });
+
+  it("shows Code Review theory content when tab is active", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderWithRouter(<KeysExplorer />);
+    });
+
+    await user.click(screen.getByRole("tab", { name: "Code Review" }));
+    expect(await screen.findByText("Address Derivation Review")).toBeInTheDocument();
+  });
 });

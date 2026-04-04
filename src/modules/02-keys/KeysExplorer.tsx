@@ -8,6 +8,7 @@ import {
   SecurityCallout,
   TheoryConceptCard,
   TheoryCallout,
+  CodeReviewChallenge,
 } from "../../shared/components/index.ts";
 import { CONTAINER_VARIANTS, STEP_VARIANTS } from "../../shared/components/styles.ts";
 import { useKeyPipeline, type PipelineResult } from "./useKeyPipeline.ts";
@@ -15,12 +16,14 @@ import { useModuleCompletion } from "../../shared/hooks/useModuleCompletion.ts";
 import { EntropyInput } from "./EntropyInput.tsx";
 import { PipelineStep } from "./PipelineStep.tsx";
 import { EllipticCurvesTab } from "./EllipticCurvesTab.tsx";
+import { KEYS_CODE_REVIEW } from "./data/codeReviewData.ts";
 
-type KeysTabKey = "pipeline" | "curves";
+type KeysTabKey = "pipeline" | "curves" | "code-review";
 
 const TABS = [
   { key: "pipeline", label: "Key Pipeline" },
   { key: "curves", label: "Elliptic Curves" },
+  { key: "code-review", label: "Code Review" },
 ];
 
 interface StepDef {
@@ -202,6 +205,49 @@ function ECTheory() {
   );
 }
 
+function CodeReviewTheory() {
+  return (
+    <>
+      <h3>Address Derivation Review</h3>
+      <p>
+        P2PKH address generation chains multiple cryptographic operations. Each step has a specific
+        purpose — skipping or reordering any of them produces a valid-looking but semantically wrong
+        address.
+      </p>
+
+      <div className="space-y-3">
+        <TheoryConceptCard
+          dot="accent"
+          title="HASH160 = SHA-256 + RIPEMD-160"
+          description="The protocol chains both hashes to produce a fixed 20-byte payload for addresses — this is the HASH160 construction Bitcoin uses everywhere."
+        />
+        <TheoryConceptCard
+          dot="danger"
+          title="Public Keys Are Not Addresses"
+          description="Hashing decouples the raw public key from the address encoding — shorter representation, privacy until first spend, and flexibility for future script upgrades."
+        />
+        <TheoryConceptCard
+          dot="teal"
+          title="Double-SHA-256 Checksum"
+          description="The 4-byte checksum uses SHA-256d, not a single SHA-256. This prevents length-extension attacks on the checksum."
+        />
+      </div>
+
+      <TheoryCallout
+        label="REVIEW TIP"
+        title="Compare output sizes"
+        description="HASH160 produces 20 bytes. If you see 33 bytes in the versioned payload, the public key was not hashed."
+      />
+    </>
+  );
+}
+
+const THEORY_CONTENT: Record<KeysTabKey, () => React.JSX.Element> = {
+  pipeline: PipelineTheory,
+  curves: ECTheory,
+  "code-review": CodeReviewTheory,
+};
+
 export default function KeysExplorer() {
   const [entropyHex, setEntropyHex] = useState("");
   const [generationKey, setGenerationKey] = useState(0);
@@ -219,13 +265,15 @@ export default function KeysExplorer() {
     setGenerationKey((k) => k + 1);
   }
 
+  const Theory = THEORY_CONTENT[activeTab];
+
   return (
     <ModuleLayout
       moduleKey="keys"
       title="Keys & Address Generator"
       moduleNumber={2}
       subtitle="Generate a private key, derive the public key, and encode Bitcoin addresses step by step."
-      theoryContent={activeTab === "pipeline" ? <PipelineTheory /> : <ECTheory />}
+      theoryContent={<Theory />}
       tabConfig={{
         tabs: TABS,
         activeTab,
@@ -309,6 +357,18 @@ export default function KeysExplorer() {
             exit="hidden"
           >
             <EllipticCurvesTab entropyHex={entropyHex} />
+          </motion.div>
+        )}
+
+        {activeTab === "code-review" && (
+          <motion.div
+            key="code-review"
+            variants={STEP_VARIANTS}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <CodeReviewChallenge challenge={KEYS_CODE_REVIEW} />
           </motion.div>
         )}
       </AnimatePresence>
